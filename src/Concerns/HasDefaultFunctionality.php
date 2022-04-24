@@ -11,11 +11,11 @@ trait HasDefaultFunctionality
 {
     public function fetchOr(string $url, mixed $default): mixed
     {
-        if (! $default instanceof \Closure) {
-            throw new InvalidArgumentException('The default must be an instance of \Closure.');
+        if ($favicon = $this->fetch($url)) {
+            return $favicon;
         }
 
-        return $this->fetch($url) ?? $default($url);
+        return $default instanceof \Closure ? $default($url) : $default;
     }
 
     public function fetchOrFallback(string $url, array $drivers): ?FetchedFavicon
