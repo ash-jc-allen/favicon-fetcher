@@ -4,6 +4,7 @@ namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use Illuminate\Support\Facades\Http;
@@ -14,6 +15,12 @@ class GoogleSharedStuffDriver implements Fetcher
 
     private const BASE_URL = 'https://www.google.com/s2/favicons?domain=';
 
+    /**
+     * @param string $url
+     * @return FetchedFavicon
+     * @throws FaviconNotFoundException
+     * @throws InvalidUrlException
+     */
     public function fetch(string $url): FetchedFavicon
     {
         if (! $this->urlIsValid($url)) {
@@ -28,6 +35,6 @@ class GoogleSharedStuffDriver implements Fetcher
             return new FetchedFavicon($faviconUrl);
         }
 
-        // TODO Handle if it was invalid.
+        throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
     }
 }
