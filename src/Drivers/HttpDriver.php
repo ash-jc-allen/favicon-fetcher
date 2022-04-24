@@ -2,27 +2,24 @@
 
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
-use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use Illuminate\Support\Facades\Http;
 
-// TODO Maybe add handling for redirects.
-// TODO Add option to throw or return null if it doesn't exist.
-
 class HttpDriver implements Fetcher
 {
     use ValidatesUrls;
+    use HasDefaultFunctionality;
 
     /**
      * @param string $url
      * @return FetchedFavicon
-     * @throws FaviconNotFoundException
      * @throws InvalidUrlException
      */
-    public function fetch(string $url): FetchedFavicon
+    public function fetch(string $url): ?FetchedFavicon
     {
         if (!$this->urlIsValid($url)) {
             throw new InvalidUrlException($url . ' is not a valid URL');
@@ -30,17 +27,16 @@ class HttpDriver implements Fetcher
 
         $faviconUrl = $this->attemptToResolveFromHeadTags($url);
 
-        return $this->attemptToResolveFromUrl($faviconUrl ?? $this->guessDefaultUrl($url))
-            ?? throw new FaviconNotFoundException('A favicon cannot be found for ' . $url);
+        return $this->attemptToResolveFromUrl(
+            $faviconUrl ?? $this->guessDefaultUrl($url)
+        );
     }
 
     private function attemptToResolveFromUrl(string $url): ?FetchedFavicon
     {
         $response = Http::get($url);
 
-        return $response->successful()
-            ? new FetchedFavicon($url)
-            : null;
+        return $response->successful() ? new FetchedFavicon($url) : null;
     }
 
     private function attemptToResolveFromHeadTags(string $url): ?string

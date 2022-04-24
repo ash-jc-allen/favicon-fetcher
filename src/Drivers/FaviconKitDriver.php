@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
@@ -12,16 +13,16 @@ use Illuminate\Support\Facades\Http;
 class FaviconKitDriver implements Fetcher
 {
     use ValidatesUrls;
+    use HasDefaultFunctionality;
 
     private const BASE_URL = 'https://api.faviconkit.com/';
 
     /**
      * @param string $url
-     * @return FetchedFavicon
+     * @return FetchedFavicon|null
      * @throws InvalidUrlException
-     * @throws FaviconNotFoundException
      */
-    public function fetch(string $url): FetchedFavicon
+    public function fetch(string $url): ?FetchedFavicon
     {
         if (! $this->urlIsValid($url)) {
             throw new InvalidUrlException($url.' is not a valid URL');
@@ -31,10 +32,6 @@ class FaviconKitDriver implements Fetcher
 
         $response = Http::get($faviconUrl);
 
-        if ($response->successful()) {
-            return new FetchedFavicon($faviconUrl);
-        }
-
-        throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
+        return $response->successful() ? new FetchedFavicon($faviconUrl) : null;
     }
 }
