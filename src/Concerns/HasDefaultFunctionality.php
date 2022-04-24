@@ -19,7 +19,8 @@ trait HasDefaultFunctionality
 
     public function fetchOrThrow(string $url): FetchedFavicon
     {
-        return $this->fetch($url)
-            ?? throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
+        return $this->fetchOr($url, function ($url): void {
+            throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
+        });
     }
 }
