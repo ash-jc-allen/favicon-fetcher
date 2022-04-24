@@ -2,14 +2,22 @@
 
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use Illuminate\Support\Facades\Http;
 
 class HttpDriver implements Fetcher
 {
+    use ValidatesUrls;
+
     public function fetch(string $url): FetchedFavicon
     {
+        if (! $this->urlIsValid($url)) {
+            throw new InvalidUrlException($url.' is not a valid URL');
+        }
+
         $tags = get_meta_tags($url);
 
         // TODO Handle if the URL is invalid.
