@@ -60,11 +60,13 @@ class HttpDriver implements Fetcher
 
     private function findLinkElement(string $html): ?string
     {
-        $pattern = "/<link(.)*rel=\"(icon|shortcut icon)\"[^>]*>/i";
+        $pattern = "/<link.*rel=\"(icon|shortcut icon)\"[^>]*>/i";
 
         preg_match($pattern, $html, $linkElement);
 
-        return $linkElement[0] ?? null;
+        return isset($linkElement[0])
+            ? strstr($linkElement[0], '>', true)
+            : null;
     }
 
     private function parseLinkFromElement(string $linkElement): string
