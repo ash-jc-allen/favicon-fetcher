@@ -1,6 +1,6 @@
 <?php
 
-namespace AshAllenDesign\FaviconFetcher\Providers;
+namespace AshAllenDesign\FaviconFetcher;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -15,7 +15,7 @@ class FaviconFetcherProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/favicon-fetcher.php', 'favicon-fetcher');
 
-        // TODO Register favicon here
+        // TODO Register favicon facade here
     }
 
     /**

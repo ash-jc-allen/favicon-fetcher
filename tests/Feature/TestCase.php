@@ -2,7 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
-use AshAllenDesign\FaviconFetcher\Providers\FaviconFetcherProvider;
+use AshAllenDesign\FaviconFetcher\FaviconFetcherProvider;
 use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 

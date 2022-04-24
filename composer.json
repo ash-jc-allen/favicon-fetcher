@@ -40,7 +40,7 @@
   "extra": {
     "laravel": {
       "providers": [
-        "AshAllenDesign\\FaviconFetcher\\Providers\\FaviconFetcherProvider"
+        "AshAllenDesign\\FaviconFetcher\\FaviconFetcherProvider"
       ]
     }
   },
