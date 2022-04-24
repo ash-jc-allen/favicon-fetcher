@@ -30,7 +30,7 @@ class HttpDriver implements Fetcher
         }
 
         if ($favicon = $this->attemptToResolveFromUrl($url)) {
-            dd($favicon);
+            return $favicon;
         }
     }
 

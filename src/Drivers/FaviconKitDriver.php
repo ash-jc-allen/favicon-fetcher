@@ -33,6 +33,8 @@ class FaviconKitDriver implements Fetcher
             return new FetchedFavicon($faviconUrl);
         }
 
+        dd('failed');
+
         // TODO Handle if it was invalid.
     }
 }

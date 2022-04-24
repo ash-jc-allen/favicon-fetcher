@@ -15,7 +15,7 @@ class FaviconFetcherProvider extends ServiceProvider
     {
         $this->mergeConfigFrom(__DIR__.'/../config/favicon-fetcher.php', 'favicon-fetcher');
 
-        // TODO Register favicon facade here
+        $this->app->bind('favicon-fetcher', fn () => new FetcherManager());
     }
 
     /**

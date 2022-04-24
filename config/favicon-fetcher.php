@@ -2,6 +2,6 @@
 
 return [
 
-    'driver' => 'http',
+    'default' => 'http',
 
 ];
