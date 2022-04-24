@@ -4,56 +4,87 @@ namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use Illuminate\Support\Facades\Http;
+
+// TODO Maybe add handling for redirects.
+// TODO Add option to throw or return null if it doesn't exist.
 
 class HttpDriver implements Fetcher
 {
     use ValidatesUrls;
 
+    /**
+     * @param string $url
+     * @return FetchedFavicon
+     * @throws FaviconNotFoundException
+     * @throws InvalidUrlException
+     */
     public function fetch(string $url): FetchedFavicon
     {
-        if (! $this->urlIsValid($url)) {
-            throw new InvalidUrlException($url.' is not a valid URL');
+        if (!$this->urlIsValid($url)) {
+            throw new InvalidUrlException($url . ' is not a valid URL');
         }
 
-        $tags = get_meta_tags($url);
+        $faviconUrl = $this->attemptToResolveFromHeadTags($url);
 
-        // TODO Handle if the URL is invalid.
-        // TODO Handle if the connection could not be made.
-
-        // TODO Try and resolve from the <head> tags first.
-
-        if ($this->tagsContainFaviconTag($tags)) {
-            return $this->faviconMetaTag($tags);
-        }
-
-        if ($favicon = $this->attemptToResolveFromUrl($url)) {
-            return $favicon;
-        }
+        return $this->attemptToResolveFromUrl($faviconUrl ?? $this->guessDefaultUrl($url))
+            ?? throw new FaviconNotFoundException('A favicon cannot be found for ' . $url);
     }
 
-    private function tagsContainFaviconTag(array $tags): bool
+    private function attemptToResolveFromUrl(string $url): ?FetchedFavicon
     {
-        return false;
+        $response = Http::get($url);
+
+        return $response->successful()
+            ? new FetchedFavicon($url)
+            : null;
     }
 
-    private function faviconMetaTag(array $tags): bool
+    private function attemptToResolveFromHeadTags(string $url): ?string
     {
-        return true;
-    }
+        $response = Http::get($url);
 
-    private function attemptToResolveFromUrl(string $url)
-    {
-        $faviconUrl = rtrim($url, '/').'/favicon.ico';
-
-        $response = Http::get($faviconUrl);
-
-        if ($response->successful()) {
-            return new FetchedFavicon($faviconUrl);
+        if (!$response->successful()) {
+            return null;
         }
 
-        // Return an error. It could not be resolved.
+        $linkTag = $this->findLinkElement($response->body());
+
+        return $linkTag
+            ? $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag))
+            : null;
+    }
+
+    private function findLinkElement(string $html): ?string
+    {
+        $pattern = "/<link(.)*rel=\"(icon|shortcut icon)\"[^>]*>/i";
+
+        preg_match($pattern, $html, $linkElement);
+
+        return $linkElement[0] ?? null;
+    }
+
+    private function parseLinkFromElement(string $linkElement): string
+    {
+        $stringUntilHref = strstr($linkElement, 'href="');
+
+        return explode('"', $stringUntilHref)[1];
+    }
+
+    private function convertToAbsoluteUrl(string $baseUrl, string $faviconUrl): string
+    {
+        if (str_starts_with($faviconUrl, '/')) {
+            $faviconUrl = $baseUrl . $faviconUrl;
+        }
+
+        return $faviconUrl;
+    }
+
+    private function guessDefaultUrl(string $url): string
+    {
+        return rtrim($url, '/') . '/favicon.ico';
     }
 }
