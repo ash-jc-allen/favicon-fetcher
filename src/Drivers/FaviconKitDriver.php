@@ -4,6 +4,7 @@ namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use Illuminate\Support\Facades\Http;
@@ -18,6 +19,7 @@ class FaviconKitDriver implements Fetcher
      * @param string $url
      * @return FetchedFavicon
      * @throws InvalidUrlException
+     * @throws FaviconNotFoundException
      */
     public function fetch(string $url): FetchedFavicon
     {
@@ -33,8 +35,6 @@ class FaviconKitDriver implements Fetcher
             return new FetchedFavicon($faviconUrl);
         }
 
-        dd('failed');
-
-        // TODO Handle if it was invalid.
+        throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
     }
 }
