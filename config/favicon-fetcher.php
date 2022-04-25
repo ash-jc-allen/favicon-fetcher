@@ -28,5 +28,5 @@ return [
     */
     'cache' => [
         'prefix' => 'favicon-fetcher',
-    ]
+    ],
 ];

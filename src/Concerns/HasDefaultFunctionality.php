@@ -38,9 +38,10 @@ trait HasDefaultFunctionality
      * Attempt to fetch the favicon for the given URL. If a favicon cannot
      * be found, return the default as a fallback.
      *
-     * @param string $url
-     * @param mixed $default
+     * @param  string  $url
+     * @param  mixed  $default
      * @return mixed
+     *
      * @throws FaviconNotFoundException
      * @throws InvalidUrlException
      */
@@ -56,7 +57,7 @@ trait HasDefaultFunctionality
     /**
      * Specify whether to throw an exception if the favicon cannot be found.
      *
-     * @param bool $throw
+     * @param  bool  $throw
      * @return $this
      */
     public function throw(bool $throw = true): self
@@ -70,7 +71,7 @@ trait HasDefaultFunctionality
      * Specify which drivers should be used as fallbacks if the current
      * driver cannot find the favicon.
      *
-     * @param string ...$fallbacks
+     * @param  string  ...$fallbacks
      * @return $this
      */
     public function withFallback(string ...$fallbacks): self
@@ -83,7 +84,7 @@ trait HasDefaultFunctionality
     /**
      * Specify whether to attempt to read the favicon from the cache.
      *
-     * @param bool $useCache
+     * @param  bool  $useCache
      * @return $this
      */
     public function useCache(bool $useCache = true): self
@@ -99,8 +100,9 @@ trait HasDefaultFunctionality
      * using a different driver. If we have specified to throw an
      * exception, then do so. Otherwise, return null.
      *
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon|null
+     *
      * @throws FaviconNotFoundException
      */
     protected function notFound(string $url)
@@ -119,7 +121,7 @@ trait HasDefaultFunctionality
     /**
      * Loop through each fallback driver and attempt to retrieve a favicon.
      *
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon|null
      */
     protected function attemptFallbacks(string $url): ?FetchedFavicon
@@ -136,7 +138,7 @@ trait HasDefaultFunctionality
     /**
      * Return the cached favicon, if one exists, or return null.
      *
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon|null
      */
     protected function attemptToFetchFromCache(string $url): ?FetchedFavicon

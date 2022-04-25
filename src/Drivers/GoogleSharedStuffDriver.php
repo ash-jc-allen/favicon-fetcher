@@ -20,8 +20,9 @@ class GoogleSharedStuffDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
+     *
      * @throws FaviconNotFoundException
      * @throws InvalidUrlException
      */

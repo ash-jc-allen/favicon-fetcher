@@ -20,8 +20,9 @@ class FaviconKitDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
+     *
      * @throws InvalidUrlException
      * @throws FaviconNotFoundException
      */
