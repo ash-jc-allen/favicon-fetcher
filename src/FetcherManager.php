@@ -6,6 +6,7 @@ use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 
 class FetcherManager
 {
@@ -31,7 +32,7 @@ class FetcherManager
     protected static function attemptToCreateCustomDriver($driver): Fetcher
     {
         return static::$customDrivers[$driver]
-            ?? throw new \Exception('Invalid driver');
+            ?? throw new FaviconFetcherException($driver.' is not a valid driver.');
     }
 
     public function __call($method, $parameters)
