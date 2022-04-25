@@ -62,6 +62,13 @@ class GoogleSharedStuffDriverTest extends TestCase
     }
 
     /** @test */
+    public function default_value_can_be_returned_using_fetchOr_method_with_a_closure(): void
+    {
+
+    }
+
+
+    /** @test */
     public function exception_can_be_thrown_after_attempting_a_fallback(): void
     {
 

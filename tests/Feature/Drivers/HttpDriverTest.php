@@ -9,12 +9,24 @@ class HttpDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
+    /** @test */
+    public function favicon_can_be_fetched_using_link_element_in_html(): void
+    {
+
+    }
+
+    /** @test */
+    public function favicon_can_be_fetched_from_guessed_url(): void
+    {
+
+    }
+
     /**
      * @test
      * @testWith ["https"]
      *           ["http"]
      */
-    public function favicon_can_be_fetched_from_driver(): void
+    public function favicon_can_be_fetched_from_driver_using_http_or_https_url(): void
     {
 
     }
@@ -57,6 +69,12 @@ class HttpDriverTest extends TestCase
 
     /** @test */
     public function default_value_can_be_returned_using_fetchOr_method(): void
+    {
+
+    }
+
+    /** @test */
+    public function default_value_can_be_returned_using_fetchOr_method_with_a_closure(): void
     {
 
     }
