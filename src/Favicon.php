@@ -55,8 +55,8 @@ class Favicon
     /**
      * Create a new Favicon object using data retrieved from the cache.
      *
-     * @param string $url
-     * @param string $faviconUrl
+     * @param  string  $url
+     * @param  string  $faviconUrl
      * @return static
      */
     public static function makeFromCache(string $url, string $faviconUrl): self
@@ -93,13 +93,13 @@ class Favicon
      * Cache the favicon URL. If the favicon is already cached, "force"
      * must be passed as "true" to re-cache the URL.
      *
-     * @param CarbonInterface $ttl
-     * @param bool $force
+     * @param  CarbonInterface  $ttl
+     * @param  bool  $force
      * @return $this
      */
     public function cache(CarbonInterface $ttl, bool $force = false): self
     {
-        if ($force || !$this->retrievedFromCache) {
+        if ($force || ! $this->retrievedFromCache) {
             Cache::put($this->buildCacheKey($this->url), $this->getFaviconUrl(), $ttl);
         }
 
@@ -109,8 +109,8 @@ class Favicon
     /**
      * Store the favicon in storage using an automatically generate filename.
      *
-     * @param string $directory
-     * @param string|null $disk
+     * @param  string  $directory
+     * @param  string|null  $disk
      * @return string
      */
     public function store(string $directory, string $disk = null): string
@@ -121,9 +121,9 @@ class Favicon
     /**
      * Store the favicon in storage.
      *
-     * @param string $directory
-     * @param string $filename
-     * @param string|null $disk
+     * @param  string  $directory
+     * @param  string  $filename
+     * @param  string|null  $disk
      * @return string
      */
     public function storeAs(string $directory, string $filename, string $disk = null): string

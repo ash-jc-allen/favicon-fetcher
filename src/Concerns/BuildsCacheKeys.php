@@ -7,7 +7,7 @@ trait BuildsCacheKeys
     /**
      * Build the key used for caching the favicon's URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return string
      */
     protected function buildCacheKey(string $url): string
