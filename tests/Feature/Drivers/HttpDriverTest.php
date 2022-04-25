@@ -17,16 +17,41 @@ class HttpDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    /** @test */
-    public function favicon_can_be_fetched_using_link_element_in_html(): void
+    /**
+     * @test
+     * @dataProvider faviconLinksInHtmlProvider
+     */
+    public function favicon_can_be_fetched_using_link_element_in_html(string $html, string $expectedFaviconUrl): void
     {
+        Http::fake([
+            'https://example.com' => Http::response($html),
+            $expectedFaviconUrl => Http::response('favicon contents here'),
+            '*' => Http::response('should not hit here'),
+        ]);
 
+        $favicon = (new HttpDriver())->fetch('https://example.com');
+
+        self::assertSame($expectedFaviconUrl, $favicon->getFaviconUrl());
     }
 
     /** @test */
-    public function favicon_can_be_fetched_from_guessed_url(): void
+    public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html(): void
     {
+        $responseHtml = <<<HTML
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
 
+        Http::fake([
+            'https://example.com' => Http::response($responseHtml),
+            'https://example.com/favicon.ico' => Http::response('favicon contents here'),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())->fetch('https://example.com');
+
+        self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }
 
     /**
@@ -214,4 +239,72 @@ class HttpDriverTest extends TestCase
         self::assertInstanceOf(InvalidUrlException::class, $exception);
         self::assertSame('example.com is not a valid URL', $exception->getMessage());
     }
+
+    public function faviconLinksInHtmlProvider(): array
+    {
+        return [
+            $this->htmlOptionOne(),
+            $this->htmlOptionTwo(),
+            $this->htmlOptionThree(),
+            $this->htmlOptionFour(),
+            $this->htmlOptionFive(),
+        ];
+    }
+
+    private function htmlOptionOne(): array
+    {
+        $responseHtml = <<<HTML
+            <html lang="en">
+                <link rel="icon" href="icon/is/here.ico" />
+            </html>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
+    }
+
+    private function htmlOptionTwo(): array
+    {
+        $responseHtml = <<<HTML
+            <html lang="en">
+                <link rel="icon" href="/icon/is/here.ico" />
+            </html>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
+    }
+
+    private function htmlOptionThree(): array
+    {
+        $responseHtml = <<<HTML
+            <html lang="en">
+                <link rel="shortcut icon" href="/icon/is/here.ico" />
+            </html>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
+    }
+
+    private function htmlOptionFour(): array
+    {
+        $responseHtml = <<<HTML
+            <html lang="en">
+                <link rel="icon" type="image/png" href="https://example.com/favicon/favicon-32x32.png"/><link rel="apple-touch-icon" sizes="57x57" href="https://example.com/favicon/apple-icon-57x57.png"/><link rel="apple-touch-icon" sizes="60x60" href="https://example.com/favicon/apple-icon-60x60.png"/><link rel="apple-touch-icon" sizes="72x72" href="https://example.com/favicon/apple-icon-72x72.png"/><link rel="apple-touch-icon" sizes="76x76" href="https://example.com/favicon/apple-icon-72x72.png"/><link rel="apple-touch-icon" sizes="114x114" href="https://example.com/favicon/apple-icon-76x76.png"/><link rel="apple-touch-icon" sizes="120x120" href="https://example.com/favicon/apple-icon-120x120.png"/><link rel="apple-touch-icon" sizes="144x144" href="https://example.com/favicon/apple-icon-144x144.png"/><link rel="apple-touch-icon" sizes="152x152" href="https://example.com/favicon/apple-icon-152x152.png"/><link rel="apple-touch-icon" sizes="180x180" href="https://example.com/favicon/apple-icon-180x180.png"/><link rel="icon" type="image/png" sizes="192x192" href="https://example.com/favicon/android-icon-192x192.png"/>
+            </html>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/favicon/favicon-32x32.png'];
+    }
+
+    private function htmlOptionFive(): array
+    {
+        $responseHtml = <<<HTML
+            <html lang="en">
+                <link href="/icon/is/here.ico" rel="shortcut icon" />
+            </html>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
+    }
 }
+
+

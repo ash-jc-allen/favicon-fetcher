@@ -78,8 +78,8 @@ class HttpDriver implements Fetcher
 
     private function convertToAbsoluteUrl(string $baseUrl, string $faviconUrl): string
     {
-        if (str_starts_with($faviconUrl, '/')) {
-            $faviconUrl = $baseUrl . $faviconUrl;
+        if (! filter_var($faviconUrl, FILTER_VALIDATE_URL)) {
+            $faviconUrl = $baseUrl.'/'.ltrim($faviconUrl, '/');
         }
 
         return $faviconUrl;
