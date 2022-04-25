@@ -5,7 +5,10 @@ namespace AshAllenDesign\FaviconFetcher;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Cache;
+use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class FetchedFavicon
 {
@@ -56,5 +59,28 @@ class FetchedFavicon
         }
 
         return $this;
+    }
+
+    public function store(string $directory, string $disk = null): string
+    {
+        return $this->storeAs($directory, Str::uuid()->toString(), $disk);
+    }
+
+    public function storeAs(string $directory, string $filename, string $disk = null)
+    {
+        $path = $this->buildStoragePath($directory, $filename);
+
+        Storage::disk($disk)->put($path, $this->content());
+
+        return $path;
+    }
+
+    protected function buildStoragePath(string $directory, string $filename): string
+    {
+        return Str::of($directory)
+            ->append('/')
+            ->append($filename)
+            ->append('.')
+            ->append(File::extension($this->faviconUrl));
     }
 }
