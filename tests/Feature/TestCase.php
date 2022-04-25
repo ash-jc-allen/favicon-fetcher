@@ -3,7 +3,6 @@
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
 use AshAllenDesign\FaviconFetcher\FaviconFetcherProvider;
-use Illuminate\Foundation\Application;
 use Orchestra\Testbench\TestCase as OrchestraTestCase;
 
 abstract class TestCase extends OrchestraTestCase

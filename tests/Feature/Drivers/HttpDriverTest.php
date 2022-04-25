@@ -37,7 +37,7 @@ class HttpDriverTest extends TestCase
     /** @test */
     public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html(): void
     {
-        $responseHtml = <<<HTML
+        $responseHtml = <<<'HTML'
             <html lang="en">
                 <link rel="localization" href="branding/brand.ftl" />
             </html>
@@ -67,7 +67,7 @@ class HttpDriverTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = (new HttpDriver())->fetch($protocol . '://example.com');
+        $favicon = (new HttpDriver())->fetch($protocol.'://example.com');
 
         self::assertSame($protocol.'://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
     }
@@ -253,7 +253,7 @@ class HttpDriverTest extends TestCase
 
     private function htmlOptionOne(): array
     {
-        $responseHtml = <<<HTML
+        $responseHtml = <<<'HTML'
             <html lang="en">
                 <link rel="icon" href="icon/is/here.ico" />
             </html>
@@ -264,7 +264,7 @@ class HttpDriverTest extends TestCase
 
     private function htmlOptionTwo(): array
     {
-        $responseHtml = <<<HTML
+        $responseHtml = <<<'HTML'
             <html lang="en">
                 <link rel="icon" href="/icon/is/here.ico" />
             </html>
@@ -275,7 +275,7 @@ class HttpDriverTest extends TestCase
 
     private function htmlOptionThree(): array
     {
-        $responseHtml = <<<HTML
+        $responseHtml = <<<'HTML'
             <html lang="en">
                 <link rel="shortcut icon" href="/icon/is/here.ico" />
             </html>
@@ -286,7 +286,7 @@ class HttpDriverTest extends TestCase
 
     private function htmlOptionFour(): array
     {
-        $responseHtml = <<<HTML
+        $responseHtml = <<<'HTML'
             <html lang="en">
                 <link rel="icon" type="image/png" href="https://example.com/favicon/favicon-32x32.png"/><link rel="apple-touch-icon" sizes="57x57" href="https://example.com/favicon/apple-icon-57x57.png"/><link rel="apple-touch-icon" sizes="60x60" href="https://example.com/favicon/apple-icon-60x60.png"/><link rel="apple-touch-icon" sizes="72x72" href="https://example.com/favicon/apple-icon-72x72.png"/><link rel="apple-touch-icon" sizes="76x76" href="https://example.com/favicon/apple-icon-72x72.png"/><link rel="apple-touch-icon" sizes="114x114" href="https://example.com/favicon/apple-icon-76x76.png"/><link rel="apple-touch-icon" sizes="120x120" href="https://example.com/favicon/apple-icon-120x120.png"/><link rel="apple-touch-icon" sizes="144x144" href="https://example.com/favicon/apple-icon-144x144.png"/><link rel="apple-touch-icon" sizes="152x152" href="https://example.com/favicon/apple-icon-152x152.png"/><link rel="apple-touch-icon" sizes="180x180" href="https://example.com/favicon/apple-icon-180x180.png"/><link rel="icon" type="image/png" sizes="192x192" href="https://example.com/favicon/android-icon-192x192.png"/>
             </html>
@@ -297,7 +297,7 @@ class HttpDriverTest extends TestCase
 
     private function htmlOptionFive(): array
     {
-        $responseHtml = <<<HTML
+        $responseHtml = <<<'HTML'
             <html lang="en">
                 <link href="/icon/is/here.ico" rel="shortcut icon" />
             </html>
@@ -306,5 +306,3 @@ class HttpDriverTest extends TestCase
         return [$responseHtml, 'https://example.com/icon/is/here.ico'];
     }
 }
-
-

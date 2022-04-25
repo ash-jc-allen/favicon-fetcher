@@ -15,14 +15,15 @@ class HttpDriver implements Fetcher
     use HasDefaultFunctionality;
 
     /**
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon
+     *
      * @throws InvalidUrlException
      */
     public function fetch(string $url): ?FetchedFavicon
     {
-        if (!$this->urlIsValid($url)) {
-            throw new InvalidUrlException($url . ' is not a valid URL');
+        if (! $this->urlIsValid($url)) {
+            throw new InvalidUrlException($url.' is not a valid URL');
         }
 
         if ($this->useCache && $favicon = $this->attemptToFetchFromCache($url)) {
@@ -47,7 +48,7 @@ class HttpDriver implements Fetcher
     {
         $response = Http::get($url);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return null;
         }
 
@@ -60,7 +61,7 @@ class HttpDriver implements Fetcher
 
     private function findLinkElement(string $html): ?string
     {
-        $pattern = "/<link.*rel=\"(icon|shortcut icon)\"[^>]*>/i";
+        $pattern = '/<link.*rel="(icon|shortcut icon)"[^>]*>/i';
 
         preg_match($pattern, $html, $linkElement);
 
@@ -87,6 +88,6 @@ class HttpDriver implements Fetcher
 
     private function guessDefaultUrl(string $url): string
     {
-        return rtrim($url, '/') . '/favicon.ico';
+        return rtrim($url, '/').'/favicon.ico';
     }
 }

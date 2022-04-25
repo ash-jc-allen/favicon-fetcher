@@ -2,7 +2,6 @@
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
-use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;

@@ -29,7 +29,7 @@ class FaviconKitDriverTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = (new FaviconKitDriver())->fetch($protocol . '://example.com');
+        $favicon = (new FaviconKitDriver())->fetch($protocol.'://example.com');
 
         self::assertSame('https://api.faviconkit.com/example.com', $favicon->getFaviconUrl());
     }

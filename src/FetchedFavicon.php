@@ -57,9 +57,9 @@ class FetchedFavicon
     public function cache(CarbonInterface $ttl, bool $force = false): self
     {
         // If the favicon was retrieved from the cache, we don't want to try and cache it again.
-        if ($force || !$this->retrievedFromCache) {
+        if ($force || ! $this->retrievedFromCache) {
             // TODO Move prefix to config.
-            $cacheKey = 'favicon-fetcher.' . $this->url;
+            $cacheKey = 'favicon-fetcher.'.$this->url;
 
             Cache::put($cacheKey, $this->getFaviconUrl(), $ttl);
         }
