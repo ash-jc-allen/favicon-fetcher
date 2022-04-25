@@ -7,7 +7,7 @@ trait ValidatesUrls
     /**
      * Validate that the given parameter is a valid URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return bool
      */
     protected function urlIsValid(string $url): bool

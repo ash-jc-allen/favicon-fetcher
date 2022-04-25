@@ -18,8 +18,9 @@ class HttpDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
+     *
      * @throws InvalidUrlException
      * @throws FaviconNotFoundException
      */
@@ -45,8 +46,8 @@ class HttpDriver implements Fetcher
      * is successful, we can assume that a valid favicon was returned.
      * Otherwise, we can assume that a favicon wasn't found.
      *
-     * @param string $url
-     * @param string $faviconUrl
+     * @param  string  $url
+     * @param  string  $faviconUrl
      * @return Favicon|null
      */
     private function attemptToResolveFromUrl(string $url, string $faviconUrl): ?Favicon
@@ -62,7 +63,7 @@ class HttpDriver implements Fetcher
      * is found, return the absolute URL of the link's "href".
      * Otherwise, return null.
      *
-     * @param string $url
+     * @param  string  $url
      * @return string|null
      */
     private function attemptToResolveFromHeadTags(string $url): ?string
@@ -83,7 +84,7 @@ class HttpDriver implements Fetcher
     /**
      * Attempt to find an "icon" or "shortcut icon" link in the HTML.
      *
-     * @param string $html
+     * @param  string  $html
      * @return string|null
      */
     private function findLinkElement(string $html): ?string
@@ -100,7 +101,7 @@ class HttpDriver implements Fetcher
     /**
      * Find and return the text inside the "href" attribute from the link tag.
      *
-     * @param string $linkElement
+     * @param  string  $linkElement
      * @return string
      */
     private function parseLinkFromElement(string $linkElement): string
@@ -113,8 +114,8 @@ class HttpDriver implements Fetcher
     /**
      * Convert the favicon URL to be absolute rather than relative.
      *
-     * @param string $baseUrl
-     * @param string $faviconUrl
+     * @param  string  $baseUrl
+     * @param  string  $faviconUrl
      * @return string
      */
     private function convertToAbsoluteUrl(string $baseUrl, string $faviconUrl): string
@@ -130,7 +131,7 @@ class HttpDriver implements Fetcher
      * Build and return the default path where we can guess the favicon
      * file might be stored.
      *
-     * @param string $url
+     * @param  string  $url
      * @return string
      */
     private function guessDefaultUrl(string $url): string
