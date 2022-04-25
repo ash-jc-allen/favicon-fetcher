@@ -14,8 +14,6 @@ class HttpDriver implements Fetcher
     use ValidatesUrls;
     use HasDefaultFunctionality;
 
-    private bool $throwOnNotFound = false;
-
     /**
      * @param string $url
      * @return FetchedFavicon

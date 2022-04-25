@@ -9,6 +9,10 @@ use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 
 trait HasDefaultFunctionality
 {
+    protected array $fallbacks = [];
+
+    protected bool $throwOnNotFound = false;
+
     public function fetchOr(string $url, mixed $default): mixed
     {
         if ($favicon = $this->fetch($url)) {
@@ -23,6 +27,13 @@ trait HasDefaultFunctionality
         return $this->fetchOr($url, function (string $url): void {
             throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
         });
+    }
+
+    public function throw(bool $throw = true): self
+    {
+        $this->throwOnNotFound = $throw;
+
+        return $this;
     }
 
     protected function notFound(string $url)
