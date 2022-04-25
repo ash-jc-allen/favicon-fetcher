@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Mockery;
 
-class FetchedFaviconTest extends TestCase
+class FaviconTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
@@ -84,7 +84,7 @@ class FetchedFaviconTest extends TestCase
 
         Cache::shouldReceive('put')
             ->withArgs([
-                'favicon-fetcher.https://example.com',
+                'favicon-fetcher.example.com',
                 'https://example.com/favicon.ico',
                 Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
@@ -120,7 +120,7 @@ class FetchedFaviconTest extends TestCase
 
         Cache::shouldReceive('put')
             ->withArgs([
-                'favicon-fetcher.https://example.com',
+                'favicon-fetcher.example.com',
                 'https://example.com/favicon.ico',
                 Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])

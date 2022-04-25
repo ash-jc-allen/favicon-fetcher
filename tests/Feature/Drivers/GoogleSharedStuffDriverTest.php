@@ -38,7 +38,7 @@ class GoogleSharedStuffDriverTest extends TestCase
     public function favicon_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
         Cache::put(
-            'favicon-fetcher.https://example.com',
+            'favicon-fetcher.example.com',
             'url-goes-here',
             now()->addHour()
         );
