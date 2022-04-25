@@ -57,7 +57,7 @@ class Favicon
      *
      * @param string $url
      * @param string $faviconUrl
-     * @return static
+     * @return self
      */
     public static function makeFromCache(string $url, string $faviconUrl): self
     {
