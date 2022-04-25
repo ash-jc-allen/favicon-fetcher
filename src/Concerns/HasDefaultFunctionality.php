@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\Cache;
 
 trait HasDefaultFunctionality
 {
+    use BuildsCacheKeys;
+
     protected array $fallbacks = [];
 
     protected bool $throwOnNotFound = false;
@@ -71,8 +73,7 @@ trait HasDefaultFunctionality
 
     protected function attemptToFetchFromCache(string $url): ?FetchedFavicon
     {
-        // TODO Lift the cache key into a central place.
-        $cachedFaviconUrl = Cache::get(config('favicon-fetcher.cache.prefix').'.'.$url);
+        $cachedFaviconUrl = Cache::get($this->buildCacheKey($url));
 
         return $cachedFaviconUrl ? FetchedFavicon::makeFromCache($url, $cachedFaviconUrl) : null;
     }

@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher;
 
+use AshAllenDesign\FaviconFetcher\Concerns\BuildsCacheKeys;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Cache;
@@ -13,6 +14,8 @@ use Illuminate\Support\Str;
 // TODO Maybe rename me to just favicon?
 class FetchedFavicon
 {
+    use BuildsCacheKeys;
+
     protected string $url;
 
     protected string $faviconUrl;
@@ -57,9 +60,7 @@ class FetchedFavicon
     public function cache(CarbonInterface $ttl, bool $force = false): self
     {
         if ($force || ! $this->retrievedFromCache) {
-            $cacheKey = config('favicon-fetcher.cache.prefix').'.'.$this->url;
-
-            Cache::put($cacheKey, $this->getFaviconUrl(), $ttl);
+            Cache::put($this->buildCacheKey($this->url), $this->getFaviconUrl(), $ttl);
         }
 
         return $this;
