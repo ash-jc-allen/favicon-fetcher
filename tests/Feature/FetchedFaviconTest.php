@@ -5,6 +5,7 @@ namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use Carbon\CarbonInterface;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
@@ -77,7 +78,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function favicon_can_be_cached_if_it_is_not_already_cached(): void
     {
-        $this->freezeTime();
+        Carbon::setTestNow(now());
 
         $expectedTtl = now()->addMinute();
 
@@ -98,7 +99,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function favicon_cannot_be_cached_if_it_is_already_cached(): void
     {
-        $this->freezeTime();
+        Carbon::setTestNow(now());
 
         $expectedTtl = now()->addMinute();
 
@@ -113,7 +114,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function favicon_can_be_cached_if_it_is_already_cached_and_the_force_flag_is_passed(): void
     {
-        $this->freezeTime();
+        Carbon::setTestNow(now());
 
         $expectedTtl = now()->addMinute();
 
