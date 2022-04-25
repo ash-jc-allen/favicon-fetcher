@@ -8,8 +8,8 @@ use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
-use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use AshAllenDesign\FaviconFetcher\FetcherManager;
+use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Mockery;
 
@@ -101,20 +101,5 @@ class FetcherManagerTest extends TestCase
     public function driver_can_be_returned_using_the_facade(): void
     {
         self::assertInstanceOf(FaviconKitDriver::class, Favicon::driver('favicon-kit'));
-    }
-}
-
-class CustomDriver implements Fetcher {
-    public function fetch(string $url): ?FetchedFavicon
-    {
-        return new FetchedFavicon(
-            'https://example.com',
-            'https://example.com/favicon.ico',
-        );
-    }
-
-    public function fetchOr(string $url, mixed $default): mixed
-    {
-        return 'default';
     }
 }

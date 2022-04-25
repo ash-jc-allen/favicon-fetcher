@@ -2,12 +2,12 @@
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Drivers;
 
-use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
-use AshAllenDesign\FaviconFetcher\FetchedFavicon;
 use AshAllenDesign\FaviconFetcher\FetcherManager;
+use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
+use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\NullDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
@@ -200,35 +200,5 @@ class FaviconKitDriverTest extends TestCase
 
         self::assertInstanceOf(InvalidUrlException::class, $exception);
         self::assertSame('example.com is not a valid URL', $exception->getMessage());
-    }
-}
-
-class CustomDriver implements Fetcher
-{
-    public function fetch(string $url): ?FetchedFavicon
-    {
-        return new FetchedFavicon('url-from-default', 'favicon-from-default',);
-    }
-
-    public function fetchOr(string $url, mixed $default): mixed
-    {
-        return 'default';
-    }
-}
-
-class NullDriver implements Fetcher
-{
-    public static bool $flag = false;
-
-    public function fetch(string $url): ?FetchedFavicon
-    {
-        static::$flag = true;
-
-        return null;
-    }
-
-    public function fetchOr(string $url, mixed $default): mixed
-    {
-        return 'default';
     }
 }
