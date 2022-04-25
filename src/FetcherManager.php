@@ -29,13 +29,13 @@ class FetcherManager
         self::$customDrivers[$name] = $fetcher;
     }
 
-    protected static function attemptToCreateCustomDriver($driver): Fetcher
+    protected static function attemptToCreateCustomDriver(string $driver): Fetcher
     {
         return static::$customDrivers[$driver]
             ?? throw new FaviconFetcherException($driver.' is not a valid driver.');
     }
 
-    public function __call($method, $parameters)
+    public function __call(string $method, mixed $parameters): mixed
     {
         return static::driver()->$method(...$parameters);
     }
