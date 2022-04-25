@@ -29,10 +29,14 @@ class GoogleSharedStuffDriver implements Fetcher
             throw new InvalidUrlException($url.' is not a valid URL');
         }
 
+        if ($this->useCache && $favicon = $this->attemptToFetchFromCache($url)) {
+            return $favicon;
+        }
+
         $faviconUrl = self::BASE_URL.$url;
 
         $response = Http::get($faviconUrl);
 
-        return $response->successful() ? new FetchedFavicon($faviconUrl) : $this->notFound($url);
+        return $response->successful() ? new FetchedFavicon($url, $faviconUrl, $this) : $this->notFound($url);
     }
 }

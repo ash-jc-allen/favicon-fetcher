@@ -3,15 +3,17 @@
 namespace AshAllenDesign\FaviconFetcher\Concerns;
 
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
-use AshAllenDesign\FaviconFetcher\Exceptions\InvalidArgumentException;
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 use AshAllenDesign\FaviconFetcher\FetchedFavicon;
+use Illuminate\Support\Facades\Cache;
 
 trait HasDefaultFunctionality
 {
     protected array $fallbacks = [];
 
     protected bool $throwOnNotFound = false;
+
+    protected bool $useCache = true;
 
     public function fetchOr(string $url, mixed $default): mixed
     {
@@ -20,13 +22,6 @@ trait HasDefaultFunctionality
         }
 
         return $default instanceof \Closure ? $default($url) : $default;
-    }
-
-    public function fetchOrThrow(string $url): FetchedFavicon
-    {
-        return $this->fetchOr($url, function (string $url): void {
-            throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
-        });
     }
 
     public function throw(bool $throw = true): self
@@ -65,5 +60,20 @@ trait HasDefaultFunctionality
         $this->fallbacks = array_merge($this->fallbacks, $fallbacks);
 
         return $this;
+    }
+
+    public function useCache(bool $useCache = true): self
+    {
+        $this->useCache = $useCache;
+
+        return $this;
+    }
+
+    protected function attemptToFetchFromCache(string $url): ?FetchedFavicon
+    {
+        // TODO Lift the cache key into a central place.
+        $cachedFaviconUrl = Cache::get('favicon-fetcher.'.$url);
+
+        return $cachedFaviconUrl ? FetchedFavicon::makeFromCache($url, $cachedFaviconUrl) : null;
     }
 }
