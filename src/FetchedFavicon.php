@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
+// TODO Maybe rename me to just favicon?
 class FetchedFavicon
 {
     protected string $url;
@@ -43,17 +44,22 @@ class FetchedFavicon
         return $this->faviconUrl;
     }
 
+    public function retrievedFromCache(): bool
+    {
+        return $this->retrievedFromCache;
+    }
+
     public function content(): string
     {
         return Http::get($this->faviconUrl)->body();
     }
 
-    public function cache(CarbonInterface $ttl): self
+    public function cache(CarbonInterface $ttl, bool $force = false): self
     {
         // If the favicon was retrieved from the cache, we don't want to try and cache it again.
-        if (!$this->retrievedFromCache) {
+        if ($force || ! $this->retrievedFromCache) {
             // TODO Move prefix to config.
-            $cacheKey = 'favicon-fetcher.' . $this->url;
+            $cacheKey = 'favicon-fetcher.'.$this->url;
 
             Cache::put($cacheKey, $this->getFaviconUrl(), $ttl);
         }

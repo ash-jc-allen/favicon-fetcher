@@ -18,8 +18,9 @@ class GoogleSharedStuffDriver implements Fetcher
     private const BASE_URL = 'https://www.google.com/s2/favicons?domain=';
 
     /**
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon|null
+     *
      * @throws FaviconNotFoundException
      * @throws InvalidUrlException
      */
