@@ -33,6 +33,6 @@ class GoogleSharedStuffDriver implements Fetcher
 
         $response = Http::get($faviconUrl);
 
-        return $response->successful() ? new FetchedFavicon($faviconUrl) : null;
+        return $response->successful() ? new FetchedFavicon($faviconUrl) : $this->notFound($url);
     }
 }

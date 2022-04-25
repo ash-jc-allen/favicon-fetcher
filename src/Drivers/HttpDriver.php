@@ -14,6 +14,8 @@ class HttpDriver implements Fetcher
     use ValidatesUrls;
     use HasDefaultFunctionality;
 
+    private bool $throwOnNotFound = false;
+
     /**
      * @param string $url
      * @return FetchedFavicon
@@ -25,11 +27,11 @@ class HttpDriver implements Fetcher
             throw new InvalidUrlException($url . ' is not a valid URL');
         }
 
-        $faviconUrl = $this->attemptToResolveFromHeadTags($url);
-
-        return $this->attemptToResolveFromUrl(
-            $faviconUrl ?? $this->guessDefaultUrl($url)
+        $faviconUrl = $this->attemptToResolveFromUrl(
+            $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url)
         );
+
+        return $faviconUrl ?? $this->notFound($url);
     }
 
     private function attemptToResolveFromUrl(string $url): ?FetchedFavicon

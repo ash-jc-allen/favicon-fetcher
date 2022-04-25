@@ -28,10 +28,12 @@ class FaviconKitDriver implements Fetcher
             throw new InvalidUrlException($url.' is not a valid URL');
         }
 
+        $url = str_replace(['https://', 'http://'], '', $url);
+
         $faviconUrl = self::BASE_URL.$url;
 
         $response = Http::get($faviconUrl);
 
-        return $response->successful() ? new FetchedFavicon($faviconUrl) : null;
+        return $response->successful()? new FetchedFavicon($faviconUrl) : $this->notFound($url);
     }
 }

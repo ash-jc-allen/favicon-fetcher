@@ -18,23 +18,41 @@ trait HasDefaultFunctionality
         return $default instanceof \Closure ? $default($url) : $default;
     }
 
-    public function fetchOrFallback(string $url, array $drivers): ?FetchedFavicon
-    {
-        return $this->fetchOr($url, function (string $url) use ($drivers): ?FetchedFavicon {
-            foreach ($drivers as $driver) {
-                if ($favicon = Favicon::driver($driver)->fetch($url)) {
-                    return $favicon;
-                }
-            }
-
-            return null;
-        });
-    }
-
     public function fetchOrThrow(string $url): FetchedFavicon
     {
         return $this->fetchOr($url, function (string $url): void {
             throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
         });
+    }
+
+    protected function notFound(string $url)
+    {
+        if ($favicon = $this->attemptFallbacks($url)) {
+            return $favicon;
+        }
+
+        if ($this->throwOnNotFound) {
+            throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
+        }
+
+        return null;
+    }
+
+    protected function attemptFallbacks(string $url): ?FetchedFavicon
+    {
+        foreach ($this->fallbacks as $driver) {
+            if ($favicon = Favicon::driver($driver)->fetch($url)) {
+                return $favicon;
+            }
+        }
+
+        return null;
+    }
+
+    public function withFallback(string ...$fallbacks): self
+    {
+        $this->fallbacks = array_merge($this->fallbacks, $fallbacks);
+
+        return $this;
     }
 }
