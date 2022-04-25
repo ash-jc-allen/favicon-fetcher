@@ -18,12 +18,12 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function favicon_url_can_be_returned(): void
     {
-       $favicon = new FetchedFavicon(
+        $favicon = new FetchedFavicon(
            'https://example.com',
            'https://example.com/favicon.ico',
        );
 
-       self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
+        self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }
 
     /** @test */
@@ -86,7 +86,7 @@ class FetchedFaviconTest extends TestCase
             ->withArgs([
                 'favicon-fetcher.https://example.com',
                 'https://example.com/favicon.ico',
-                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl))
+                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
             ->once();
 
@@ -122,7 +122,7 @@ class FetchedFaviconTest extends TestCase
             ->withArgs([
                 'favicon-fetcher.https://example.com',
                 'https://example.com/favicon.ico',
-                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl))
+                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
             ->once();
 

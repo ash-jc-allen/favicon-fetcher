@@ -29,7 +29,7 @@ class GoogleSharedStuffDriverTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = (new GoogleSharedStuffDriver())->fetch($protocol . '://example.com');
+        $favicon = (new GoogleSharedStuffDriver())->fetch($protocol.'://example.com');
 
         self::assertSame('https://www.google.com/s2/favicons?domain='.$protocol.'://example.com', $favicon->getFaviconUrl());
     }

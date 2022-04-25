@@ -17,8 +17,9 @@ class FaviconKitDriver implements Fetcher
     private const BASE_URL = 'https://api.faviconkit.com/';
 
     /**
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon|null
+     *
      * @throws InvalidUrlException
      */
     public function fetch(string $url): ?FetchedFavicon
@@ -37,6 +38,6 @@ class FaviconKitDriver implements Fetcher
 
         $response = Http::get($faviconUrl);
 
-        return $response->successful()? new FetchedFavicon($url, $faviconUrl, $this) : $this->notFound($url);
+        return $response->successful() ? new FetchedFavicon($url, $faviconUrl, $this) : $this->notFound($url);
     }
 }

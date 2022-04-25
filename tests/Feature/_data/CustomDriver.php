@@ -9,7 +9,7 @@ class CustomDriver implements Fetcher
 {
     public function fetch(string $url): ?FetchedFavicon
     {
-        return new FetchedFavicon('url-from-default', 'favicon-from-default',);
+        return new FetchedFavicon('url-from-default', 'favicon-from-default');
     }
 
     public function fetchOr(string $url, mixed $default): mixed
