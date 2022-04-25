@@ -4,7 +4,7 @@ namespace AshAllenDesign\FaviconFetcher\Concerns;
 
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
-use AshAllenDesign\FaviconFetcher\FetchedFavicon;
+use AshAllenDesign\FaviconFetcher\Favicon as FetchedFavicon;
 use Illuminate\Support\Facades\Cache;
 
 trait HasDefaultFunctionality

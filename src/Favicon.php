@@ -11,8 +11,7 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
-// TODO Maybe rename me to just favicon?
-class FetchedFavicon
+class Favicon
 {
     use BuildsCacheKeys;
 

@@ -6,7 +6,7 @@ use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
-use AshAllenDesign\FaviconFetcher\FetchedFavicon;
+use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Support\Facades\Http;
 
 class FaviconKitDriver implements Fetcher
@@ -18,11 +18,11 @@ class FaviconKitDriver implements Fetcher
 
     /**
      * @param  string  $url
-     * @return FetchedFavicon|null
+     * @return Favicon|null
      *
      * @throws InvalidUrlException
      */
-    public function fetch(string $url): ?FetchedFavicon
+    public function fetch(string $url): ?Favicon
     {
         if (! $this->urlIsValid($url)) {
             throw new InvalidUrlException($url.' is not a valid URL');
@@ -38,6 +38,6 @@ class FaviconKitDriver implements Fetcher
 
         $response = Http::get($faviconUrl);
 
-        return $response->successful() ? new FetchedFavicon($url, $faviconUrl, $this) : $this->notFound($url);
+        return $response->successful() ? new Favicon($url, $faviconUrl, $this) : $this->notFound($url);
     }
 }

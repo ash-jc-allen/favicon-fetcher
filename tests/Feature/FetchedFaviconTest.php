@@ -2,7 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
-use AshAllenDesign\FaviconFetcher\FetchedFavicon;
+use AshAllenDesign\FaviconFetcher\Favicon;
 use Carbon\CarbonInterface;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Carbon;
@@ -18,7 +18,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function favicon_url_can_be_returned(): void
     {
-        $favicon = new FetchedFavicon(
+        $favicon = new Favicon(
            'https://example.com',
            'https://example.com/favicon.ico',
        );
@@ -34,7 +34,7 @@ class FetchedFaviconTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = new FetchedFavicon(
+        $favicon = new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
         );
@@ -45,7 +45,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function url_can_be_returned(): void
     {
-        $favicon = new FetchedFavicon(
+        $favicon = new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
         );
@@ -56,7 +56,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function retrieved_from_cache_value_can_be_returned_if_the_favicon_was_retrieved_from_the_cache(): void
     {
-        $favicon = FetchedFavicon::makeFromCache(
+        $favicon = Favicon::makeFromCache(
             'https://example.com',
             'https://example.com/favicon.ico',
         );
@@ -67,7 +67,7 @@ class FetchedFaviconTest extends TestCase
     /** @test */
     public function retrieved_from_cache_value_can_be_returned_if_the_favicon_was_not_retrieved_from_the_cache(): void
     {
-        $favicon = new FetchedFavicon(
+        $favicon = new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
         );
@@ -90,7 +90,7 @@ class FetchedFaviconTest extends TestCase
             ])
             ->once();
 
-        (new FetchedFavicon(
+        (new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
         ))->cache($expectedTtl);
@@ -105,7 +105,7 @@ class FetchedFaviconTest extends TestCase
 
         Cache::shouldReceive('put')->never();
 
-        FetchedFavicon::makeFromCache(
+        Favicon::makeFromCache(
             'https://example.com',
             'https://example.com/favicon.ico',
         )->cache($expectedTtl);
@@ -126,7 +126,7 @@ class FetchedFaviconTest extends TestCase
             ])
             ->once();
 
-        FetchedFavicon::makeFromCache(
+        Favicon::makeFromCache(
             'https://example.com',
             'https://example.com/favicon.ico',
         )->cache(now()->addMinute(), true);
@@ -142,7 +142,7 @@ class FetchedFaviconTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = new FetchedFavicon(
+        $favicon = new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
         );
@@ -162,7 +162,7 @@ class FetchedFaviconTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        (new FetchedFavicon(
+        (new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
         ))->storeAs('favicons', 'fetched');
