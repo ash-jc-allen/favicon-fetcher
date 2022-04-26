@@ -132,7 +132,16 @@ $favicon = Favicon::fetchOr('https://ashallendesign.co.uk', function ($url) {
 
 ### Exceptions
 
+By default, if a favicon can't be found for a URL, the `fetch` method will return `null`. However, if you'd prefer an exception to be thrown, you can use the `throw` method available on the `Favicon` facade. This means that if a favicon can't be found, an `AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException` will be thrown.
 
+To enable exceptions to be thrown, your code could look something like this:
+
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$favicon = Favicon::throw()->fetch('https://ashallendesign.co.uk');
+```
 
 ### Drivers
 
@@ -165,7 +174,7 @@ return [
 
     // ...
         
-    'default' => 'favicon-kit'
+    'default' => 'favicon-kit',
             
     // ...
 
@@ -236,11 +245,89 @@ $favicon = Favicon::driver('my-custom-driver')->fetch('https://ashallendesign.co
 
 ### Storing Favicons
 
+After fetching favicons, you might want to store them in your filesystem so that you don't need to fetch them again in the future. Favicon Fetcher provides two methods that you can use for storing the favicons: `store` and `storeAs`.
+
+#### Using `store`
+
+If you use the `store` method, a filename will automatically be generated for the favicon before storing. The method's first parameter accepts a string and is the directory that the favicon will be stored in. You can store a favicon using your default filesystem disk like so:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->store('favicons');
+
+// $faviconPath is now equal to: "/favicons/abc-123.ico"
+```
+
+If you'd like to use a different storage disk, you can pass it as an optional second argument to the `store` method. For example, to store the favicon on S3, your code use the following:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->store('favicons', 's3');
+
+// $faviconPath is now equal to: "/favicons/abc-123.ico"
+```
+
+#### Using `storeAs`
+
+If you use the `storeAs` method, you will be able to define the filename that the file will be stored as. The method's first parameter accepts a string and is the directory that the favicon will be stored in. The second parameter specifies the favicon filename (excluding the file extension). You can store a favicon using your default filesystem disk like so:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->storeAs('favicons', 'ashallendesign');
+
+// $faviconPath is now equal to: "/favicons/ashallendesign.ico"
+```
+
+If you'd like to use a different storage disk, you can pass it as an optional third argument to the `storeAs` method. For example, to store the favicon on S3, your code use the following:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->storeAs('favicons', 'ashallendesign', 's3');
+
+// $faviconPath is now equal to: "/favicons/ashallendesign.ico"
+```
+
 ### Caching Favicons
 
-CONFIG
+As well as being able to store favicons, the package also allows you to cache the favicon URLs. This can be extremely useful if you don't want to store a local copy of the file and want to use the external version of the favicon that the website uses.
 
-## Examples
+As a basic example, if you have a page displaying 50 websites and their favicons, we would need to find the favicon's URL on each page load. As can imagine, this would drastically increase the page load time. So, by retrieving the URLs from the cache, it would majorly improve up the page speed.
+
+To cache a favicon, you can use the `cache` method available on the `Favicon` class. The first parameter accepts a `Carbon\CarbonInterface` as the cache lifetime. For example, to cache the favicon URL of `https://ashallendesign.co.uk` for 1 day, your code might look something like:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->cache(now()->addDay());
+```
+
+By default, the package will always try and resolve the favicon from the cache before attempting to retrieve a fresh version. However, if you want to disable the cache and always retrieve a fresh version, you can use the `useCache` method like so:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::useCache(false)->fetch('https://ashallendesign.co.uk');
+```
+
+The package uses `favicon-fetcher` as a prefix for all the cache keys. If you'd like to change this, you can do so by changing the `cache.prefix` field in the `favicon-fethcher` config file. For example, to change the prefix to `my-awesome-prefix`, you could update your config file like so:
+
+```php
+return [
+
+    // ...
+        
+    'cache' => [
+        'prefix' => 'my-awesome-prefix',
+    ]
+            
+    // ...
+
+]
+```
 
 ## Testing
 
