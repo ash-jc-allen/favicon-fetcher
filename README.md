@@ -60,7 +60,7 @@ composer require ashallendesign/favicon-fetcher
 ```
 
 ### Publish the Config and Migrations
-You can then publish the package's config file and database migrations by using the following command:
+You can then publish the package's config file by using the following command:
 
 ```bash
 php artisan vendor:publish --provider="AshAllenDesign\FaviconFetcher\FaviconFetcherProvider"
