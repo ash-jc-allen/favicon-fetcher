@@ -48,6 +48,7 @@
     }
   },
   "scripts": {
-    "test": "vendor/bin/phpunit"
+    "test": "vendor/bin/phpunit",
+    "larastan": "vendor/bin/phpstan analyse"
   }
 }

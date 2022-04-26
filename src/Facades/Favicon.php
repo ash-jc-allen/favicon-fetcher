@@ -3,6 +3,7 @@
 namespace AshAllenDesign\FaviconFetcher\Facades;
 
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Favicon as FetchedFavicon;
 use AshAllenDesign\FaviconFetcher\FetcherManager;
 use Illuminate\Support\Facades\Facade;
 use RuntimeException;
@@ -13,7 +14,7 @@ use RuntimeException;
  * @method static Fetcher throw(bool $throw = true)
  * @method static Fetcher withFallback(string ...$fallbacks)
  * @method static Fetcher useCache(bool $useCache = true)
- * @method static Favicon|null fetch(string $url)
+ * @method static FetchedFavicon|null fetch(string $url)
  * @method static mixed fetchOr(string $url, mixed $default)
  *
  * @see FetcherManager
