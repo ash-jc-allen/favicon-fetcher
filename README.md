@@ -40,7 +40,7 @@
 
 ## Overview
 
-A Laravel package that can be used for adding fetching favicons from websites.
+A Laravel package that can be used for fetching favicons from websites.
 
 ## Installation
 
@@ -94,7 +94,7 @@ use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 $favicon = Favicon::fetchOr('https://ashallendesign.co.uk', 'https://example.com/favicon.ico');
 ```
 
-This method also accept a `Closure` as the second argument if you'd prefer to run some custom logic. The `url` field passed as the first argument to the `fetchOr` method is available to use in the closure. For example, to use a `Closure`, your code could look something like this:
+This method also accepts a `Closure` as the second argument if you'd prefer to run some custom logic. The `url` field passed as the first argument to the `fetchOr` method is available to use in the closure. For example, to use a closure, your code could look something like this:
 
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
@@ -327,7 +327,7 @@ If you find any security related issues, please contact me directly at [mail@ash
 
 If you wish to make any changes or improvements to the package, feel free to make a pull request.
 
-To contribute to this library, please use the following guidelines before submitting your pull request:
+To contribute to this package, please use the following guidelines before submitting your pull request:
 
 - Write tests for any new functions that are added. If you are updating existing code, make sure that the existing tests
   pass and write more if needed.
