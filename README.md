@@ -16,7 +16,7 @@
 - [Installation](#installation)
     * [Requirements](#requirements)
     * [Install the Package](#install-the-package)
-    * [Publish the Config and Migrations](#publish-the-config-and-migrations)
+    * [Publish the Config](#publish-the-config)
 - [Usage](#usage)
     * [Fetching Favicons](#fetching-favicons)
         + [Using the `fetch` Method](#using-the-fetch-method)
@@ -59,7 +59,7 @@ You can install the package via Composer:
 composer require ashallendesign/favicon-fetcher
 ```
 
-### Publish the Config and Migrations
+### Publish the Config
 You can then publish the package's config file by using the following command:
 
 ```bash
