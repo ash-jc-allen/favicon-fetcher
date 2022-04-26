@@ -25,6 +25,8 @@ class FaviconFetcherProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        //
+        $this->publishes([
+            __DIR__.'/../config/favicon-fetcher.php' => config_path('favicon-fetcher.php'),
+        ], 'favicon-fetcher-config');
     }
 }
