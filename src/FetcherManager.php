@@ -6,6 +6,7 @@ use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
+use AshAllenDesign\FaviconFetcher\Drivers\UnavatarDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 
 class FetcherManager
@@ -20,6 +21,7 @@ class FetcherManager
             'http' => new HttpDriver(),
             'google-shared-stuff' => new GoogleSharedStuffDriver(),
             'favicon-kit' => new FaviconKitDriver(),
+            'unavatar' => new UnavatarDriver(),
             default => static::attemptToCreateCustomDriver($driver),
         };
     }
