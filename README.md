@@ -35,6 +35,7 @@
 - [Testing](#testing)
 - [Security](#security)
 - [Contribution](#contribution)
+- [Changelog](#changelog)
 - [Credits](#credits)
 - [License](#license)
 
@@ -125,7 +126,7 @@ Favicon Fetcher provides the functionality to use different drivers for retrievi
 
 ### Available Drivers
 
-By default, Favicon Fetcher ships with 3 drivers out-the-box: `http`, `google-shared-stuff`, `favicon-kit`.
+By default, Favicon Fetcher ships with 4 drivers out-the-box: `http`, `google-shared-stuff`, `favicon-kit`, `unavatar`.
 
 The `http` driver fetches favicons by attempting to parse "icon" and "shortcut icon" link elements from the returned HTML of a webpage. If it can't find one, it will attempt to guess the URL of the favicon based on common defaults.
 
@@ -133,9 +134,11 @@ The `google-shared-stuff` driver fetches favicons using the [Google Shared Stuff
 
 The `favicon-kit` driver fetches favicons using the [Favicon Kit](https://faviconkit.com) API.
 
+The `unavatar` driver fetches favicons using the [Unavatar](https://unavatar.io) API.
+
 #### How to Choose a Driver
 
-It's important to remember that the `google-shared-stuff` and `favicon-kit` drivers both interact with third-party APIs to retrieve the favicons. So, this means that some data will be shared to external services.
+It's important to remember that the `google-shared-stuff`, `favicon-kit`, and `unavatar` drivers interact with third-party APIs to retrieve the favicons. So, this means that some data will be shared to external services.
 
 However, the `http` driver does not use any external services and directly queries the website that you are trying to fetch the favicon for. Due to the fact that this package is new, it is likely that the `http` driver may not be 100% accurate when trying to fetch favicons from websites. So, theoretically, the `http` driver should provide you with better privacy, but may not be as accurate as the other drivers. 
 
@@ -333,6 +336,10 @@ To contribute to this package, please use the following guidelines before submit
   pass and write more if needed.
 - Follow [PSR-12](https://www.php-fig.org/psr/psr-12/) coding standards.
 - Make all pull requests to the `master` branch.
+
+## Changelog
+
+Check the [CHANGELOG](CHANGELOG.md) to get more information about the latest changes.
 
 ## Credits
 
