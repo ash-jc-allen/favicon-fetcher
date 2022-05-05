@@ -94,7 +94,7 @@ class HttpDriver implements Fetcher
 
         preg_match($pattern, $html, $linkElement);
 
-        if (!isset($linkElement[0])) {
+        if (! isset($linkElement[0])) {
             return null;
         }
 
