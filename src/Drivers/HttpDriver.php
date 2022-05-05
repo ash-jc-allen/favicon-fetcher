@@ -9,6 +9,7 @@ use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Str;
 
 class HttpDriver implements Fetcher
 {
@@ -93,9 +94,17 @@ class HttpDriver implements Fetcher
 
         preg_match($pattern, $html, $linkElement);
 
-        return isset($linkElement[0])
-            ? strstr($linkElement[0], '>', true)
-            : null;
+        if (!isset($linkElement[0])) {
+            return null;
+        }
+
+        // If multiple link elements were found in the HTML, we need to loop
+        // through and only grab the "shortcut icon" or "icon" link.
+        return collect(explode('>', $linkElement[0]))
+            ->filter(
+                fn (string $link): bool => Str::is(['*rel="shortcut icon"*', '*rel="icon"*'], $link)
+            )
+            ->first();
     }
 
     /**
