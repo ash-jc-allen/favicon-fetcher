@@ -38,8 +38,6 @@ class HttpDriver implements Fetcher
             $url, $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url)
         );
 
-
-
         return $faviconUrl ?? $this->notFound($url);
     }
 
