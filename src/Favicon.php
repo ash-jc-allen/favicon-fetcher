@@ -86,7 +86,7 @@ class Favicon
      */
     public function content(): string
     {
-        return Http::get($this->faviconUrl)->body();
+        return Http::withOptions(['verify' => false])->get($this->faviconUrl)->body();
     }
 
     /**
