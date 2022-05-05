@@ -38,6 +38,8 @@ class HttpDriver implements Fetcher
             $url, $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url)
         );
 
+
+
         return $faviconUrl ?? $this->notFound($url);
     }
 
@@ -52,7 +54,7 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveFromUrl(string $url, string $faviconUrl): ?Favicon
     {
-        $response = Http::get($faviconUrl);
+        $response = Http::withOptions(['verify' => false])->get($faviconUrl);
 
         return $response->successful() ? new Favicon($url, $faviconUrl, $this) : null;
     }
@@ -68,7 +70,7 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveFromHeadTags(string $url): ?string
     {
-        $response = Http::get($url);
+        $response = Http::withOptions(['verify' => false])->get($url);
 
         if (! $response->successful()) {
             return null;
@@ -89,7 +91,7 @@ class HttpDriver implements Fetcher
      */
     private function findLinkElement(string $html): ?string
     {
-        $pattern = '/<link.*rel="(icon|shortcut icon)"[^>]*>/i';
+        $pattern = '/<link rel="(icon|shortcut icon)"[^>]*>/i';
 
         preg_match($pattern, $html, $linkElement);
 
