@@ -248,6 +248,10 @@ class HttpDriverTest extends TestCase
             $this->htmlOptionThree(),
             $this->htmlOptionFour(),
             $this->htmlOptionFive(),
+            $this->htmlOptionSix(),
+            $this->htmlOptionSeven(),
+            $this->htmlOptionEight(),
+            $this->htmlOptionNine(),
         ];
     }
 
@@ -304,5 +308,77 @@ class HttpDriverTest extends TestCase
         HTML;
 
         return [$responseHtml, 'https://example.com/icon/is/here.ico'];
+    }
+
+    private function htmlOptionSix(): array
+    {
+        $responseHtml = <<<'HTML'
+            <head> <title>Title here</title> <meta name="description" content="Meta description here"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <link rel="alternate" href="https://www.example.lv" hreflang="lv"> <link rel="alternate" href="https://www.example.lt/" hreflang="lt"> <link rel="alternate" href="https://www.example.ee/" hreflang="ee"> <link rel="alternate" href="https://www.example.ru/" hreflang="ru"> <link rel="alternate" href="https://www.example.com/en/" hreflang="en"> <link rel="alternate" href="https://www.example.com/default" hreflang="x-default"> <meta name="theme-color" content="#FFFFFF"> <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png"> <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"> <link rel="stylesheet" href="/css/app.css?id=123"> <script src="/vendor/livewire/livewire.js?id=456" data-turbo-eval="false" data-turbolinks-eval="false" ></script><script data-turbo-eval="false" data-turbolinks-eval="false" >
+        HTML;
+
+        return [$responseHtml, 'https://example.com/images/favicon.ico'];
+    }
+
+    private function htmlOptionSeven(): array
+    {
+        $responseHtml = <<<'HTML'
+            <head>
+                <title>Title here</title>
+                <meta name="description" content="Meta description here">
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <link rel="alternate" href="https://www.example.lv" hreflang="lv">
+                <link rel="alternate" href="https://www.example.lt/" hreflang="lt">
+                <link rel="alternate" href="https://www.example.ee/" hreflang="ee">
+                <link rel="alternate" href="https://www.example.ru/" hreflang="ru">
+                <link rel="alternate" href="https://www.example.com/en/" hreflang="en">
+                <link rel="alternate" href="https://www.example.com/default" hreflang="x-default">
+                <meta name="theme-color" content="#FFFFFF">
+                <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+                <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico">
+                <link rel="stylesheet" href="/css/app.css?id=123">
+                <script src="/vendor/livewire/livewire.js?id=456" data-turbo-eval="false" data-turbolinks-eval="false" ></script>
+                <script data-turbo-eval="false" data-turbolinks-eval="false" ></script>
+            </head>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/images/favicon.ico'];
+    }
+
+    private function htmlOptionEight(): array
+    {
+        $responseHtml = <<<'HTML'
+            <head> <title>Title here</title> <meta name="description" content="Meta description here"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <link rel="alternate" href="https://www.example.lv" hreflang="lv"> <link rel="alternate" href="https://www.example.lt/" hreflang="lt"> <link rel="alternate" href="https://www.example.ee/" hreflang="ee"> <link rel="alternate" href="https://www.example.ru/" hreflang="ru"> <link rel="alternate" href="https://www.example.com/en/" hreflang="en"> <link rel="alternate" href="https://www.example.com/default" hreflang="x-default"> <meta name="theme-color" content="#FFFFFF"> <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png"> <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> <link rel="stylesheet" href="/css/app.css?id=123"> <script src="/vendor/livewire/livewire.js?id=456" data-turbo-eval="false" data-turbolinks-eval="false" ></script><script data-turbo-eval="false" data-turbolinks-eval="false" >
+        HTML;
+
+        return [$responseHtml, 'https://example.com/images/favicon.ico'];
+    }
+
+    private function htmlOptionNine(): array
+    {
+        $responseHtml = <<<'HTML'
+            <head>
+                <title>Title here</title>
+                <meta name="description" content="Meta description here">
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+                <meta http-equiv="X-UA-Compatible" content="IE=edge">
+                <link rel="alternate" href="https://www.example.lv" hreflang="lv">
+                <link rel="alternate" href="https://www.example.lt/" hreflang="lt">
+                <link rel="alternate" href="https://www.example.ee/" hreflang="ee">
+                <link rel="alternate" href="https://www.example.ru/" hreflang="ru">
+                <link rel="alternate" href="https://www.example.com/en/" hreflang="en">
+                <link rel="alternate" href="https://www.example.com/default" hreflang="x-default">
+                <meta name="theme-color" content="#FFFFFF">
+                <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+                <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+                <link rel="stylesheet" href="/css/app.css?id=123">
+                <script src="/vendor/livewire/livewire.js?id=456" data-turbo-eval="false" data-turbolinks-eval="false" ></script>
+                <script data-turbo-eval="false" data-turbolinks-eval="false" ></script>
+            </head>
+        HTML;
+
+        return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
 }
