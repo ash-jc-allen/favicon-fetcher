@@ -9,6 +9,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Mockery;
 
 class FaviconTest extends TestCase
@@ -150,6 +151,28 @@ class FaviconTest extends TestCase
         $path = $favicon->store('favicons');
 
         self::assertSame('favicon contents here', Storage::get($path));
+    }
+
+    /** @test */
+    public function favicon_contents_be_stored_if_the_favicon_url_does_not_have_an_image_extension(): void
+    {
+        Storage::fake();
+
+        Http::fake([
+            'https://example.com/favicon.ico' => Http::response('favicon contents here'),
+            'https://example.com/favicon.com' => Http::response(body: 'favicon contents here', headers: ['content-type' => 'image/png']),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = new Favicon(
+            'https://example.com',
+            'https://example.com/favicon.com',
+        );
+
+        $path = $favicon->store('favicons');
+
+        self::assertSame('favicon contents here', Storage::get($path));
+        self::assertTrue(Str::of($path)->endsWith('.png'));
     }
 
     /** @test */
