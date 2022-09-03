@@ -163,7 +163,6 @@ class Favicon
             'image/x-icon' => 'ico',
             'image/x-ico' => 'ico',
             'image/vnd.microsoft.icon' => 'ico',
-            'text/calendar' => 'ics',
             'image/jpeg' => 'jpeg',
             'image/pjpeg' => 'jpeg',
             'image/png' => 'png',
