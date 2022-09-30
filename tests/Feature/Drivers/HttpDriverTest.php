@@ -383,9 +383,9 @@ class HttpDriverTest extends TestCase
         return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
     
-	private function htmlOptionTen(): array
-	{
-		$responseHtml = <<<'HTML'
+    private function htmlOptionTen(): array
+    {
+        $responseHtml = <<<'HTML'
             <head>
                 <title>Test Title</title>
                 <meta content='IE=edge' http-equiv='X-UA-Compatible'>
@@ -396,6 +396,7 @@ class HttpDriverTest extends TestCase
             </head>
         HTML;
 
-		return [$responseHtml, 'https://www.example.com/favicon123.ico'];
-	}
+        return [$responseHtml, 'https://www.example.com/favicon123.ico'];
+    }
+
 }
