@@ -1,7 +1,10 @@
 # Changelog
 
+**v1.2.0 (released 2022-10-17):**
+- Added support for PHP 8.2. ([#21](https://github.com/ash-jc-allen/favicon-fetcher/pull/21))
+
 **v1.1.3 (released 2022-09-03):**
-- Removed an incorrect mime type from the file extension detection. ([#19][https://github.com/ash-jc-allen/favicon-fetcher/pull/19])
+- Removed an incorrect mime type from the file extension detection. ([#19](https://github.com/ash-jc-allen/favicon-fetcher/pull/19))
 
 **v1.1.2 (released 2022-07-23):**
 - Fixed bug that was using the incorrect file extension when storing favicons retrieved using the "google-shared-stuff", "unavatar", and "favicon-kit" drivers. ([#17](https://github.com/ash-jc-allen/favicon-fetcher/pull/17))
