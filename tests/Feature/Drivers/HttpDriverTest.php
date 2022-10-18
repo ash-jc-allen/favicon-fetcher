@@ -382,7 +382,7 @@ class HttpDriverTest extends TestCase
 
         return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
-    
+
     private function htmlOptionTen(): array
     {
         $responseHtml = <<<'HTML'

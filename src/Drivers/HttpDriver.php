@@ -122,7 +122,7 @@ class HttpDriver implements Fetcher
     {
         $stringUntilHref = strstr($linkElement, 'href="');
 
-        if (!$stringUntilHref) {
+        if (! $stringUntilHref) {
             $stringUntilHref = strstr($linkElement, "href='");
         }
 
