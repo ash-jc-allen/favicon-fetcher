@@ -398,5 +398,4 @@ class HttpDriverTest extends TestCase
 
         return [$responseHtml, 'https://www.example.com/favicon123.ico'];
     }
-
 }
