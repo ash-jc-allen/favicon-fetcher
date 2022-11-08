@@ -1,5 +1,8 @@
 # Changelog
 
+**v1.2.1 (released 2022-11-08):**
+- Fixed bug that prevented a favicon URL from being detected using the `HttpDriver` if the favicon URL was using single quotes (instead of double quotes). ([#20](https://github.com/ash-jc-allen/favicon-fetcher/pull/20))
+
 **v1.2.0 (released 2022-10-17):**
 - Added support for PHP 8.2. ([#21](https://github.com/ash-jc-allen/favicon-fetcher/pull/21))
 
