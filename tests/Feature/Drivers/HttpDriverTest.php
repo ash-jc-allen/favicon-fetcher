@@ -252,6 +252,7 @@ class HttpDriverTest extends TestCase
             $this->htmlOptionSeven(),
             $this->htmlOptionEight(),
             $this->htmlOptionNine(),
+            $this->htmlOptionTen(),
         ];
     }
 
@@ -380,5 +381,21 @@ class HttpDriverTest extends TestCase
         HTML;
 
         return [$responseHtml, 'https://example.com/images/favicon.ico'];
+    }
+
+    private function htmlOptionTen(): array
+    {
+        $responseHtml = <<<'HTML'
+            <head>
+                <title>Test Title</title>
+                <meta content='IE=edge' http-equiv='X-UA-Compatible'>
+                <meta content='telephone=no' name='format-detection'>
+                <meta content='width=device-width, initial-scale=1, maximum-scale=1' name='viewport'>
+                <link href='https://www.example.com/favicon123.png' rel='apple-touch-icon'>
+                <link href='https://www.example.com/favicon123.ico' rel='shortcut icon' type='image/x-icon'>
+            </head>
+        HTML;
+
+        return [$responseHtml, 'https://www.example.com/favicon123.ico'];
     }
 }

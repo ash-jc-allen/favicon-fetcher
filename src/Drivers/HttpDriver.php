@@ -90,7 +90,7 @@ class HttpDriver implements Fetcher
      */
     private function findLinkElement(string $html): ?string
     {
-        $pattern = '/<link.*rel="(icon|shortcut icon)"[^>]*>/i';
+        $pattern = '/<link.*rel=["\'](icon|shortcut icon)["\'][^>]*>/i';
 
         preg_match($pattern, $html, $linkElement);
 
@@ -102,7 +102,12 @@ class HttpDriver implements Fetcher
         // through and only grab the "shortcut icon" or "icon" link.
         return collect(explode('>', $linkElement[0]))
             ->filter(
-                fn (string $link): bool => Str::is(['*rel="shortcut icon"*', '*rel="icon"*'], $link)
+                fn (string $link): bool => Str::is([
+                    '*rel="shortcut icon"*',
+                    '*rel="icon"*',
+                    "*rel='shortcut icon'*",
+                    "*rel='icon'*",
+                ], $link)
             )
             ->first();
     }
@@ -117,7 +122,15 @@ class HttpDriver implements Fetcher
     {
         $stringUntilHref = strstr($linkElement, 'href="');
 
-        return explode('"', $stringUntilHref)[1];
+        if (! $stringUntilHref) {
+            $stringUntilHref = strstr($linkElement, "href='");
+        }
+
+        // Replace the double or single quotes with a common delimiter
+        // that can be used for exploding the string.
+        $stringUntilHref = str_replace(['"', '\''], '|', $stringUntilHref);
+
+        return explode('|', $stringUntilHref)[1];
     }
 
     /**
