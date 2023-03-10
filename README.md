@@ -350,3 +350,15 @@ Check the [CHANGELOG](CHANGELOG.md) to get more information about the latest cha
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
+
+## Support Me
+
+If you've found this package useful, please consider buying a copy of [Battle Ready Laravel](https://battle-ready-laravel.com) to support me and my work.
+
+Every sale makes a huge difference to me and allows me to spend more time working on open-source projects and tutorials.
+
+To say a huge thanks, you can use the code **BATTLE20** to get a 20% discount on the book.
+
+[👉 Get Your Copy!](https://battle-ready-laravel.com)
+
+[![Battle Ready Laravel](https://ashallendesign.co.uk/images/custom/sponsors/battle-ready-laravel-horizontal-banner.png)](https://battle-ready-laravel.com)
