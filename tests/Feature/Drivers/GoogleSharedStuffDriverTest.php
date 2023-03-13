@@ -19,6 +19,7 @@ class GoogleSharedStuffDriverTest extends TestCase
 
     /**
      * @test
+     *
      * @testWith ["https"]
      *           ["http"]
      */

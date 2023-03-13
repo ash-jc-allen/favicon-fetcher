@@ -19,6 +19,7 @@ class UnavatarDriverTest extends TestCase
 
     /**
      * @test
+     *
      * @testWith ["https"]
      *           ["http"]
      */
