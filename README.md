@@ -126,7 +126,7 @@ Favicon Fetcher provides the functionality to use different drivers for retrievi
 
 ### Available Drivers
 
-By default, Favicon Fetcher ships with 4 drivers out-the-box: `http`, `google-shared-stuff`, `favicon-kit`, `unavatar`.
+By default, Favicon Fetcher ships with 5 drivers out-the-box: `http`, `google-shared-stuff`, `favicon-kit`, `unavatar`, `favicon-grabber`.
 
 The `http` driver fetches favicons by attempting to parse "icon" and "shortcut icon" link elements from the returned HTML of a webpage. If it can't find one, it will attempt to guess the URL of the favicon based on common defaults.
 
@@ -135,6 +135,8 @@ The `google-shared-stuff` driver fetches favicons using the [Google Shared Stuff
 The `favicon-kit` driver fetches favicons using the [Favicon Kit](https://faviconkit.com) API.
 
 The `unavatar` driver fetches favicons using the [Unavatar](https://unavatar.io) API.
+
+The `favicon-grabber` driver fetches favicons using the [Favicon Grabber](https://favicongrabber.com) API.
 
 #### How to Choose a Driver
 

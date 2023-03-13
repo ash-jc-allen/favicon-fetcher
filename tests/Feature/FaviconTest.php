@@ -20,9 +20,9 @@ class FaviconTest extends TestCase
     public function favicon_url_can_be_returned(): void
     {
         $favicon = new Favicon(
-           'https://example.com',
-           'https://example.com/favicon.ico',
-       );
+            'https://example.com',
+            'https://example.com/favicon.ico',
+        );
 
         self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }

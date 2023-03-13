@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
+use AshAllenDesign\FaviconFetcher\Drivers\FaviconGrabberDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
@@ -40,6 +41,12 @@ class FetcherManagerTest extends TestCase
     public function favicon_kit_driver_can_be_returned(): void
     {
         self::assertInstanceOf(FaviconKitDriver::class, FetcherManager::driver('favicon-kit'));
+    }
+
+    /** @test */
+    public function favicon_grabber_driver_can_be_returned(): void
+    {
+        self::assertInstanceOf(FaviconGrabberDriver::class, FetcherManager::driver('favicon-grabber'));
     }
 
     /** @test */

@@ -3,6 +3,7 @@
 namespace AshAllenDesign\FaviconFetcher;
 
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Drivers\FaviconGrabberDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
@@ -22,6 +23,7 @@ class FetcherManager
             'google-shared-stuff' => new GoogleSharedStuffDriver(),
             'favicon-kit' => new FaviconKitDriver(),
             'unavatar' => new UnavatarDriver(),
+            'favicon-grabber' => new FaviconGrabberDriver(),
             default => static::attemptToCreateCustomDriver($driver),
         };
     }

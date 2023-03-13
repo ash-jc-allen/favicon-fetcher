@@ -11,7 +11,8 @@ return [
     | By default, the package comes with support for several drivers,
     | but you can define your own if needed.
     |
-    | Supported drivers: "http", "google-shared-stuff", "favicon-kit"
+    | Supported drivers: "http", "google-shared-stuff", "favicon-kit",
+    |                    "unavatar", "favicon-grabber"
     |
     */
     'default' => 'http',
