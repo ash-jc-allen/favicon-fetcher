@@ -19,6 +19,7 @@ class FaviconGrabberDriverTest extends TestCase
 
     /**
      * @test
+     *
      * @testWith ["https"]
      *           ["http"]
      */

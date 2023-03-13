@@ -19,6 +19,7 @@ class FaviconKitDriverTest extends TestCase
 
     /**
      * @test
+     *
      * @testWith ["https"]
      *           ["http"]
      */
