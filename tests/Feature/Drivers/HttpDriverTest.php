@@ -19,6 +19,7 @@ class HttpDriverTest extends TestCase
 
     /**
      * @test
+     *
      * @dataProvider faviconLinksInHtmlProvider
      */
     public function favicon_can_be_fetched_using_link_element_in_html(string $html, string $expectedFaviconUrl): void
@@ -56,6 +57,7 @@ class HttpDriverTest extends TestCase
 
     /**
      * @test
+     *
      * @testWith ["https"]
      *           ["http"]
      */

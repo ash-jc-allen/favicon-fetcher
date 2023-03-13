@@ -42,7 +42,7 @@ class FaviconGrabberDriver implements Fetcher
 
         $response = Http::get($apiUrl);
 
-        if (!$response->successful()) {
+        if (! $response->successful()) {
             return $this->notFound($url);
         }
 
