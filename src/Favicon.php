@@ -83,7 +83,7 @@ class Favicon
 
     public function setIconType(string $type): static
     {
-        if (!$this->acceptableIconType($type)) {
+        if (! $this->acceptableIconType($type)) {
             throw new InvalidIconTypeException('The type ['.$type.'] is not a valid favicon type.');
         }
 

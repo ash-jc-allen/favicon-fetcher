@@ -89,7 +89,7 @@ class FaviconTest extends TestCase
             ->withArgs([
                 'favicon-fetcher.example.com',
                 'https://example.com/favicon.ico',
-                Mockery::on(fn(CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
+                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
             ->once();
 
@@ -125,7 +125,7 @@ class FaviconTest extends TestCase
             ->withArgs([
                 'favicon-fetcher.example.com',
                 'https://example.com/favicon.ico',
-                Mockery::on(fn(CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
+                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
             ->once();
 

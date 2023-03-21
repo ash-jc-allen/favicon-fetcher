@@ -77,7 +77,6 @@ class HttpDriver implements Fetcher
 //            $url, $this->attemptToResolveAllFromHeadTags($url) ?? $this->guessDefaultUrl($url)
 //        );
 
-
         return $faviconsCollection;
     }
 
@@ -106,8 +105,9 @@ class HttpDriver implements Fetcher
      * is found, return the absolute URL of the link's "href".
      * Otherwise, return null.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
+     *
      * @throws InvalidIconSizeException
      * @throws InvalidIconTypeException
      */
@@ -121,7 +121,7 @@ class HttpDriver implements Fetcher
 
         $linkTag = $this->findLinkElement($response->body());
 
-        if (!$linkTag) {
+        if (! $linkTag) {
             return null;
         }
 
@@ -144,7 +144,6 @@ class HttpDriver implements Fetcher
         return $favicon;
     }
 
-
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
         $response = Http::get($url);
@@ -159,7 +158,7 @@ class HttpDriver implements Fetcher
             return new Favicon(
                 $url,
                 $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag)),
-                 Favicon::TYPE_ICON_UNKNOWN, // TODO Get the type here
+                Favicon::TYPE_ICON_UNKNOWN, // TODO Get the type here
                 null, // TODO Get the size here
                 $this,
             );
@@ -175,7 +174,7 @@ class HttpDriver implements Fetcher
     }
 
     /**
-     * @param string $html
+     * @param  string  $html
      * @return Collection<string>
      */
     private function findAllLinkElements(string $html): Collection
@@ -195,7 +194,7 @@ class HttpDriver implements Fetcher
             ->map(function (string $htmlLine) {
                 return collect(explode('>', $htmlLine))
                     ->filter(
-                        fn(string $link): bool => Str::is([
+                        fn (string $link): bool => Str::is([
                             '*rel="shortcut icon"*',
                             '*rel="icon"*',
                             '*rel="apple-touch-icon"*',
@@ -277,7 +276,7 @@ class HttpDriver implements Fetcher
         );
 
         // If we couldn't find a "sizes" attribute, then we can't guess the size.
-        if ($stringUntilSizesAttr === "") {
+        if ($stringUntilSizesAttr === '') {
             return null;
         }
 
