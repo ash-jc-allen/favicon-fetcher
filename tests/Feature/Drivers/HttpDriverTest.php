@@ -24,8 +24,12 @@ class HttpDriverTest extends TestCase
      *
      * @dataProvider faviconLinksInHtmlProvider
      */
-    public function favicon_can_be_fetched_using_link_element_in_html(string $html, string $expectedFaviconUrl): void
-    {
+    public function favicon_can_be_fetched_using_link_element_in_html(
+        string $html,
+        string $expectedFaviconUrl,
+        ?int $expectedSize,
+        string $expectedType,
+    ): void {
         Http::fake([
             'https://example.com' => Http::response($html),
             $expectedFaviconUrl => Http::response('favicon contents here'),
@@ -35,6 +39,8 @@ class HttpDriverTest extends TestCase
         $favicon = (new HttpDriver())->fetch('https://example.com');
 
         self::assertSame($expectedFaviconUrl, $favicon->getFaviconUrl());
+        self::assertSame($expectedSize, $favicon->getIconSize());
+        self::assertSame($expectedType, $favicon->getIconType());
     }
 
     /** @test */
@@ -312,17 +318,17 @@ class HttpDriverTest extends TestCase
     public function faviconLinksInHtmlProvider(): array
     {
         return [
-            [$this->htmlOptionOne(), 'https://example.com/icon/is/here.ico'],
-            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico'],
-            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico'],
-            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png'],
-            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico'],
-            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico'],
-            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico'],
-            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico'],
-            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico'],
-            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico'],
-            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png'],
+            [$this->htmlOptionOne(), 'https://example.com/icon/is/here.ico', null, Favicon::TYPE_ICON],
+            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico', null, Favicon::TYPE_ICON],
+            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico', null, Favicon::TYPE_SHORTCUT_ICON],
+            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png', null, Favicon::TYPE_ICON],
+            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico', null, Favicon::TYPE_SHORTCUT_ICON],
+            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico', null, Favicon::TYPE_SHORTCUT_ICON],
+            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico', null, Favicon::TYPE_SHORTCUT_ICON],
+            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico', null, Favicon::TYPE_ICON],
+            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico', null, Favicon::TYPE_ICON],
+            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico', null, Favicon::TYPE_SHORTCUT_ICON],
+            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
         ];
     }
 
