@@ -4,6 +4,8 @@ namespace AshAllenDesign\FaviconFetcher;
 
 use AshAllenDesign\FaviconFetcher\Concerns\BuildsCacheKeys;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use Carbon\CarbonInterface;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
@@ -52,15 +54,13 @@ class Favicon
      */
     protected bool $retrievedFromCache = false;
 
-    protected string $type = self::TYPE_ICON_UNKNOWN;
+    protected string $iconType = self::TYPE_ICON_UNKNOWN;
 
     protected ?int $size = null;
 
     public function __construct(
         string $url,
         string $faviconUrl,
-        string $iconType,
-        int $size = null,
         Fetcher $fromDriver = null,
         bool $retrievedFromCache = false
     ) {
@@ -68,17 +68,26 @@ class Favicon
         $this->faviconUrl = $faviconUrl;
         $this->driver = $fromDriver;
         $this->retrievedFromCache = $retrievedFromCache;
+    }
+
+    public function setIconSize(?int $size): static
+    {
+        if ($size !== null && $size < 0) {
+            throw new InvalidIconSizeException('The size ['.$size.'] is not a valid favicon size.');
+        }
+
         $this->size = $size;
-        $this->setIconType($iconType);
+
+        return $this;
     }
 
     public function setIconType(string $type): static
     {
         if (!$this->acceptableIconType($type)) {
-            throw new \InvalidArgumentException('The type ['.$type.'] is not a valid favicon type.');
+            throw new InvalidIconTypeException('The type ['.$type.'] is not a valid favicon type.');
         }
 
-        $this->type = $type;
+        $this->iconType = $type;
 
         return $this;
     }
@@ -92,11 +101,11 @@ class Favicon
      */
     public static function makeFromCache(string $url, string $faviconUrl): self
     {
+        // TODO Get the icon type and size from the cache too.
+
         return new self(
             url: $url,
             faviconUrl: $faviconUrl,
-            iconType: self::TYPE_ICON_UNKNOWN, // TODO Get this from the cache.
-            size: null, // TODO Get this from the cache.
             retrievedFromCache: true
         );
     }
@@ -170,6 +179,16 @@ class Favicon
         Storage::disk($disk)->put($path, $this->content());
 
         return $path;
+    }
+
+    public function getIconType(): string
+    {
+        return $this->iconType;
+    }
+
+    public function getIconSize(): ?int
+    {
+        return $this->size;
     }
 
     protected function buildStoragePath(string $directory, string $filename): string

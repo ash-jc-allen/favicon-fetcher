@@ -44,7 +44,9 @@ class UnavatarDriver implements Fetcher
 
         $response = Http::get($faviconUrl);
 
-        return $response->successful() ? new Favicon($url, $faviconUrl, $this) : $this->notFound($url);
+        return $response->successful()
+            ? new Favicon(url: $url, faviconUrl: $faviconUrl, fromDriver: $this)
+            : $this->notFound($url);
     }
 
     public function fetchAll(string $url): FaviconCollection

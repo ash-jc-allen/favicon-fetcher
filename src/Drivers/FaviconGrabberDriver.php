@@ -49,7 +49,7 @@ class FaviconGrabberDriver implements Fetcher
 
         $faviconUrl = $response->json('icons')[0]['src'];
 
-        return new Favicon($url, $faviconUrl, $this);
+        return new Favicon(url: $url, faviconUrl: $faviconUrl, fromDriver: $this);
     }
 
     public function fetchAll(string $url): FaviconCollection
