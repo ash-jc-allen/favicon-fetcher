@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
@@ -49,5 +50,10 @@ class FaviconGrabberDriver implements Fetcher
         $faviconUrl = $response->json('icons')[0]['src'];
 
         return new Favicon($url, $faviconUrl, $this);
+    }
+
+    public function fetchAll(string $url): FaviconCollection
+    {
+        // TODO Implement this method.
     }
 }

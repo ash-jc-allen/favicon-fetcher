@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Contracts;
 
+use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
@@ -15,6 +16,14 @@ interface Fetcher
      * @return Favicon|null
      */
     public function fetch(string $url): ?Favicon;
+
+    /**
+     * Attempt to fetch all favicons and icons for the given URL.
+     *
+     * @param string $url
+     * @return FaviconCollection
+     */
+    public function fetchAll(string $url): FaviconCollection;
 
     /**
      * Attempt to fetch the favicon for the given URL. If a favicon cannot
