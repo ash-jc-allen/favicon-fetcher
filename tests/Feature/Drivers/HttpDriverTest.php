@@ -2,9 +2,11 @@
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
+use AshAllenDesign\FaviconFetcher\Favicon;
 use AshAllenDesign\FaviconFetcher\FetcherManager;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\NullDriver;
@@ -242,89 +244,143 @@ class HttpDriverTest extends TestCase
         self::assertSame('example.com is not a valid URL', $exception->getMessage());
     }
 
-    public function faviconLinksInHtmlProvider(): array
+    /**
+     * @test
+     *
+     * @dataProvider allFaviconLinksInHtmlProvider
+     */
+    public function all_icons_for_a_url_can_be_fetched(string $html, $expectedFaviconCollection): void
+    {
+        Http::fake([
+            'https://example.com' => Http::response($html),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAll('https://example.com');
+
+        self::assertInstanceOf(FaviconCollection::class, $favicons);
+        self::assertCount($expectedFaviconCollection->count(), $favicons);
+
+        // TODO Add extra assertions.
+    }
+
+    /** @test */
+    public function empty_favicon_collection_is_returned_if_no_icons_can_be_found_for_a_url(): void
+    {
+
+    }
+
+    /** @test */
+    public function error_is_thrown_if_trying_to_find_all_the_favicons_for_a_url_that_does_not_exist(): void
+    {
+
+    }
+
+    /** @test */
+    public function all_favicons_for_a_url_can_be_fetched_from_the_cache(): void
+    {
+
+    }
+
+    /** @test */
+    public function all_favicons_for_a_url_can_be_cached(): void
+    {
+
+    }
+
+    public function allFaviconLinksInHtmlProvider(): array
     {
         return [
-            $this->htmlOptionOne(),
-            $this->htmlOptionTwo(),
-            $this->htmlOptionThree(),
-            $this->htmlOptionFour(),
-            $this->htmlOptionFive(),
-            $this->htmlOptionSix(),
-            $this->htmlOptionSeven(),
-            $this->htmlOptionEight(),
-            $this->htmlOptionNine(),
-            $this->htmlOptionTen(),
+            [$this->htmlOptionOne(),
+                new FaviconCollection([
+                    new Favicon('https://example.com', 'https://example.com/icon/is/here.ico')
+                ]),
+            ],
+//            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico'],
+//            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico'],
+//            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png'],
+//            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico'],
+//            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico'],
+//            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico'],
+//            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico'],
+//            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico'],
+//            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico'],
+//            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png'],
         ];
     }
 
-    private function htmlOptionOne(): array
+    public function faviconLinksInHtmlProvider(): array
     {
-        $responseHtml = <<<'HTML'
+        return [
+            [$this->htmlOptionOne(), 'https://example.com/icon/is/here.ico'],
+            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico'],
+            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico'],
+            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png'],
+            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico'],
+            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico'],
+            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico'],
+            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico'],
+            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico'],
+            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico'],
+            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png'],
+        ];
+    }
+
+    private function htmlOptionOne(): string
+    {
+        return <<<'HTML'
             <html lang="en">
                 <link rel="icon" href="icon/is/here.ico" />
             </html>
         HTML;
-
-        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
     }
 
-    private function htmlOptionTwo(): array
+    private function htmlOptionTwo(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <html lang="en">
                 <link rel="icon" href="/icon/is/here.ico" />
             </html>
         HTML;
-
-        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
     }
 
-    private function htmlOptionThree(): array
+    private function htmlOptionThree(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <html lang="en">
                 <link rel="shortcut icon" href="/icon/is/here.ico" />
             </html>
         HTML;
-
-        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
     }
 
-    private function htmlOptionFour(): array
+    private function htmlOptionFour(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <html lang="en">
                 <link rel="icon" type="image/png" href="https://example.com/favicon/favicon-32x32.png"/><link rel="apple-touch-icon" sizes="57x57" href="https://example.com/favicon/apple-icon-57x57.png"/><link rel="apple-touch-icon" sizes="60x60" href="https://example.com/favicon/apple-icon-60x60.png"/><link rel="apple-touch-icon" sizes="72x72" href="https://example.com/favicon/apple-icon-72x72.png"/><link rel="apple-touch-icon" sizes="76x76" href="https://example.com/favicon/apple-icon-72x72.png"/><link rel="apple-touch-icon" sizes="114x114" href="https://example.com/favicon/apple-icon-76x76.png"/><link rel="apple-touch-icon" sizes="120x120" href="https://example.com/favicon/apple-icon-120x120.png"/><link rel="apple-touch-icon" sizes="144x144" href="https://example.com/favicon/apple-icon-144x144.png"/><link rel="apple-touch-icon" sizes="152x152" href="https://example.com/favicon/apple-icon-152x152.png"/><link rel="apple-touch-icon" sizes="180x180" href="https://example.com/favicon/apple-icon-180x180.png"/><link rel="icon" type="image/png" sizes="192x192" href="https://example.com/favicon/android-icon-192x192.png"/>
             </html>
         HTML;
-
-        return [$responseHtml, 'https://example.com/favicon/favicon-32x32.png'];
     }
 
-    private function htmlOptionFive(): array
+    private function htmlOptionFive(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <html lang="en">
                 <link href="/icon/is/here.ico" rel="shortcut icon" />
             </html>
         HTML;
-
-        return [$responseHtml, 'https://example.com/icon/is/here.ico'];
     }
 
-    private function htmlOptionSix(): array
+    private function htmlOptionSix(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <head> <title>Title here</title> <meta name="description" content="Meta description here"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <link rel="alternate" href="https://www.example.lv" hreflang="lv"> <link rel="alternate" href="https://www.example.lt/" hreflang="lt"> <link rel="alternate" href="https://www.example.ee/" hreflang="ee"> <link rel="alternate" href="https://www.example.ru/" hreflang="ru"> <link rel="alternate" href="https://www.example.com/en/" hreflang="en"> <link rel="alternate" href="https://www.example.com/default" hreflang="x-default"> <meta name="theme-color" content="#FFFFFF"> <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png"> <link rel="shortcut icon" type="image/x-icon" href="/images/favicon.ico"> <link rel="stylesheet" href="/css/app.css?id=123"> <script src="/vendor/livewire/livewire.js?id=456" data-turbo-eval="false" data-turbolinks-eval="false" ></script><script data-turbo-eval="false" data-turbolinks-eval="false" >
         HTML;
-
-        return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
 
-    private function htmlOptionSeven(): array
+    private function htmlOptionSeven(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <head>
                 <title>Title here</title>
                 <meta name="description" content="Meta description here">
@@ -345,22 +401,18 @@ class HttpDriverTest extends TestCase
                 <script data-turbo-eval="false" data-turbolinks-eval="false" ></script>
             </head>
         HTML;
-
-        return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
 
-    private function htmlOptionEight(): array
+    private function htmlOptionEight(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <head> <title>Title here</title> <meta name="description" content="Meta description here"> <meta charset="utf-8"> <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"> <meta http-equiv="X-UA-Compatible" content="IE=edge"> <link rel="alternate" href="https://www.example.lv" hreflang="lv"> <link rel="alternate" href="https://www.example.lt/" hreflang="lt"> <link rel="alternate" href="https://www.example.ee/" hreflang="ee"> <link rel="alternate" href="https://www.example.ru/" hreflang="ru"> <link rel="alternate" href="https://www.example.com/en/" hreflang="en"> <link rel="alternate" href="https://www.example.com/default" hreflang="x-default"> <meta name="theme-color" content="#FFFFFF"> <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png"> <link rel="icon" type="image/x-icon" href="/images/favicon.ico"> <link rel="stylesheet" href="/css/app.css?id=123"> <script src="/vendor/livewire/livewire.js?id=456" data-turbo-eval="false" data-turbolinks-eval="false" ></script><script data-turbo-eval="false" data-turbolinks-eval="false" >
         HTML;
-
-        return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
 
-    private function htmlOptionNine(): array
+    private function htmlOptionNine(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <head>
                 <title>Title here</title>
                 <meta name="description" content="Meta description here">
@@ -381,13 +433,11 @@ class HttpDriverTest extends TestCase
                 <script data-turbo-eval="false" data-turbolinks-eval="false" ></script>
             </head>
         HTML;
-
-        return [$responseHtml, 'https://example.com/images/favicon.ico'];
     }
 
-    private function htmlOptionTen(): array
+    private function htmlOptionTen(): string
     {
-        $responseHtml = <<<'HTML'
+        return <<<'HTML'
             <head>
                 <title>Test Title</title>
                 <meta content='IE=edge' http-equiv='X-UA-Compatible'>
@@ -397,7 +447,32 @@ class HttpDriverTest extends TestCase
                 <link href='https://www.example.com/favicon123.ico' rel='shortcut icon' type='image/x-icon'>
             </head>
         HTML;
+    }
 
-        return [$responseHtml, 'https://www.example.com/favicon123.ico'];
+    private function htmlOptionEleven(): string
+    {
+        return <<<'HTML'
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="apple-touch-icon" sizes="57x57" href="/apple-icon-57x57.png">
+                <link rel="apple-touch-icon" sizes="60x60" href="/apple-icon-60x60.png">
+                <link rel="apple-touch-icon" sizes="72x72" href="/apple-icon-72x72.png">
+                <link rel="apple-touch-icon" sizes="76x76" href="/apple-icon-76x76.png">
+                <link rel="apple-touch-icon" sizes="114x114" href="/apple-icon-114x114.png">
+                <link rel="apple-touch-icon" sizes="120x120" href="/apple-icon-120x120.png">
+                <link rel="apple-touch-icon" sizes="144x144" href="/apple-icon-144x144.png">
+                <link rel="apple-touch-icon" sizes="152x152" href="/apple-icon-152x152.png">
+                <link rel="apple-touch-icon" sizes="200x200" href="/apple-icon-200x200.png">
+                <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
+                <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
+                <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+                <link rel="manifest" href="/manifest.json">
+                <meta name="msapplication-TileColor" content="#ffffff">
+                <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+                <meta name="theme-color" content="#ffffff">
+                <title>Dummy title</title>
+            </head>
+        HTML;
     }
 }

@@ -2,12 +2,14 @@
 
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -35,11 +37,47 @@ class HttpDriver implements Fetcher
             return $favicon;
         }
 
-        $faviconUrl = $this->attemptToResolveFromUrl(
-            $url, $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url)
-        );
+        $faviconUrl = $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url);
 
-        return $faviconUrl ?? $this->notFound($url);
+        $faviconCanBeReached = $this->attemptToResolveFromUrl($faviconUrl);
+
+        // TODO Get the icon type and size.
+
+        return $faviconCanBeReached
+            ? new Favicon(url: $url, faviconUrl: $faviconUrl, fromDriver: $this)
+            : $this->notFound($url);
+    }
+
+    public function fetchAll(string $url): FaviconCollection
+    {
+        // TODO Check the URL is valid.
+        // TODO Add caching.
+        // TODO Get a default in none are found.
+        // TODO Add fallbacks.
+
+        if (! $this->urlIsValid($url)) {
+            throw new InvalidUrlException($url.' is not a valid URL');
+        }
+
+        $faviconsCollection = new FaviconCollection();
+
+        $favicons = $this->attemptToResolveAllFromHeadTags($url);
+
+        dd($favicons);
+
+        // TODO If the collection is empty, try to guess the default URL.
+
+        // TODO Loop through each of the favicons and make a request to them to see whether they are valid.
+        //  Remove the icons from the collection that aren't valid.
+
+        dd($favicons);
+
+//        $faviconUrls = $this->attemptToResolveFromUrl(
+//            $url, $this->attemptToResolveAllFromHeadTags($url) ?? $this->guessDefaultUrl($url)
+//        );
+
+
+        return $faviconsCollection;
     }
 
     /**
@@ -51,11 +89,14 @@ class HttpDriver implements Fetcher
      * @param  string  $faviconUrl
      * @return Favicon|null
      */
-    private function attemptToResolveFromUrl(string $url, string $faviconUrl): ?Favicon
+    private function attemptToResolveFromUrl(string $faviconUrl): bool
     {
-        $response = Http::get($faviconUrl);
+        return Http::get($faviconUrl)->successful();
 
-        return $response->successful() ? new Favicon($url, $faviconUrl, $this) : null;
+        // TODO Attempt to resolve the icon type.
+        // TODO Attempt to resolve the icon size here.
+
+        return $response->successful() ? new Favicon($url, $faviconUrl, null, null, $this) : null;
     }
 
     /**
@@ -80,6 +121,71 @@ class HttpDriver implements Fetcher
         return $linkTag
             ? $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag))
             : null;
+    }
+
+
+    private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
+    {
+        $response = Http::get($url);
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $linkTags = $this->findAllLinkElements($response->body());
+
+        $faviconUrls = $linkTags->map(function (string $linkTag) use ($url) {
+            return new Favicon(
+                $url,
+                $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag)),
+                 Favicon::TYPE_ICON_UNKNOWN, // TODO Get the type here
+                null, // TODO Get the size here
+                $this,
+            );
+        });
+
+        return FaviconCollection::make($faviconUrls);
+
+        dd($faviconUrls);
+
+        return $linkTag
+            ? $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag))
+            : null;
+    }
+
+    /**
+     * @param string $html
+     * @return Collection<string>
+     */
+    private function findAllLinkElements(string $html): Collection
+    {
+        $pattern = '/<link.*rel=["\'](icon|shortcut icon|apple-touch-icon)["\'][^>]*>/i';
+
+        preg_match_all($pattern, $html, $linkElementLines);
+
+        // TODO What should we do if no link elements were found? Return null or an empty collection?
+        if (! isset($linkElementLines[0])) {
+            return null;
+        }
+
+        // If multiple link elements were found in a single line, we need to loop
+        // through and split them out.
+        return collect($linkElementLines[0])
+            ->map(function (string $htmlLine) {
+                return collect(explode('>', $htmlLine))
+                    ->filter(
+                        fn(string $link): bool => Str::is([
+                            '*rel="shortcut icon"*',
+                            '*rel="icon"*',
+                            '*rel="apple-touch-icon"*',
+                            "*rel='shortcut icon'*",
+                            "*rel='icon'*",
+                            "*rel='apple-touch-icon'*",
+                        ], $link)
+                    )
+                    ->all();
+            })
+            ->flatten();
     }
 
     /**
