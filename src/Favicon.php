@@ -15,6 +15,14 @@ class Favicon
 {
     use BuildsCacheKeys;
 
+    public const TYPE_ICON = 'icon';
+
+    public const TYPE_SHORTCUT_ICON = 'shortcut_icon';
+
+    public const TYPE_APPLE_TOUCH_ICON = 'apple_touch_icon';
+
+    public const TYPE_ICON_UNKNOWN = 'unknown';
+
     /**
      * The URL of the website that the favicon belongs to.
      *
@@ -44,12 +52,35 @@ class Favicon
      */
     protected bool $retrievedFromCache = false;
 
-    public function __construct(string $url, string $faviconUrl, Fetcher $fromDriver = null, bool $retrievedFromCache = false)
-    {
+    protected string $type = self::TYPE_ICON_UNKNOWN;
+
+    protected ?int $size = null;
+
+    public function __construct(
+        string $url,
+        string $faviconUrl,
+        string $iconType,
+        int $size = null,
+        Fetcher $fromDriver = null,
+        bool $retrievedFromCache = false
+    ) {
         $this->url = $url;
         $this->faviconUrl = $faviconUrl;
         $this->driver = $fromDriver;
         $this->retrievedFromCache = $retrievedFromCache;
+        $this->size = $size;
+        $this->setIconType($iconType);
+    }
+
+    public function setIconType(string $type): static
+    {
+        if (!$this->acceptableIconType($type)) {
+            throw new \InvalidArgumentException('The type ['.$type.'] is not a valid favicon type.');
+        }
+
+        $this->type = $type;
+
+        return $this;
     }
 
     /**
@@ -61,7 +92,13 @@ class Favicon
      */
     public static function makeFromCache(string $url, string $faviconUrl): self
     {
-        return new self(url: $url, faviconUrl: $faviconUrl, retrievedFromCache: true);
+        return new self(
+            url: $url,
+            faviconUrl: $faviconUrl,
+            iconType: self::TYPE_ICON_UNKNOWN, // TODO Get this from the cache.
+            size: null, // TODO Get this from the cache.
+            retrievedFromCache: true
+        );
     }
 
     public function getUrl(): string
@@ -171,5 +208,18 @@ class Favicon
         ];
 
         return $mimeToExtensionMap[$faviconMimetype] ?? null;
+    }
+
+    private function acceptableIconType(string $type): bool
+    {
+        return in_array(
+            needle: $type,
+            haystack: [
+                self::TYPE_ICON,
+                self::TYPE_SHORTCUT_ICON,
+                self::TYPE_APPLE_TOUCH_ICON,
+                self::TYPE_ICON_UNKNOWN,
+            ],
+            strict: true);
     }
 }
