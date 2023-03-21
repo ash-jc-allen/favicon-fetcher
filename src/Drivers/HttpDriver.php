@@ -7,6 +7,8 @@ use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Support\Collection;
@@ -37,14 +39,13 @@ class HttpDriver implements Fetcher
             return $favicon;
         }
 
-        $faviconUrl = $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url);
+        $favicon = $this->attemptToResolveFromHeadTags($url)
+            ?? new Favicon(url: $url, faviconUrl: $this->guessDefaultUrl($url), fromDriver: $this);
 
-        $faviconCanBeReached = $this->attemptToResolveFromUrl($faviconUrl);
-
-        // TODO Get the icon type and size.
+        $faviconCanBeReached = $this->attemptToResolveFromUrl($favicon->getFaviconUrl());
 
         return $faviconCanBeReached
-            ? new Favicon(url: $url, faviconUrl: $faviconUrl, fromDriver: $this)
+            ? $favicon
             : $this->notFound($url);
     }
 
@@ -105,10 +106,12 @@ class HttpDriver implements Fetcher
      * is found, return the absolute URL of the link's "href".
      * Otherwise, return null.
      *
-     * @param  string  $url
-     * @return string|null
+     * @param string $url
+     * @return Favicon|null
+     * @throws InvalidIconSizeException
+     * @throws InvalidIconTypeException
      */
-    private function attemptToResolveFromHeadTags(string $url): ?string
+    private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
         $response = Http::get($url);
 
@@ -118,9 +121,27 @@ class HttpDriver implements Fetcher
 
         $linkTag = $this->findLinkElement($response->body());
 
-        return $linkTag
-            ? $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag))
-            : null;
+        if (!$linkTag) {
+            return null;
+        }
+
+        $linkElement = $this->parseLinkFromElement($linkTag);
+
+        $favicon = new Favicon(
+            url: $url,
+            faviconUrl: $this->convertToAbsoluteUrl($url, $linkElement),
+            fromDriver: $this,
+        );
+
+        if ($iconSize = $this->guessSizeFromElement($linkTag)) {
+            $favicon->setIconSize($iconSize);
+        }
+
+        if ($iconType = $this->guessTypeFromElement($linkTag)) {
+            $favicon->setIconType($iconType);
+        }
+
+        return $favicon;
     }
 
 
@@ -237,6 +258,61 @@ class HttpDriver implements Fetcher
         $stringUntilHref = str_replace(['"', '\''], '|', $stringUntilHref);
 
         return explode('|', $stringUntilHref)[1];
+    }
+
+    private function guessSizeFromElement(string $linkElement): ?int
+    {
+        $stringUntilSizesAttr = strstr($linkElement, 'sizes="');
+
+        if (! $stringUntilSizesAttr) {
+            $stringUntilSizesAttr = strstr($linkElement, "sizes='");
+        }
+
+        // Replace the double or single quotes with a common delimiter
+        // that can be used for exploding the string.
+        $stringUntilSizesAttr = str_replace(
+            search: ['"', '\''],
+            replace: '|',
+            subject: $stringUntilSizesAttr
+        );
+
+        // If we couldn't find a "sizes" attribute, then we can't guess the size.
+        if ($stringUntilSizesAttr === "") {
+            return null;
+        }
+
+        // Find the size of the icon (e.g. - 192x192)
+        $sizesIncludingX = explode('|', $stringUntilSizesAttr)[1];
+
+        // The favicons should be squares, so the height and width should
+        // be the same. So we can just return the first number.
+        return explode('x', $sizesIncludingX)[0];
+    }
+
+    private function guessTypeFromElement(string $linkElement): ?string
+    {
+        $stringUntilRelAttr = strstr($linkElement, 'rel="');
+
+        if (! $stringUntilRelAttr) {
+            $stringUntilRelAttr = strstr($linkElement, "rel='");
+        }
+
+        // Replace the double or single quotes with a common delimiter
+        // that can be used for exploding the string.
+        $stringUntilRelAttr = str_replace(
+            search: ['"', '\''],
+            replace: '|',
+            subject: $stringUntilRelAttr
+        );
+
+        $type = explode('|', $stringUntilRelAttr)[1];
+
+        return match ($type) {
+            'icon' => Favicon::TYPE_ICON,
+            'shortcut icon' => Favicon::TYPE_SHORTCUT_ICON,
+            'apple-touch-icon' => Favicon::TYPE_APPLE_TOUCH_ICON,
+            default => Favicon::TYPE_ICON_UNKNOWN,
+        };
     }
 
     /**
