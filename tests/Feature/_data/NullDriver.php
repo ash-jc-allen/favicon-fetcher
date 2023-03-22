@@ -24,6 +24,6 @@ class NullDriver implements Fetcher
 
     public function fetchAll(string $url): FaviconCollection
     {
-        // TODO: Implement fetchAll() method.
+        // Implement this method if needed for testing.
     }
 }

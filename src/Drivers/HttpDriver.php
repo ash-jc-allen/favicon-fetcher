@@ -51,8 +51,6 @@ class HttpDriver implements Fetcher
 
     public function fetchAll(string $url): FaviconCollection
     {
-        // TODO Add caching.
-
         if (! $this->urlIsValid($url)) {
             throw new InvalidUrlException($url.' is not a valid URL');
         }
