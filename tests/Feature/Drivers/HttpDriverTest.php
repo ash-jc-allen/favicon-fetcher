@@ -27,10 +27,9 @@ class HttpDriverTest extends TestCase
     public function favicon_can_be_fetched_using_link_element_in_html(
         string $html,
         string $expectedFaviconUrl,
-        ?int   $expectedSize,
+        ?int $expectedSize,
         string $expectedType,
-    ): void
-    {
+    ): void {
         Http::fake([
             'https://example.com' => Http::response($html),
             $expectedFaviconUrl => Http::response('favicon contents here'),
@@ -78,9 +77,9 @@ class HttpDriverTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = (new HttpDriver())->fetch($protocol . '://example.com');
+        $favicon = (new HttpDriver())->fetch($protocol.'://example.com');
 
-        self::assertSame($protocol . '://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
+        self::assertSame($protocol.'://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
     }
 
     /** @test */
@@ -446,13 +445,13 @@ class HttpDriverTest extends TestCase
             [
                 $this->htmlOptionOne(),
                 FaviconCollection::make([
-                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON)
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON),
                 ]),
             ],
             [
                 $this->htmlOptionTwo(),
                 FaviconCollection::make([
-                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON)
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON),
                 ]),
             ],
             [
@@ -533,7 +532,7 @@ class HttpDriverTest extends TestCase
                     (new Favicon('https://example.com', 'https://example.com/android-icon-192x192.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(192),
                     (new Favicon('https://example.com', 'https://example.com/favicon-32x32.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(32),
                     (new Favicon('https://example.com', 'https://example.com/favicon-96x96.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(96),
-                ])
+                ]),
             ],
         ];
     }
