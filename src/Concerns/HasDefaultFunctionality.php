@@ -178,7 +178,7 @@ trait HasDefaultFunctionality
     {
         $cachedFaviconsData = Cache::get($this->buildCacheKeyForCollection($url));
 
-        if (!$cachedFaviconsData) {
+        if (! $cachedFaviconsData) {
             return null;
         }
 
