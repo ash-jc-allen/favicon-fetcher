@@ -5,6 +5,7 @@ namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Drivers;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
+use AshAllenDesign\FaviconFetcher\Favicon;
 use AshAllenDesign\FaviconFetcher\FetcherManager;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\NullDriver;
@@ -40,7 +41,11 @@ class FaviconKitDriverTest extends TestCase
     {
         Cache::put(
             'favicon-fetcher.example.com',
-            'url-goes-here',
+            [
+                'favicon_url' => 'url-goes-here',
+                'icon_size' => null,
+                'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
+            ],
             now()->addHour()
         );
 

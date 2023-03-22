@@ -2,12 +2,16 @@
 
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
+use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
+use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
@@ -35,11 +39,45 @@ class HttpDriver implements Fetcher
             return $favicon;
         }
 
-        $faviconUrl = $this->attemptToResolveFromUrl(
-            $url, $this->attemptToResolveFromHeadTags($url) ?? $this->guessDefaultUrl($url)
-        );
+        $favicon = $this->attemptToResolveFromHeadTags($url)
+            ?? new Favicon(url: $url, faviconUrl: $this->guessDefaultUrl($url), fromDriver: $this);
 
-        return $faviconUrl ?? $this->notFound($url);
+        $faviconCanBeReached = $this->faviconUrlCanBeReached($favicon->getFaviconUrl());
+
+        return $faviconCanBeReached
+            ? $favicon
+            : $this->notFound($url);
+    }
+
+    public function fetchAll(string $url): FaviconCollection
+    {
+        // TODO Check the URL is valid.
+        // TODO Add caching.
+        // TODO Get a default in none are found.
+        // TODO Add fallbacks.
+
+        if (! $this->urlIsValid($url)) {
+            throw new InvalidUrlException($url.' is not a valid URL');
+        }
+
+        $faviconsCollection = new FaviconCollection();
+
+        $favicons = $this->attemptToResolveAllFromHeadTags($url);
+
+        dd($favicons);
+
+        // TODO If the collection is empty, try to guess the default URL.
+
+        // TODO Loop through each of the favicons and make a request to them to see whether they are valid.
+        //  Remove the icons from the collection that aren't valid.
+
+        dd($favicons);
+
+//        $faviconUrls = $this->attemptToResolveFromUrl(
+//            $url, $this->attemptToResolveAllFromHeadTags($url) ?? $this->guessDefaultUrl($url)
+//        );
+
+        return $faviconsCollection;
     }
 
     /**
@@ -47,15 +85,12 @@ class HttpDriver implements Fetcher
      * is successful, we can assume that a valid favicon was returned.
      * Otherwise, we can assume that a favicon wasn't found.
      *
-     * @param  string  $url
      * @param  string  $faviconUrl
-     * @return Favicon|null
+     * @return bool
      */
-    private function attemptToResolveFromUrl(string $url, string $faviconUrl): ?Favicon
+    private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
-        $response = Http::get($faviconUrl);
-
-        return $response->successful() ? new Favicon($url, $faviconUrl, $this) : null;
+        return Http::get($faviconUrl)->successful();
     }
 
     /**
@@ -65,9 +100,12 @@ class HttpDriver implements Fetcher
      * Otherwise, return null.
      *
      * @param  string  $url
-     * @return string|null
+     * @return Favicon|null
+     *
+     * @throws InvalidIconSizeException
+     * @throws InvalidIconTypeException
      */
-    private function attemptToResolveFromHeadTags(string $url): ?string
+    private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
         $response = Http::get($url);
 
@@ -77,9 +115,91 @@ class HttpDriver implements Fetcher
 
         $linkTag = $this->findLinkElement($response->body());
 
+        if (! $linkTag) {
+            return null;
+        }
+
+        $linkElement = $this->parseLinkFromElement($linkTag);
+
+        $favicon = new Favicon(
+            url: $url,
+            faviconUrl: $this->convertToAbsoluteUrl($url, $linkElement),
+            fromDriver: $this,
+        );
+
+        if ($iconSize = $this->guessSizeFromElement($linkTag)) {
+            $favicon->setIconSize($iconSize);
+        }
+
+        if ($iconType = $this->guessTypeFromElement($linkTag)) {
+            $favicon->setIconType($iconType);
+        }
+
+        return $favicon;
+    }
+
+    private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
+    {
+        $response = Http::get($url);
+
+        if (! $response->successful()) {
+            return null;
+        }
+
+        $linkTags = $this->findAllLinkElements($response->body());
+
+        $faviconUrls = $linkTags->map(function (string $linkTag) use ($url) {
+            return new Favicon(
+                $url,
+                $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag)),
+                Favicon::TYPE_ICON_UNKNOWN, // TODO Get the type here
+                null, // TODO Get the size here
+                $this,
+            );
+        });
+
+        return FaviconCollection::make($faviconUrls);
+
+        dd($faviconUrls);
+
         return $linkTag
             ? $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag))
             : null;
+    }
+
+    /**
+     * @param  string  $html
+     * @return Collection<string>
+     */
+    private function findAllLinkElements(string $html): Collection
+    {
+        $pattern = '/<link.*rel=["\'](icon|shortcut icon|apple-touch-icon)["\'][^>]*>/i';
+
+        preg_match_all($pattern, $html, $linkElementLines);
+
+        // TODO What should we do if no link elements were found? Return null or an empty collection?
+        if (! isset($linkElementLines[0])) {
+            return null;
+        }
+
+        // If multiple link elements were found in a single line, we need to loop
+        // through and split them out.
+        return collect($linkElementLines[0])
+            ->map(function (string $htmlLine) {
+                return collect(explode('>', $htmlLine))
+                    ->filter(
+                        fn (string $link): bool => Str::is([
+                            '*rel="shortcut icon"*',
+                            '*rel="icon"*',
+                            '*rel="apple-touch-icon"*',
+                            "*rel='shortcut icon'*",
+                            "*rel='icon'*",
+                            "*rel='apple-touch-icon'*",
+                        ], $link)
+                    )
+                    ->all();
+            })
+            ->flatten();
     }
 
     /**
@@ -131,6 +251,61 @@ class HttpDriver implements Fetcher
         $stringUntilHref = str_replace(['"', '\''], '|', $stringUntilHref);
 
         return explode('|', $stringUntilHref)[1];
+    }
+
+    private function guessSizeFromElement(string $linkElement): ?int
+    {
+        $stringUntilSizesAttr = strstr($linkElement, 'sizes="');
+
+        if (! $stringUntilSizesAttr) {
+            $stringUntilSizesAttr = strstr($linkElement, "sizes='");
+        }
+
+        // Replace the double or single quotes with a common delimiter
+        // that can be used for exploding the string.
+        $stringUntilSizesAttr = str_replace(
+            search: ['"', '\''],
+            replace: '|',
+            subject: $stringUntilSizesAttr
+        );
+
+        // If we couldn't find a "sizes" attribute, then we can't guess the size.
+        if ($stringUntilSizesAttr === '') {
+            return null;
+        }
+
+        // Find the size of the icon (e.g. - 192x192)
+        $sizesIncludingX = explode('|', $stringUntilSizesAttr)[1];
+
+        // The favicons should be squares, so the height and width should
+        // be the same. So we can just return the first number.
+        return explode('x', $sizesIncludingX)[0];
+    }
+
+    private function guessTypeFromElement(string $linkElement): ?string
+    {
+        $stringUntilRelAttr = strstr($linkElement, 'rel="');
+
+        if (! $stringUntilRelAttr) {
+            $stringUntilRelAttr = strstr($linkElement, "rel='");
+        }
+
+        // Replace the double or single quotes with a common delimiter
+        // that can be used for exploding the string.
+        $stringUntilRelAttr = str_replace(
+            search: ['"', '\''],
+            replace: '|',
+            subject: $stringUntilRelAttr
+        );
+
+        $type = explode('|', $stringUntilRelAttr)[1];
+
+        return match ($type) {
+            'icon' => Favicon::TYPE_ICON,
+            'shortcut icon' => Favicon::TYPE_SHORTCUT_ICON,
+            'apple-touch-icon' => Favicon::TYPE_APPLE_TOUCH_ICON,
+            default => Favicon::TYPE_ICON_UNKNOWN,
+        };
     }
 
     /**
