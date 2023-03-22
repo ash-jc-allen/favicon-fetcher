@@ -39,7 +39,7 @@ class FaviconCollection extends Collection
         if ($force || ! $this->retrievedFromCache) {
             $cacheKey = $this->buildCacheKeyForCollection($this->first()->getUrl());
 
-            $cacheData = $this->map(fn(Favicon $favicon): array => $favicon->toCache())->all();
+            $cacheData = $this->map(fn (Favicon $favicon): array => $favicon->toCache())->all();
 
             Cache::put($cacheKey, $cacheData, $ttl);
         }
