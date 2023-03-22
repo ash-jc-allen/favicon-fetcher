@@ -268,10 +268,13 @@ class HttpDriverTest extends TestCase
 
         $favicons = (new HttpDriver())->fetchAll('https://example.com');
 
-        self::assertInstanceOf(FaviconCollection::class, $favicons);
         self::assertCount($expectedFaviconCollection->count(), $favicons);
 
-        // TODO Add extra assertions.
+        foreach ($favicons as $index => $favicon) {
+            self::assertSame($expectedFaviconCollection[$index]->getFaviconUrl(), $favicon->getFaviconUrl());
+            self::assertSame($expectedFaviconCollection[$index]->getIconType(), $favicon->getIconType());
+            self::assertSame($expectedFaviconCollection[$index]->getIconSize(), $favicon->getIconSize());
+        }
     }
 
     /** @test */
@@ -361,21 +364,98 @@ class HttpDriverTest extends TestCase
     public function allFaviconLinksInHtmlProvider(): array
     {
         return [
-            [$this->htmlOptionOne(),
-                new FaviconCollection([
-                    new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'),
+            [
+                $this->htmlOptionOne(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON)
                 ]),
             ],
-            //            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico'],
-            //            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico'],
-            //            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png'],
-            //            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico'],
-            //            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico'],
-            //            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico'],
-            //            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico'],
-            //            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico'],
-            //            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico'],
-            //            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png'],
+            [
+                $this->htmlOptionTwo(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON)
+                ]),
+            ],
+            [
+                $this->htmlOptionThree(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionFour(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/favicon/favicon-32x32.png'))->setIconSize(null)->setIconType(Favicon::TYPE_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-57x57.png'))->setIconSize(57)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-60x60.png'))->setIconSize(60)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-72x72.png'))->setIconSize(72)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-72x72.png'))->setIconSize(76)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-76x76.png'))->setIconSize(114)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-120x120.png'))->setIconSize(120)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-144x144.png'))->setIconSize(144)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-152x152.png'))->setIconSize(152)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/favicon/android-icon-192x192.png'))->setIconSize(192)->setIconType(Favicon::TYPE_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionFive(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionSix(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/images/favicon.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionSeven(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/images/favicon.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionEight(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/images/favicon.ico'))->setIconType(Favicon::TYPE_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionNine(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://example.com/images/favicon.ico'))->setIconType(Favicon::TYPE_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionTen(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://www.example.com/favicon123.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+                    (new Favicon('https://example.com', 'https://www.example.com/favicon123.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+                ]),
+            ],
+            [
+                $this->htmlOptionEleven(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-57x57.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(57),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-60x60.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(60),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-72x72.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(72),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-76x76.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(76),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-114x114.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(114),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-120x120.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(120),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-144x144.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(144),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-152x152.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(152),
+                    (new Favicon('https://example.com', 'https://example.com/apple-icon-200x200.png'))->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON)->setIconSize(200),
+                    (new Favicon('https://example.com', 'https://example.com/android-icon-192x192.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(192),
+                    (new Favicon('https://example.com', 'https://example.com/favicon-32x32.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(32),
+                    (new Favicon('https://example.com', 'https://example.com/favicon-96x96.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(96),
+                ])
+            ],
         ];
     }
 
