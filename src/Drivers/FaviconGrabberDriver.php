@@ -7,6 +7,7 @@ use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
+use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Support\Facades\Http;
@@ -54,6 +55,6 @@ class FaviconGrabberDriver implements Fetcher
 
     public function fetchAll(string $url): FaviconCollection
     {
-        // TODO Implement this method.
+        throw new FeatureNotSupportedException('The FaviconGrabber driver does not support fetching all favicons.');
     }
 }
