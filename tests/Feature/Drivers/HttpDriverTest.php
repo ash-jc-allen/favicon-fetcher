@@ -87,7 +87,11 @@ class HttpDriverTest extends TestCase
     {
         Cache::put(
             'favicon-fetcher.example.com',
-            'url-goes-here',
+            [
+                'favicon_url' => 'url-goes-here',
+                'icon_size' => null,
+                'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
+            ],
             now()->addHour()
         );
 
