@@ -15,7 +15,7 @@ final class FaviconCollectionTest extends TestCase
     use LazilyRefreshDatabase;
 
     /** @test */
-    public function favicon_collection_can_be_cached(): void
+    public function favicon_collection_can_be_cached_if_the_collection_was_not_retrieved_from_the_cache(): void
     {
         $collection = FaviconCollection::make([
             (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
@@ -40,6 +40,59 @@ final class FaviconCollectionTest extends TestCase
                 ],
             ],
             actual: $cachedItems
+        );
+    }
+
+    /** @test */
+    public function favicon_collection_can_be_cached_if_the_collection_was_retrieved_from_the_cache_and_the_force_flag_is_true(): void
+    {
+        Cache::put(
+            key: 'favicon-fetcher.example.com.collection',
+            value: 'Dummy value here that should be overridden',
+            ttl: now()->addDay(),
+        );
+
+        FaviconCollection::makeFromCache([
+            (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+            (new Favicon('https://example.com', 'https://example.com/images/favicon.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+        ])->cache(now()->addDay(), true);
+
+        // Assert that the items in the database were overridden.
+        self::assertSame(
+            expected: [
+                [
+                    'favicon_url' => 'https://example.com/images/apple-icon-180x180.png',
+                    'icon_size' => 180,
+                    'icon_type' => 'apple_touch_icon',
+                ],
+                [
+                    'favicon_url' => 'https://example.com/images/favicon.ico',
+                    'icon_size' => null,
+                    'icon_type' => 'shortcut_icon',
+                ],
+            ],
+            actual: Cache::get('favicon-fetcher.example.com.collection')
+        );
+    }
+
+    /** @test */
+    public function favicon_collection_is_not_cached_if_the_collection_was_retrieved_from_the_cache_and_the_force_flag_is_false(): void
+    {
+        Cache::put(
+            key: 'favicon-fetcher.example.com.collection',
+            value: 'Dummy value here that should not be overridden',
+            ttl: now()->addDay(),
+        );
+
+        FaviconCollection::makeFromCache([
+            (new Favicon('https://example.com', 'https://example.com/images/apple-icon-180x180.png'))->setIconSize(180)->setIconType(Favicon::TYPE_APPLE_TOUCH_ICON),
+            (new Favicon('https://example.com', 'https://example.com/images/favicon.ico'))->setIconType(Favicon::TYPE_SHORTCUT_ICON),
+        ])->cache(now()->addDay());
+
+        // Assert that the items in the database were not overridden.
+        self::assertSame(
+            expected: 'Dummy value here that should not be overridden',
+            actual: Cache::get('favicon-fetcher.example.com.collection')
         );
     }
 

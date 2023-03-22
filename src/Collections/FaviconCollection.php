@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AshAllenDesign\FaviconFetcher\Collections;
 
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
@@ -16,25 +18,38 @@ class FaviconCollection extends Collection
     use HasDefaultFunctionality;
 
     /**
-     * Cache the collection of favicons.
-     *
-     * @param CarbonInterface $ttl
-     * @return void
+     * Whether the favicons in this collection were all retrieved from the cache.
      */
-    public function cache(CarbonInterface $ttl): void
+    protected bool $retrievedFromCache = false;
+
+    public static function makeFromCache($items = []): static
     {
-        $cacheKey = $this->buildCacheKeyForCollection($this->first()->getUrl());
+        $collection = new static($items);
 
-        $cacheData = $this->map(fn (Favicon $favicon): array => $favicon->toCache())->all();
+        $collection->retrievedFromCache = true;
 
-        Cache::put($cacheKey, $cacheData, $ttl);
+        return $collection;
+    }
+
+    /**
+     * Cache the collection of favicons.
+     */
+    public function cache(CarbonInterface $ttl, bool $force = false): static
+    {
+        if ($force || ! $this->retrievedFromCache) {
+            $cacheKey = $this->buildCacheKeyForCollection($this->first()->getUrl());
+
+            $cacheData = $this->map(fn(Favicon $favicon): array => $favicon->toCache())->all();
+
+            Cache::put($cacheKey, $cacheData, $ttl);
+        }
+
+        return $this;
     }
 
     /**
      * Get the favicon with the largest icon size. Any icons with an unknown size (null)
      * will be treated as having a size of 0.
-     *
-     * @return Favicon|null
      */
     public function largest(): ?Favicon
     {
