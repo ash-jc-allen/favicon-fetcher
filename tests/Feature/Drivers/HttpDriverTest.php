@@ -275,22 +275,86 @@ class HttpDriverTest extends TestCase
     }
 
     /** @test */
-    public function empty_favicon_collection_is_returned_if_no_icons_can_be_found_for_a_url(): void
+    public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html_when_trying_to_get_all_icons(): void
     {
+        $responseHtml = <<<'HTML'
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
+
+        Http::fake([
+            'https://example.com' => Http::response($responseHtml),
+            'https://example.com/favicon.ico' => Http::response('favicon contents here'),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAll('https://example.com');
+
+        self::assertCount(1, $favicons);
+        self::assertSame($favicons->first()->getFaviconUrl(), 'https://example.com/favicon.ico');
     }
 
     /** @test */
-    public function error_is_thrown_if_trying_to_find_all_the_favicons_for_a_url_that_does_not_exist(): void
+    public function empty_favicon_collection_is_returned_if_the_url_cannot_be_reached(): void
     {
+        $responseHtml = <<<'HTML'
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
+
+        Http::fake([
+            'https://example.com' => Http::response('not found', 404),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAll('https://example.com');
+
+        self::assertCount(0, $favicons);
+    }
+
+    /** @test */
+    public function empty_favicon_collection_is_returned_if_no_icons_can_be_found_for_a_url(): void
+    {
+        $responseHtml = <<<'HTML'
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
+
+        Http::fake([
+            'https://example.com' => Http::response($responseHtml),
+            'https://example.com/favicon.ico' => Http::response('not found', 404),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAll('https://example.com');
+
+        self::assertCount(0, $favicons);
+    }
+
+    /** @test */
+    public function error_is_thrown_if_trying_to_find_all_the_favicons_for_an_invalid_url(): void
+    {
+        Http::fake([
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $exception = null;
+
+        try {
+            (new HttpDriver())->fetchAll('example.com');
+        } catch (\Exception $e) {
+            $exception = $e;
+        }
+
+        self::assertInstanceOf(InvalidUrlException::class, $exception);
+        self::assertSame('example.com is not a valid URL', $exception->getMessage());
     }
 
     /** @test */
     public function all_favicons_for_a_url_can_be_fetched_from_the_cache(): void
-    {
-    }
-
-    /** @test */
-    public function all_favicons_for_a_url_can_be_cached(): void
     {
     }
 
