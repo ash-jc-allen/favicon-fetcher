@@ -27,9 +27,10 @@ class HttpDriverTest extends TestCase
     public function favicon_can_be_fetched_using_link_element_in_html(
         string $html,
         string $expectedFaviconUrl,
-        ?int $expectedSize,
+        ?int   $expectedSize,
         string $expectedType,
-    ): void {
+    ): void
+    {
         Http::fake([
             'https://example.com' => Http::response($html),
             $expectedFaviconUrl => Http::response('favicon contents here'),
@@ -77,9 +78,9 @@ class HttpDriverTest extends TestCase
             '*' => Http::response('should not hit here'),
         ]);
 
-        $favicon = (new HttpDriver())->fetch($protocol.'://example.com');
+        $favicon = (new HttpDriver())->fetch($protocol . '://example.com');
 
-        self::assertSame($protocol.'://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
+        self::assertSame($protocol . '://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
     }
 
     /** @test */
@@ -357,8 +358,86 @@ class HttpDriverTest extends TestCase
     }
 
     /** @test */
-    public function all_favicons_for_a_url_can_be_fetched_from_the_cache(): void
+    public function all_favicon_for_a_url_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
+        Cache::put(
+            'favicon-fetcher.example.com.collection',
+            [
+                [
+                    'favicon_url' => 'url-goes-here',
+                    'icon_size' => null,
+                    'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
+                ],
+                [
+                    'favicon_url' => 'url-goes-here-1',
+                    'icon_size' => 100,
+                    'icon_type' => Favicon::TYPE_ICON,
+                ],
+                [
+                    'favicon_url' => 'url-goes-here-1.com',
+                    'icon_size' => 192,
+                    'icon_type' => Favicon::TYPE_APPLE_TOUCH_ICON,
+                ],
+            ],
+            now()->addHour(),
+        );
+
+        Http::fake([
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAll('https://example.com');
+
+        self::assertCount(3, $favicons);
+
+        self::assertSame('url-goes-here', $favicons->first()->getFaviconUrl());
+        self::assertSame('url-goes-here-1', $favicons->skip(1)->first()->getFaviconUrl());
+        self::assertSame('url-goes-here-1.com', $favicons->skip(2)->first()->getFaviconUrl());
+
+        self::assertNull($favicons->first()->getIconSize());
+        self::assertSame(100, $favicons->skip(1)->first()->getIconSize());
+        self::assertSame(192, $favicons->skip(2)->first()->getIconSize());
+
+        self::assertSame(Favicon::TYPE_ICON_UNKNOWN, $favicons->first()->getIconType());
+        self::assertSame(Favicon::TYPE_ICON, $favicons->skip(1)->first()->getIconType());
+        self::assertSame(Favicon::TYPE_APPLE_TOUCH_ICON, $favicons->skip(2)->first()->getIconType());
+    }
+
+    /** @test */
+    public function all_favicons_for_a_url_are_not_fetched_from_the_cache_if_it_exists_but_the_use_cache_flag_is_false(): void
+    {
+        Cache::put(
+            'favicon-fetcher.example.com.collection',
+            [
+                [
+                    'favicon_url' => 'url-goes-here',
+                    'icon_size' => null,
+                    'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
+                ],
+                [
+                    'favicon_url' => 'url-goes-here-1',
+                    'icon_size' => 100,
+                    'icon_type' => Favicon::TYPE_ICON,
+                ],
+                [
+                    'favicon_url' => 'url-goes-here-1.com',
+                    'icon_size' => 192,
+                    'icon_type' => Favicon::TYPE_APPLE_TOUCH_ICON,
+                ],
+            ],
+            now()->addHour(),
+        );
+
+        Http::fake([
+            'https://example.com' => Http::response('<link href="/icon/favicon.ico" rel="icon">'),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->useCache(false)->fetchAll('https://example.com');
+
+        self::assertCount(1, $favicons);
+
+        self::assertSame('https://example.com/icon/favicon.ico', $favicons->first()->getFaviconUrl());
     }
 
     public function allFaviconLinksInHtmlProvider(): array
