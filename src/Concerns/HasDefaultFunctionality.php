@@ -178,7 +178,7 @@ trait HasDefaultFunctionality
      * Return a collection of cached favicons if they exist, or return null.
      *
      * @param  string  $url
-     * @return FetchedFavicon|null
+     * @return FaviconCollection|null
      *
      * @throws FaviconFetcherException
      */
