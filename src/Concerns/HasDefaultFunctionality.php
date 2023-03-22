@@ -153,8 +153,16 @@ trait HasDefaultFunctionality
             return null;
         }
 
-        if (! is_array($cachedFaviconData)) {
-            throw new FaviconFetcherException('The cached favicon data is not a valid array.');
+        // If the cached data is still stored in the older format used in
+        // v1 of the package, then we convert it to the new format. In
+        // v3 of the package, we will remove this check and enforce
+        // an array to be stored.
+        if (is_string($cachedFaviconData)) {
+            $cachedFaviconData = [
+                'favicon_url' => $cachedFaviconData,
+                'icon_type' => FetchedFavicon::TYPE_ICON_UNKNOWN,
+                'icon_size' => null,
+            ];
         }
 
         return (new FetchedFavicon(

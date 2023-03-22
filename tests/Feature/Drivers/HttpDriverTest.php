@@ -103,6 +103,28 @@ class HttpDriverTest extends TestCase
         $favicon = (new HttpDriver())->fetch('https://example.com');
 
         self::assertSame('url-goes-here', $favicon->getFaviconUrl());
+        self::assertNull($favicon->getIconSize());
+        self::assertSame(Favicon::TYPE_ICON_UNKNOWN, $favicon->getIconType());
+    }
+
+    /** @test */
+    public function favicon_can_be_fetched_from_the_cache_if_it_already_exists_in_the_old_string_format(): void
+    {
+        Cache::put(
+            'favicon-fetcher.example.com',
+            'url-goes-here',
+            now()->addHour()
+        );
+
+        Http::fake([
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())->fetch('https://example.com');
+
+        self::assertSame('url-goes-here', $favicon->getFaviconUrl());
+        self::assertNull($favicon->getIconSize());
+        self::assertSame(Favicon::TYPE_ICON_UNKNOWN, $favicon->getIconType());
     }
 
     /** @test */
