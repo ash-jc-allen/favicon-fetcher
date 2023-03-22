@@ -12,6 +12,7 @@ trait BuildsCacheKeys
      */
     protected function buildCacheKey(string $url): string
     {
+        // TODO Update this method to also use the type and and size of the favicon.
         $url = str_replace(['http://', 'https://'], '', $url);
 
         return config('favicon-fetcher.cache.prefix').'.'.$url;
