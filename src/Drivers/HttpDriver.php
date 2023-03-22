@@ -182,15 +182,10 @@ class HttpDriver implements Fetcher
 
         preg_match_all($pattern, $html, $linkElementLines);
 
-        // TODO What should we do if no link elements were found? Return null or an empty collection?
-        if (! isset($linkElementLines[0])) {
-            return null;
-        }
-
         // If multiple link elements were found in a single line, we need to loop
         // through and split them out.
         return collect($linkElementLines[0])
-            ->map(function (string $htmlLine) {
+            ->map(function (string $htmlLine): array {
                 return collect(explode('>', $htmlLine))
                     ->filter(
                         fn (string $link): bool => Str::is([

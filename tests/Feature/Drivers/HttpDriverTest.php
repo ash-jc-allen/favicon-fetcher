@@ -302,12 +302,6 @@ class HttpDriverTest extends TestCase
     /** @test */
     public function empty_favicon_collection_is_returned_if_the_url_cannot_be_reached(): void
     {
-        $responseHtml = <<<'HTML'
-            <html lang="en">
-                <link rel="localization" href="branding/brand.ftl" />
-            </html>
-        HTML;
-
         Http::fake([
             'https://example.com' => Http::response('not found', 404),
             '*' => Http::response('should not hit here'),
