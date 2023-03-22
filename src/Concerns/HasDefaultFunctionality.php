@@ -2,6 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Concerns;
 
+use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
@@ -163,5 +164,36 @@ trait HasDefaultFunctionality
         ))
             ->setIconType($cachedFaviconData['icon_type'])
             ->setIconSize($cachedFaviconData['icon_size']);
+    }
+
+    /**
+     * Return a collection of cached favicons if they exist, or return null.
+     *
+     * @param  string  $url
+     * @return FetchedFavicon|null
+     *
+     * @throws FaviconFetcherException
+     */
+    protected function attemptToFetchCollectionFromCache(string $url): ?FaviconCollection
+    {
+        $cachedFaviconsData = Cache::get($this->buildCacheKeyForCollection($url));
+
+        if (!$cachedFaviconsData) {
+            return null;
+        }
+
+        $favicons = new FaviconCollection();
+
+        foreach ($cachedFaviconsData as $cachedFaviconData) {
+            $favicons->push((new FetchedFavicon(
+                url: $url,
+                faviconUrl: $cachedFaviconData['favicon_url'],
+                retrievedFromCache: true,
+            ))
+                ->setIconType($cachedFaviconData['icon_type'])
+                ->setIconSize($cachedFaviconData['icon_size']));
+        }
+
+        return $favicons;
     }
 }

@@ -21,6 +21,7 @@
     * [Fetching Favicons](#fetching-favicons)
         + [Using the `fetch` Method](#using-the-fetch-method)
         + [Using the `fetchOr` Method](#using-the-fetchor-method)
+        + [Using the `fetchAll` Method](#using-the-fetchall-method)
     * [Exceptions](#exceptions)
     * [Drivers](#drivers)
     * [Available Drivers](#available-drivers)
@@ -32,6 +33,8 @@
         + [Using `store`](#using-store)
         + [Using `storeAs`](#using-storeas)
     * [Caching Favicons](#caching-favicons)
+    * [Favicon Types](#favicon-types)
+    * [Favicon Sizes](#favicon-sizes)
 - [Testing](#testing)
 - [Security](#security)
 - [Contribution](#contribution)
@@ -106,6 +109,28 @@ $favicon = Favicon::fetchOr('https://ashallendesign.co.uk', function ($url) {
     return 'https://example.com/favicon.ico';
 });
 ```
+
+#### Using the `fetchAll` Method
+
+There may be times when you want to retrieve the different sized favicons for a given website. To get the different sized favicons, you can use the `fetchAll` method which will return an instance of `AshAllenDesign\FaviconFetcher\FaviconCollection`:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$favicons = Favicon::fetchAll('https://ashallendesign.co.uk');
+```
+
+The `FaviconCollection` class extends the `Illuminate\Support\Collection` class, so you can use all the methods available on the `Collection` class.
+
+It also includes a `largest` method that you can use to get the favicon with the largest dimensions. It's worth noting that if the size of the favicon is unknown, it will be treated as if it has a size of `0x0px` when determining which is the largest.  For example, you can use the `largest` method like this:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$largestFavicon = Favicon::fetchAll('https://ashallendesign.co.uk')->largest();
+```
+
+Note: Only the `http` driver supports retrieving all the favicons for a given website. For this reason, the `fetchAll` method does not support fallbacks. Support may be added for other drivers and fallbacks in the future. 
 
 ### Exceptions
 
@@ -283,7 +308,7 @@ To cache a favicon, you can use the `cache` method available on the `Favicon` cl
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 
-$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->cache(now()->addDay());
+$favicon = Favicon::fetch('https://ashallendesign.co.uk')->cache(now()->addDay());
 ```
 
 By default, the package will always try and resolve the favicon from the cache before attempting to retrieve a fresh version. However, if you want to disable the cache and always retrieve a fresh version, you can use the `useCache` method like so:
@@ -291,7 +316,7 @@ By default, the package will always try and resolve the favicon from the cache b
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 
-$faviconPath = Favicon::useCache(false)->fetch('https://ashallendesign.co.uk');
+$favicon = Favicon::useCache(false)->fetch('https://ashallendesign.co.uk');
 ```
 
 The package uses `favicon-fetcher` as a prefix for all the cache keys. If you'd like to change this, you can do so by changing the `cache.prefix` field in the `favicon-fethcher` config file. For example, to change the prefix to `my-awesome-prefix`, you could update your config file like so:
@@ -309,6 +334,50 @@ return [
 
 ]
 ```
+
+The package also provides the functionality for you to cache collections of favicons that have been retrieved using the `fetchAll` method. You can do this by calling the `cache` on the `FaviconCollection` class like so:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconCollection = Favicon::fetchAll('https://ashallendesign.co.uk')->cache(now()->addDay());
+```
+
+### Favicon Types
+
+When attempting to retrieve favicons using the `http` driver, we may be able to determine the favicons' type (such as `icon`, `shortcut icon`, or `apple-touch-icon`). To get the type of the favicon, you can use the `getIconType` method like so:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconPath = Favicon::fetch('https://ashallendesign.co.uk')->getIconType();
+```
+
+This method can return one of four constants defined on the `Favicon` class: `TYPE_ICON`, `TYPE_SHORTCUT_ICON`, `TYPE_APPLE_TOUCH_ICON`, and `TYPE_ICON_UNKNOWN`.
+
+You can make use of these constants for things like filtering. For example, if you wanted to get all the icons except the `apple-touch-icon`, you could do the following:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconCollection = Favicon::fetchAll('https://ashallendesign.co.uk');
+
+$faviconCollection->filter(function ($favicon) {
+    return $favicon->getIconType() !== Favicon::TYPE_APPLE_TOUCH_ICON;
+});
+```
+
+### Favicon Sizes
+
+When attempting to retrieve favicons using the `http` driver, me may be able to determine the favicons' sizes. To get the size of the favicon, you can use the `getIconSize` method like so:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$faviconSize = Favicon::fetch('https://ashallendesign.co.uk')->getIconSize();
+```
+
+It's assumed that the icons are square, so only a single integer will be returned. For example, if a favicon is 16x16px, then the `getIconSize` method will return `16`. If the size is unknown, `null` will be returned.
 
 ## Testing
 
