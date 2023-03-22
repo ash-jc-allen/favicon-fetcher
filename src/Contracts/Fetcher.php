@@ -20,7 +20,7 @@ interface Fetcher
     /**
      * Attempt to fetch all favicons and icons for the given URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return FaviconCollection
      */
     public function fetchAll(string $url): FaviconCollection;

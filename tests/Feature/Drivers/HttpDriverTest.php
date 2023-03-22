@@ -277,25 +277,21 @@ class HttpDriverTest extends TestCase
     /** @test */
     public function empty_favicon_collection_is_returned_if_no_icons_can_be_found_for_a_url(): void
     {
-
     }
 
     /** @test */
     public function error_is_thrown_if_trying_to_find_all_the_favicons_for_a_url_that_does_not_exist(): void
     {
-
     }
 
     /** @test */
     public function all_favicons_for_a_url_can_be_fetched_from_the_cache(): void
     {
-
     }
 
     /** @test */
     public function all_favicons_for_a_url_can_be_cached(): void
     {
-
     }
 
     public function allFaviconLinksInHtmlProvider(): array
@@ -303,19 +299,19 @@ class HttpDriverTest extends TestCase
         return [
             [$this->htmlOptionOne(),
                 new FaviconCollection([
-                    new Favicon('https://example.com', 'https://example.com/icon/is/here.ico')
+                    new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'),
                 ]),
             ],
-//            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico'],
-//            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico'],
-//            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png'],
-//            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico'],
-//            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico'],
-//            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico'],
-//            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico'],
-//            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico'],
-//            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico'],
-//            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png'],
+            //            [$this->htmlOptionTwo(), 'https://example.com/icon/is/here.ico'],
+            //            [$this->htmlOptionThree(), 'https://example.com/icon/is/here.ico'],
+            //            [$this->htmlOptionFour(), 'https://example.com/favicon/favicon-32x32.png'],
+            //            [$this->htmlOptionFive(), 'https://example.com/icon/is/here.ico'],
+            //            [$this->htmlOptionSix(), 'https://example.com/images/favicon.ico'],
+            //            [$this->htmlOptionSeven(), 'https://example.com/images/favicon.ico'],
+            //            [$this->htmlOptionEight(), 'https://example.com/images/favicon.ico'],
+            //            [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico'],
+            //            [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico'],
+            //            [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png'],
         ];
     }
 

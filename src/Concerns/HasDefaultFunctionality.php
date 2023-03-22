@@ -139,19 +139,20 @@ trait HasDefaultFunctionality
     /**
      * Return the cached favicon, if one exists, or return null.
      *
-     * @param string $url
+     * @param  string  $url
      * @return FetchedFavicon|null
+     *
      * @throws FaviconFetcherException
      */
     protected function attemptToFetchFromCache(string $url): ?FetchedFavicon
     {
         $cachedFaviconData = Cache::get($this->buildCacheKey($url));
 
-        if (!$cachedFaviconData) {
+        if (! $cachedFaviconData) {
             return null;
         }
 
-        if (!is_array($cachedFaviconData)) {
+        if (! is_array($cachedFaviconData)) {
             throw new FaviconFetcherException('The cached favicon data is not a valid array.');
         }
 
