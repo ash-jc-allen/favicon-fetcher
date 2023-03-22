@@ -336,7 +336,7 @@ return [
 ]
 ```
 
-The package also provides the functionality for you to cache collections of favicons that have been retrieved using the `fetchAll` method. You can do this by calling the `cache` on the `FaviconCollection` class like so:
+The package also provides the functionality for you to cache collections of favicons that have been retrieved using the `fetchAll` method. You can do this by calling the `cache` method on the `FaviconCollection` class like so:
 
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
@@ -370,7 +370,7 @@ $faviconCollection->filter(function ($favicon) {
 
 ### Favicon Sizes
 
-When attempting to retrieve favicons using the `http` driver, me may be able to determine the favicons' sizes. To get the size of the favicon, you can use the `getIconSize` method like so:
+When attempting to retrieve favicons using the `http` driver, we may be able to determine the favicons' sizes. To get the size of the favicon, you can use the `getIconSize` method like so:
 
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;

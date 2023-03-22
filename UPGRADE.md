@@ -32,6 +32,6 @@ Previously, Favicon Fetcher only stored the URL of the favicon when calling the 
 
 This means that instead of a string being stored in the cache, an array is now stored instead.
 
-The package has backwards-compatible support to handle items cached before v2.0.0. If you are attempting to retrieve a cached favicon that was stored in the cache before v2.0.0, the `Favicon` class' type and size won't be set. The size and type will only be available on Favicons that were cached from v2.0.0 onwards.
+The package has some minor backwards-compatible support to handle items cached before v2.0.0. If you are attempting to retrieve a cached favicon that was stored in the cache before v2.0.0, the `Favicon` class' type and size won't be set. The size and type will only be available on Favicons that were cached from v2.0.0 onwards.
 
 In a future release (likely v3.0.0), the backwards-compatible support will be removed so that only arrays can be read from the cache.
