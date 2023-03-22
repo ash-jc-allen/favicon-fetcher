@@ -59,9 +59,10 @@ class FaviconTest extends TestCase
     /** @test */
     public function retrieved_from_cache_value_can_be_returned_if_the_favicon_was_retrieved_from_the_cache(): void
     {
-        $favicon = Favicon::makeFromCache(
+        $favicon = new Favicon(
             url: 'https://example.com',
             faviconUrl: 'https://example.com/favicon.ico',
+            retrievedFromCache: true,
         );
 
         self::assertTrue($favicon->retrievedFromCache());
@@ -112,10 +113,11 @@ class FaviconTest extends TestCase
 
         Cache::shouldReceive('put')->never();
 
-        Favicon::makeFromCache(
-            'https://example.com',
-            'https://example.com/favicon.ico',
-        )->cache($expectedTtl);
+        (new Favicon(
+            url: 'https://example.com',
+            faviconUrl: 'https://example.com/favicon.ico',
+            retrievedFromCache: true,
+        ))->cache($expectedTtl);
     }
 
     /** @test */
@@ -137,10 +139,10 @@ class FaviconTest extends TestCase
             ])
             ->once();
 
-        Favicon::makeFromCache(
+        (new Favicon(
             'https://example.com',
             'https://example.com/favicon.ico',
-        )->cache(now()->addMinute(), true);
+        ))->cache(now()->addMinute(), true);
     }
 
     /** @test */

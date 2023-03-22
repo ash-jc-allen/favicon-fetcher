@@ -92,24 +92,6 @@ class Favicon
         return $this;
     }
 
-    /**
-     * Create a new Favicon object using data retrieved from the cache.
-     *
-     * @param  string  $url
-     * @param  string  $faviconUrl
-     * @return self
-     */
-    public static function makeFromCache(string $url, string $faviconUrl): self
-    {
-        // TODO Get the icon type and size from the cache too.
-
-        return new self(
-            url: $url,
-            faviconUrl: $faviconUrl,
-            retrievedFromCache: true
-        );
-    }
-
     public function getUrl(): string
     {
         return $this->url;
