@@ -367,13 +367,13 @@ class HttpDriverTest extends TestCase
             [
                 $this->htmlOptionOne(),
                 FaviconCollection::make([
-                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON)
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON),
                 ]),
             ],
             [
                 $this->htmlOptionTwo(),
                 FaviconCollection::make([
-                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON)
+                    (new Favicon('https://example.com', 'https://example.com/icon/is/here.ico'))->setIconType(Favicon::TYPE_ICON),
                 ]),
             ],
             [
@@ -454,7 +454,7 @@ class HttpDriverTest extends TestCase
                     (new Favicon('https://example.com', 'https://example.com/android-icon-192x192.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(192),
                     (new Favicon('https://example.com', 'https://example.com/favicon-32x32.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(32),
                     (new Favicon('https://example.com', 'https://example.com/favicon-96x96.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(96),
-                ])
+                ]),
             ],
         ];
     }
