@@ -42,7 +42,7 @@ class HttpDriver implements Fetcher
         $favicon = $this->attemptToResolveFromHeadTags($url)
             ?? new Favicon(url: $url, faviconUrl: $this->guessDefaultUrl($url), fromDriver: $this);
 
-        $faviconCanBeReached = $this->attemptToResolveFromUrl($favicon->getFaviconUrl());
+        $faviconCanBeReached = $this->faviconUrlCanBeReached($favicon->getFaviconUrl());
 
         return $faviconCanBeReached
             ? $favicon
@@ -86,18 +86,12 @@ class HttpDriver implements Fetcher
      * is successful, we can assume that a valid favicon was returned.
      * Otherwise, we can assume that a favicon wasn't found.
      *
-     * @param  string  $url
-     * @param  string  $faviconUrl
-     * @return Favicon|null
+     * @param string $faviconUrl
+     * @return bool
      */
-    private function attemptToResolveFromUrl(string $faviconUrl): bool
+    private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
         return Http::get($faviconUrl)->successful();
-
-        // TODO Attempt to resolve the icon type.
-        // TODO Attempt to resolve the icon size here.
-
-        return $response->successful() ? new Favicon($url, $faviconUrl, null, null, $this) : null;
     }
 
     /**
