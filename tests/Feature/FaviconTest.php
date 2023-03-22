@@ -88,7 +88,11 @@ class FaviconTest extends TestCase
         Cache::shouldReceive('put')
             ->withArgs([
                 'favicon-fetcher.example.com',
-                'https://example.com/favicon.ico',
+                [
+                    'favicon_url' => 'https://example.com/favicon.ico',
+                    'icon_size' => null,
+                    'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
+                ],
                 Mockery::on(fn(CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
             ->once();
@@ -124,7 +128,11 @@ class FaviconTest extends TestCase
         Cache::shouldReceive('put')
             ->withArgs([
                 'favicon-fetcher.example.com',
-                'https://example.com/favicon.ico',
+                [
+                    'favicon_url' => 'https://example.com/favicon.ico',
+                    'icon_size' => null,
+                    'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
+                ],
                 Mockery::on(fn(CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
             ])
             ->once();

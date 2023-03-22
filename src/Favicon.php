@@ -146,7 +146,11 @@ class Favicon
     public function cache(CarbonInterface $ttl, bool $force = false): self
     {
         if ($force || ! $this->retrievedFromCache) {
-            Cache::put($this->buildCacheKey($this->url), $this->getFaviconUrl(), $ttl);
+            Cache::put(
+                $this->buildCacheKey($this->url),
+                $this->toCache(),
+                $ttl
+            );
         }
 
         return $this;
@@ -240,5 +244,19 @@ class Favicon
                 self::TYPE_ICON_UNKNOWN,
             ],
             strict: true);
+    }
+
+    /**
+     * Transform the favicon object into an array that can be cached.
+     *
+     * @return array
+     */
+    private function toCache(): array
+    {
+        return [
+            'favicon_url' => $this->getFaviconUrl(),
+            'icon_size' => $this->getIconSize(),
+            'icon_type' => $this->getIconType(),
+        ];
     }
 }
