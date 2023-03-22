@@ -39,6 +39,7 @@
 - [Security](#security)
 - [Contribution](#contribution)
 - [Changelog](#changelog)
+- [Upgrading](#upgrading)
 - [Credits](#credits)
 - [License](#license)
 
@@ -411,6 +412,10 @@ To contribute to this package, please use the following guidelines before submit
 ## Changelog
 
 Check the [CHANGELOG](CHANGELOG.md) to get more information about the latest changes.
+
+## Upgrading
+
+Check the [UPGRADE](UPGRADE.md) guide to get more information on how to update this library to newer versions.
 
 ## Credits
 
