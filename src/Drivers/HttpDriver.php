@@ -169,7 +169,7 @@ class HttpDriver implements Fetcher
             return $favicon;
         });
 
-        return FaviconCollection::make($favicons);
+        return new FaviconCollection($favicons);
     }
 
     /**
