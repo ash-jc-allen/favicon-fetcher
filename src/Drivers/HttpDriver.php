@@ -57,6 +57,10 @@ class HttpDriver implements Fetcher
             throw new InvalidUrlException($url.' is not a valid URL');
         }
 
+        if ($this->useCache && $favicons = $this->attemptToFetchCollectionFromCache($url)) {
+            return $favicons;
+        }
+
         $favicons = $this->attemptToResolveAllFromHeadTags($url);
 
         // If the URL couldn't be reached, throw and exception and return

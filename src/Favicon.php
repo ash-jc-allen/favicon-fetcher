@@ -251,7 +251,7 @@ class Favicon
      *
      * @return array
      */
-    private function toCache(): array
+    public function toCache(): array
     {
         return [
             'favicon_url' => $this->getFaviconUrl(),
