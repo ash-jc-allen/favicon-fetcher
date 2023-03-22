@@ -18,7 +18,7 @@ class FaviconCollection extends Collection
     /**
      * Cache the collection of favicons.
      *
-     * @param CarbonInterface $ttl
+     * @param  CarbonInterface  $ttl
      * @return void
      */
     public function cache(CarbonInterface $ttl): void
