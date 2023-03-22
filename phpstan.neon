@@ -9,5 +9,7 @@ parameters:
     level: 6
 
     ignoreErrors:
+        - "#^Unsafe usage of new static#"
+        - '#^Call to an undefined method AshAllenDesign\\FaviconFetcher\\Collections\\FaviconCollection::fetch\(\)#'
 
     checkMissingIterableValueType: false

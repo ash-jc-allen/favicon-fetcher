@@ -22,7 +22,11 @@ class FaviconCollection extends Collection
      */
     protected bool $retrievedFromCache = false;
 
-    public static function makeFromCache($items = []): static
+    /**
+     * @param  array<array<int,string>>  $items
+     * @return static
+     */
+    public static function makeFromCache(array $items = []): static
     {
         $collection = new static($items);
 
@@ -34,12 +38,12 @@ class FaviconCollection extends Collection
     /**
      * Cache the collection of favicons.
      */
-    public function cache(CarbonInterface $ttl, bool $force = false): static
+    public function cache(CarbonInterface $ttl, bool $force = false): self
     {
         if ($force || ! $this->retrievedFromCache) {
             $cacheKey = $this->buildCacheKeyForCollection($this->first()->getUrl());
 
-            $cacheData = $this->map(fn(Favicon $favicon): array => $favicon->toCache())->all();
+            $cacheData = $this->map(fn (Favicon $favicon): array => $favicon->toCache())->all();
 
             Cache::put($cacheKey, $cacheData, $ttl);
         }

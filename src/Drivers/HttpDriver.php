@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
@@ -167,12 +169,12 @@ class HttpDriver implements Fetcher
             return $favicon;
         });
 
-        return FaviconCollection::make($favicons);
+        return new FaviconCollection($favicons);
     }
 
     /**
      * @param  string  $html
-     * @return Collection<string>
+     * @return Collection<int, string>
      */
     private function findAllLinkElements(string $html): Collection
     {
@@ -182,6 +184,7 @@ class HttpDriver implements Fetcher
 
         // If multiple link elements were found in a single line, we need to loop
         // through and split them out.
+        /** @phpstan-ignore-next-line  */
         return collect($linkElementLines[0])
             ->map(function (string $htmlLine): array {
                 return collect(explode('>', $htmlLine))
@@ -259,6 +262,11 @@ class HttpDriver implements Fetcher
             $stringUntilSizesAttr = strstr($linkElement, "sizes='");
         }
 
+        // If we couldn't find a "sizes" attribute, then we can't guess the size.
+        if (! $stringUntilSizesAttr) {
+            return null;
+        }
+
         // Replace the double or single quotes with a common delimiter
         // that can be used for exploding the string.
         $stringUntilSizesAttr = str_replace(
@@ -267,20 +275,15 @@ class HttpDriver implements Fetcher
             subject: $stringUntilSizesAttr
         );
 
-        // If we couldn't find a "sizes" attribute, then we can't guess the size.
-        if ($stringUntilSizesAttr === '') {
-            return null;
-        }
-
         // Find the size of the icon (e.g. - 192x192)
         $sizesIncludingX = explode('|', $stringUntilSizesAttr)[1];
 
         // The favicons should be squares, so the height and width should
         // be the same. So we can just return the first number.
-        return explode('x', $sizesIncludingX)[0];
+        return (int) explode('x', $sizesIncludingX)[0];
     }
 
-    private function guessTypeFromElement(string $linkElement): ?string
+    private function guessTypeFromElement(string $linkElement): string
     {
         $stringUntilRelAttr = strstr($linkElement, 'rel="');
 
