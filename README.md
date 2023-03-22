@@ -113,7 +113,7 @@ $favicon = Favicon::fetchOr('https://ashallendesign.co.uk', function ($url) {
 
 #### Using the `fetchAll` Method
 
-There may be times when you want to retrieve the different sized favicons for a given website. To get the different sized favicons, you can use the `fetchAll` method which will return an instance of `AshAllenDesign\FaviconFetcher\FaviconCollection`:
+There may be times when you want to retrieve the different sized favicons for a given website. To get the different sized favicons, you can use the `fetchAll` method which will return an instance of `AshAllenDesign\FaviconFetcher\Collections\FaviconCollection`:
 
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
