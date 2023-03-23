@@ -10,14 +10,18 @@
 
 The visibility of the `buildCacheKey` method in the `AshAllenDesign\FaviconFetcher\Concerns\BuildsCacheKeys` trait has been changed from `protected` to `public`. If you are overriding this method anywhere in your code, you'll need to update the visibility to `public`.
 
-### Added `fetchAll` Method to `Fetcher` Interface
+### Added `fetchAll` and `fetchAllOr` Methods to `Fetcher` Interface
 
-The `fetchAll` method has been added to the `AshAllenDesign\FaviconFetcher\Interfaces\Fetcher` interface. If you are implementing this interface in your own code, you'll need to add this method to your implementation.
+The `fetchAll` and `fetchAllOr` methods have been added to the `AshAllenDesign\FaviconFetcher\Interfaces\Fetcher` interface. If you are implementing this interface in your own code, you'll need to add these method to your implementation.
 
-The signature for the new method is:
+The signatures for the new methods are:
 
 ```php
 public function fetchAll(string $url): FaviconCollection;
+```
+
+```php
+public function fetchAllOr(string $url, mixed $default): mixed;
 ```
 
 ### Removed `makeFromCache` Method from `Favicon` Class
