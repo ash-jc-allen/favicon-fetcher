@@ -5,6 +5,7 @@ namespace AshAllenDesign\FaviconFetcher\Concerns;
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
+use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 use AshAllenDesign\FaviconFetcher\Favicon as FetchedFavicon;
@@ -51,6 +52,29 @@ trait HasDefaultFunctionality
     {
         if ($favicon = $this->fetch($url)) {
             return $favicon;
+        }
+
+        return $default instanceof \Closure ? $default($url) : $default;
+    }
+
+    /**
+     * Attempt to fetch all the favicons for the given URL. If the favicons cannot
+     * be found, return the default as a fallback.
+     *
+     * @param string $url
+     * @param mixed $default
+     * @return mixed
+     *
+     * @throws FaviconNotFoundException
+     * @throws InvalidUrlException
+     * @throws FeatureNotSupportedException
+     */
+    public function fetchAllOr(string $url, mixed $default): mixed
+    {
+        $favicons = $this->fetchAll($url);
+
+        if ($favicons->isNotEmpty()) {
+            return $favicons;
         }
 
         return $default instanceof \Closure ? $default($url) : $default;

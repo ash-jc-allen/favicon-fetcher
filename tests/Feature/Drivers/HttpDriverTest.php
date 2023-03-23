@@ -455,6 +455,54 @@ class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/icon/favicon.ico', $favicons->first()->getFaviconUrl());
     }
 
+    /** @test */
+    public function favicons_can_be_returned_using_the_fetchAllOr_method(): void
+    {
+        Http::fake([
+            'https://example.com' => Http::response($this->htmlOptionOne()),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAllOr('https://example.com', 'should not fallback to this');
+
+        self::assertCount(1, $favicons);
+
+        self::assertSame('https://example.com/icon/is/here.ico', $favicons->first()->getFaviconUrl());
+        self::assertSame(Favicon::TYPE_ICON, $favicons->first()->getIconType());
+        self::assertSame(null, $favicons->first()->getIconSize());
+    }
+
+    /** @test */
+    public function default_value_can_be_returned_using_fetchAllOr_method(): void
+    {
+        Http::fake([
+            'https://example.com/*' => Http::response('not found', 404),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())
+            ->useCache(true)
+            ->fetchAllOr('https://example.com', 'fallback-to-this');
+
+        self::assertSame('fallback-to-this', $favicon);
+    }
+
+    /** @test */
+    public function default_value_can_be_returned_using_fetchAllOr_method_with_a_closure(): void
+    {
+        Http::fake([
+            'https://example.com/*' => Http::response('not found', 404),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())
+            ->fetchAllOr('https://example.com', function () {
+                return 'fallback-to-this';
+            });
+
+        self::assertSame('fallback-to-this', $favicon);
+    }
+
     public function allFaviconLinksInHtmlProvider(): array
     {
         return [
