@@ -321,9 +321,7 @@ class HttpDriver implements Fetcher
         // If the favicon URL is relative, we need to convert it to be absolute.
         // We also strip the path (if there is one) from the base URL.
         if (! filter_var($faviconUrl, FILTER_VALIDATE_URL)) {
-            $parsedUrl = parse_url($baseUrl);
-
-            $faviconUrl = $parsedUrl['scheme'].'://'.$parsedUrl['host'].'/'.ltrim($faviconUrl, '/');
+            $faviconUrl = $this->stripPathFromUrl($baseUrl).'/'.ltrim($faviconUrl, '/');
         }
 
         return $faviconUrl;
@@ -338,6 +336,13 @@ class HttpDriver implements Fetcher
      */
     private function guessDefaultUrl(string $url): string
     {
-        return rtrim($url, '/').'/favicon.ico';
+        return rtrim($this->stripPathFromUrl($url)).'/favicon.ico';
+    }
+
+    private function stripPathFromUrl(string $url): string
+    {
+        $parsedUrl = parse_url($url);
+
+        return $parsedUrl['scheme'].'://'.$parsedUrl['host'];
     }
 }

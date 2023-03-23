@@ -77,6 +77,26 @@ class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }
 
+    /** @test */
+    public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html_and_a_relative_url_is_passed(): void
+    {
+        $responseHtml = <<<'HTML'
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
+
+        Http::fake([
+            'https://example.com/blog' => Http::response($responseHtml),
+            'https://example.com/favicon.ico' => Http::response('favicon contents here'),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())->fetch('https://example.com/blog');
+
+        self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
+    }
+
     /**
      * @test
      *
