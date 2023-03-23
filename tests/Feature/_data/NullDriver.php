@@ -26,4 +26,9 @@ class NullDriver implements Fetcher
     {
         // Implement this method if needed for testing.
     }
+
+    public function fetchAllOr(string $url, mixed $default): mixed
+    {
+        // Implement this method if needed for testing.
+    }
 }
