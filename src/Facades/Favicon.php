@@ -17,7 +17,7 @@ use RuntimeException;
  * @method static Fetcher useCache(bool $useCache = true)
  * @method static FetchedFavicon|null fetch(string $url)
  * @method static mixed fetchOr(string $url, mixed $default)
- * @method static FaviconCollection fetchAll(string $url, mixed $default)
+ * @method static FaviconCollection fetchAll(string $url)
  * @method static mixed fetchAllOr(string $url, mixed $default)
  *
  * @see FetcherManager
