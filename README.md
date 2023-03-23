@@ -22,6 +22,7 @@
         + [Using the `fetch` Method](#using-the-fetch-method)
         + [Using the `fetchOr` Method](#using-the-fetchor-method)
         + [Using the `fetchAll` Method](#using-the-fetchall-method)
+        + [Using the `fetchAllOr` Method](#using-the-fetchallor-method)
     * [Exceptions](#exceptions)
     * [Drivers](#drivers)
     * [Available Drivers](#available-drivers)
@@ -132,6 +133,30 @@ $largestFavicon = Favicon::fetchAll('https://ashallendesign.co.uk')->largest();
 ```
 
 Note: Only the `http` driver supports retrieving all the favicons for a given website. For this reason, the `fetchAll` method does not support fallbacks. Support may be added for other drivers and fallbacks in the future. 
+
+#### Using the `fetchAllOr` Method
+
+If you'd like to provide a default value to be used if all the favicons for a site cannot be found, you can use the `fetchAllOr` method.
+
+For example, if you wanted to use a default icon (`https://example.com/favicon.ico`) if the favicons could not be found, your code could look something like this:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$favicon = Favicon::fetchAllOr('https://ashallendesign.co.uk', 'https://example.com/favicon.ico');
+```
+
+This method also accepts a `Closure` as the second argument if you'd prefer to run some custom logic. The `url` field passed as the first argument to the `fetchAllOr` method is available to use in the closure. For example, to use a closure, your code could look something like this:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$favicon = Favicon::fetchAllOr('https://ashallendesign.co.uk', function ($url) {
+    // Run extra logic here...
+
+    return 'https://example.com/favicon.ico';
+});
+```
 
 ### Exceptions
 
