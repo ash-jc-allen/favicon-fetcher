@@ -97,6 +97,16 @@ final class FaviconCollectionTest extends TestCase
     }
 
     /** @test */
+    public function favicon_collection_is_not_cached_if_the_collection_is_empty(): void
+    {
+        Cache::shouldReceive('put')->never();
+
+        $collection = new FaviconCollection();
+
+        $collection->cache(now()->addDay());
+    }
+
+    /** @test */
     public function largest_favicon_can_be_retrieved(): void
     {
         $largest = FaviconCollection::make([

@@ -36,11 +36,17 @@ class FaviconCollection extends Collection
     }
 
     /**
-     * Cache the collection of favicons.
+     * Cache the collection of favicons. We only cache the collection if it contains
+     * items and if it was not retrieved from the cache. If the collection was
+     * retrieved from the cache, then the "force" flag has to be set to
+     * true in order to cache it.
      */
     public function cache(CarbonInterface $ttl, bool $force = false): self
     {
-        if ($force || ! $this->retrievedFromCache) {
+        $shouldCache = $this->isNotEmpty()
+            && ($force || ! $this->retrievedFromCache);
+
+        if ($shouldCache) {
             $cacheKey = $this->buildCacheKeyForCollection($this->first()->getUrl());
 
             $cacheData = $this->map(fn (Favicon $favicon): array => $favicon->toCache())->all();
