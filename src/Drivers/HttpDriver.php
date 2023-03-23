@@ -318,8 +318,12 @@ class HttpDriver implements Fetcher
      */
     private function convertToAbsoluteUrl(string $baseUrl, string $faviconUrl): string
     {
+        // If the favicon URL is relative, we need to convert it to be absolute.
+        // We also strip the path (if there is one) from the base URL.
         if (! filter_var($faviconUrl, FILTER_VALIDATE_URL)) {
-            $faviconUrl = $baseUrl.'/'.ltrim($faviconUrl, '/');
+            $parsedUrl = parse_url($baseUrl);
+
+            $faviconUrl = $parsedUrl['scheme'].'://'.$parsedUrl['host'].'/'.ltrim($faviconUrl, '/');
         }
 
         return $faviconUrl;
