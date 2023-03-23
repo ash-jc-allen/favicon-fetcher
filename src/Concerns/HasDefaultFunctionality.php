@@ -61,8 +61,8 @@ trait HasDefaultFunctionality
      * Attempt to fetch all the favicons for the given URL. If the favicons cannot
      * be found, return the default as a fallback.
      *
-     * @param string $url
-     * @param mixed $default
+     * @param  string  $url
+     * @param  mixed  $default
      * @return mixed
      *
      * @throws FaviconNotFoundException
