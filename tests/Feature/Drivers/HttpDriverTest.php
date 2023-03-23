@@ -44,6 +44,20 @@ class HttpDriverTest extends TestCase
     }
 
     /** @test */
+    public function favicon_can_be_fetched_if_the_url_has_a_path_and_thelink_element_contains_a_relative_url(): void
+    {
+        Http::fake([
+            'https://example.com/blog' => Http::response($this->htmlOptionOne()),
+            'https://example.com/icon/is/here.ico' => Http::response('favicon contents here'),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())->fetch('https://example.com/blog');
+
+        self::assertSame('https://example.com/icon/is/here.ico', $favicon->getFaviconUrl());
+    }
+
+    /** @test */
     public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html(): void
     {
         $responseHtml = <<<'HTML'
