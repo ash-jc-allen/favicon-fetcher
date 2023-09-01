@@ -339,11 +339,23 @@ class HttpDriver implements Fetcher
         return rtrim($this->stripPathFromUrl($url)).'/favicon.ico';
     }
 
+    /**
+     * Strip the path and any query parameters from the given URL so that
+     * we only return the scheme, host and port (if there is one).
+     *
+     * @param string $url
+     * @return string
+     */
     private function stripPathFromUrl(string $url): string
     {
         $parsedUrl = parse_url($url);
-        $port = array_key_exists('port', $parsedUrl) ? ':'.$parsedUrl['port'] : '';
 
-        return $parsedUrl['scheme'].'://'.$parsedUrl['host'].$port;
+        $url = $parsedUrl['scheme'].'://'.$parsedUrl['host'];
+
+        if (array_key_exists('port', $parsedUrl)) {
+            $url .= ':'.$parsedUrl['port'];
+        }
+
+        return $url;
     }
 }

@@ -130,6 +130,19 @@ class HttpDriverTest extends TestCase
     }
 
     /** @test */
+    public function favicon_can_be_fetched_from_url_with_query_parameters(): void
+    {
+        Http::fake([
+            'http://example.com?query=parameter' => Http::response('<link href="/icon/favicon.ico" rel="icon">'),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())->fetch('http://example.com?query=parameter');
+
+        self::assertSame('http://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
+    }
+
+    /** @test */
     public function favicon_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
         Cache::put(
