@@ -343,7 +343,7 @@ class HttpDriver implements Fetcher
      * Strip the path and any query parameters from the given URL so that
      * we only return the scheme, host and port (if there is one).
      *
-     * @param string $url
+     * @param  string  $url
      * @return string
      */
     private function stripPathFromUrl(string $url): string
