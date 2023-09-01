@@ -40,7 +40,9 @@ class GoogleSharedStuffDriver implements Fetcher
 
         $faviconUrl = self::BASE_URL.$url;
 
-        $response = Http::get($faviconUrl);
+        $response = Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($faviconUrl);
 
         return $response->successful()
             ? new Favicon(url: $url, faviconUrl: $faviconUrl, fromDriver: $this)

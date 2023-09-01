@@ -114,7 +114,11 @@ class Favicon
      */
     public function content(): string
     {
-        return Http::get($this->faviconUrl)->body();
+        // TODO Extract into client method
+        return Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($this->faviconUrl)
+            ->body();
     }
 
     /**
@@ -199,7 +203,10 @@ class Favicon
 
     protected function guessFileExtensionFromMimeType(): ?string
     {
-        $faviconMimetype = Http::get($this->faviconUrl)->header('content-type');
+        $faviconMimetype = Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($this->faviconUrl)
+            ->header('content-type');
 
         $mimeToExtensionMap = [
             'image/x-icon' => 'ico',

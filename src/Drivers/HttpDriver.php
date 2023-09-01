@@ -93,7 +93,10 @@ class HttpDriver implements Fetcher
      */
     private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
-        return Http::get($faviconUrl)->successful();
+        // TODO Extrac into "client" method.
+        return Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($faviconUrl)->successful();
     }
 
     /**
@@ -110,7 +113,9 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
-        $response = Http::get($url);
+        $response = Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($url);
 
         if (! $response->successful()) {
             return null;
@@ -143,7 +148,9 @@ class HttpDriver implements Fetcher
 
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
-        $response = Http::get($url);
+        $response = Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($url);
 
         if (! $response->successful()) {
             return null;

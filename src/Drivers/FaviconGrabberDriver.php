@@ -42,7 +42,9 @@ class FaviconGrabberDriver implements Fetcher
 
         $apiUrl = self::BASE_URL.$urlWithoutProtocol;
 
-        $response = Http::get($apiUrl);
+        $response = Http::timeout(config('favicon-fetcher.timeout'))
+            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
+            ->get($apiUrl);
 
         if (! $response->successful() || count($response->json('icons')) === 0) {
             return $this->notFound($url);
