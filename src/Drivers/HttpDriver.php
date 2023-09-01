@@ -342,7 +342,8 @@ class HttpDriver implements Fetcher
     private function stripPathFromUrl(string $url): string
     {
         $parsedUrl = parse_url($url);
+        $port = array_key_exists('port', $parsedUrl) ? ':'.$parsedUrl['port'] : '';
 
-        return $parsedUrl['scheme'].'://'.$parsedUrl['host'];
+        return $parsedUrl['scheme'].'://'.$parsedUrl['host'].$port;
     }
 }
