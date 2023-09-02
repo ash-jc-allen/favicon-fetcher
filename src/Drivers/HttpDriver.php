@@ -124,6 +124,10 @@ class HttpDriver implements Fetcher
 
         $linkElement = $this->parseLinkFromElement($linkTag);
 
+        if ($linkElement === '') {
+            return null;
+        }
+
         $favicon = new Favicon(
             url: $url,
             faviconUrl: $this->convertToAbsoluteUrl($url, $linkElement),
@@ -178,80 +182,71 @@ class HttpDriver implements Fetcher
      */
     private function findAllLinkElements(string $html): Collection
     {
-        $pattern = '/<link.*rel=["\'](icon|shortcut icon|apple-touch-icon)["\'][^>]*>/i';
+        $pattern = '/<link.*rel=["\']*(icon|shortcut icon|apple-touch-icon)["\' ][^>]*>/i';
+
+        // Ensure all tags are on a single line
+        $html = preg_replace('/([<])/', '\n$0', $html);
 
         preg_match_all($pattern, $html, $linkElementLines);
 
-        // If multiple link elements were found in a single line, we need to loop
-        // through and split them out.
-        /** @phpstan-ignore-next-line  */
-        return collect($linkElementLines[0])
-            ->map(function (string $htmlLine): array {
-                return collect(explode('>', $htmlLine))
-                    ->filter(
-                        fn (string $link): bool => Str::is([
-                            '*rel="shortcut icon"*',
-                            '*rel="icon"*',
-                            '*rel="apple-touch-icon"*',
-                            "*rel='shortcut icon'*",
-                            "*rel='icon'*",
-                            "*rel='apple-touch-icon'*",
-                        ], $link)
-                    )
-                    ->all();
-            })
-            ->flatten();
+        if (! isset($linkElementLines[0])) {
+            return collect();
+        }
+
+        return collect($linkElementLines[0]);
+
     }
 
     /**
-     * Attempt to find an "icon" or "shortcut icon" link in the HTML.
+     * Attempt to find the first "icon" or "shortcut icon" link in the HTML.
      *
      * @param  string  $html
      * @return string|null
      */
     private function findLinkElement(string $html): ?string
     {
-        $pattern = '/<link.*rel=["\'](icon|shortcut icon)["\'][^>]*>/i';
+        $linkElements = $this->findAllLinkElements($html);
 
-        preg_match($pattern, $html, $linkElement);
-
-        if (! isset($linkElement[0])) {
+        if ($linkElements->count() === 0) {
             return null;
         }
 
-        // If multiple link elements were found in the HTML, we need to loop
-        // through and only grab the "shortcut icon" or "icon" link.
-        return collect(explode('>', $linkElement[0]))
-            ->filter(
-                fn (string $link): bool => Str::is([
-                    '*rel="shortcut icon"*',
-                    '*rel="icon"*',
-                    "*rel='shortcut icon'*",
-                    "*rel='icon'*",
-                ], $link)
-            )
-            ->first();
+        $linkElements = $linkElements->filter(function (string $link): bool {
+
+            preg_match('/rel=["\']*(icon|shortcut icon|apple-touch-icon)["\' ][^>]/i', $link, $linkParts);
+
+            if (isset($linkParts[1]) && (
+                $linkParts[1] === 'icon' ||
+                $linkParts[1] === 'shortcut icon'
+            )) {
+                return true;
+            }
+
+            return false;
+        });
+
+        return $linkElements->first();
     }
 
     /**
      * Find and return the text inside the "href" attribute from the link tag.
+     *
+     * Handles edge case of no single or double quotes surrounding the URL.
      *
      * @param  string  $linkElement
      * @return string
      */
     private function parseLinkFromElement(string $linkElement): string
     {
-        $stringUntilHref = strstr($linkElement, 'href="');
+        $pattern = '/href=(["\']*)(.*?)(["\'> ])/';
 
-        if (! $stringUntilHref) {
-            $stringUntilHref = strstr($linkElement, "href='");
+        preg_match($pattern, $linkElement, $hrefParts);
+
+        if (! isset($hrefParts[2])) {
+            return '';
         }
 
-        // Replace the double or single quotes with a common delimiter
-        // that can be used for exploding the string.
-        $stringUntilHref = str_replace(['"', '\''], '|', $stringUntilHref);
-
-        return explode('|', $stringUntilHref)[1];
+        return $hrefParts[2];
     }
 
     private function guessSizeFromElement(string $linkElement): ?int
