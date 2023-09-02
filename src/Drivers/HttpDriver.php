@@ -6,6 +6,7 @@ namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
+use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
@@ -14,13 +15,13 @@ use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Support\Collection;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 
 class HttpDriver implements Fetcher
 {
     use ValidatesUrls;
     use HasDefaultFunctionality;
+    use MakesHttpRequests;
 
     /**
      * Attempt to fetch the favicon for the given URL.
@@ -93,10 +94,9 @@ class HttpDriver implements Fetcher
      */
     private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
-        // TODO Extrac into "client" method.
-        return Http::timeout(config('favicon-fetcher.timeout'))
-            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
-            ->get($faviconUrl)->successful();
+        return $this->httpClient()
+            ->get($faviconUrl)
+            ->successful();
     }
 
     /**
@@ -113,9 +113,7 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
-        $response = Http::timeout(config('favicon-fetcher.timeout'))
-            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
-            ->get($url);
+        $response = $this->httpClient()->get($url);
 
         if (! $response->successful()) {
             return null;
@@ -148,9 +146,7 @@ class HttpDriver implements Fetcher
 
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
-        $response = Http::timeout(config('favicon-fetcher.timeout'))
-            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
-            ->get($url);
+        $response = $this->httpClient()->get($url);
 
         if (! $response->successful()) {
             return null;

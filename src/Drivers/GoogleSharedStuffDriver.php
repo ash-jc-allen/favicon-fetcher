@@ -4,18 +4,19 @@ namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
+use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
-use Illuminate\Support\Facades\Http;
 
 class GoogleSharedStuffDriver implements Fetcher
 {
     use ValidatesUrls;
     use HasDefaultFunctionality;
+    use MakesHttpRequests;
 
     private const BASE_URL = 'https://www.google.com/s2/favicons?domain=';
 
@@ -40,9 +41,7 @@ class GoogleSharedStuffDriver implements Fetcher
 
         $faviconUrl = self::BASE_URL.$url;
 
-        $response = Http::timeout(config('favicon-fetcher.timeout'))
-            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
-            ->get($faviconUrl);
+        $response = $this->httpClient()->get($faviconUrl);
 
         return $response->successful()
             ? new Favicon(url: $url, faviconUrl: $faviconUrl, fromDriver: $this)
