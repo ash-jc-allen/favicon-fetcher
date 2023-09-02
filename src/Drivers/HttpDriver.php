@@ -13,7 +13,9 @@ use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
+use AshAllenDesign\FaviconFetcher\Exceptions\RequestTimeoutException;
 use AshAllenDesign\FaviconFetcher\Favicon;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Str;
 
@@ -89,14 +91,17 @@ class HttpDriver implements Fetcher
      * is successful, we can assume that a valid favicon was returned.
      * Otherwise, we can assume that a favicon wasn't found.
      *
-     * @param  string  $faviconUrl
+     * @param string $faviconUrl
      * @return bool
+     * @throws RequestTimeoutException
      */
     private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
-        return $this->httpClient()
-            ->get($faviconUrl)
-            ->successful();
+        return $this->withRequestExceptionHandling(fn (): bool =>
+            $this->httpClient()
+                ->get($faviconUrl)
+                ->successful()
+        );
     }
 
     /**
@@ -105,15 +110,18 @@ class HttpDriver implements Fetcher
      * is found, return the absolute URL of the link's "href".
      * Otherwise, return null.
      *
-     * @param  string  $url
+     * @param string $url
      * @return Favicon|null
      *
      * @throws InvalidIconSizeException
      * @throws InvalidIconTypeException
+     * @throws RequestTimeoutException
      */
     private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
-        $response = $this->httpClient()->get($url);
+        $response = $this->withRequestExceptionHandling(fn (): Response =>
+            $this->httpClient()->get($url)
+        );
 
         if (! $response->successful()) {
             return null;
@@ -144,9 +152,14 @@ class HttpDriver implements Fetcher
         return $favicon;
     }
 
+    /**
+     * @throws RequestTimeoutException
+     */
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
-        $response = $this->httpClient()->get($url);
+        $response = $this->withRequestExceptionHandling(fn (): Response =>
+            $this->httpClient()->get($url)
+        );
 
         if (! $response->successful()) {
             return null;

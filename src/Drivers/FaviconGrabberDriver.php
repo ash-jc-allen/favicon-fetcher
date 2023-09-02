@@ -7,10 +7,13 @@ use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
+use AshAllenDesign\FaviconFetcher\Exceptions\RequestTimeoutException;
 use AshAllenDesign\FaviconFetcher\Favicon;
+use Illuminate\Http\Client\Response;
 
 class FaviconGrabberDriver implements Fetcher
 {
@@ -23,11 +26,13 @@ class FaviconGrabberDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param  string  $url
+     * @param string $url
      * @return Favicon|null
      *
      * @throws InvalidUrlException
      * @throws FaviconNotFoundException
+     * @throws RequestTimeoutException
+     * @throws FaviconFetcherException
      */
     public function fetch(string $url): ?Favicon
     {
@@ -43,7 +48,9 @@ class FaviconGrabberDriver implements Fetcher
 
         $apiUrl = self::BASE_URL.$urlWithoutProtocol;
 
-        $response = $this->httpClient()->get($apiUrl);
+        $response = $this->withRequestExceptionHandling(fn (): Response =>
+            $this->httpClient()->get($apiUrl)
+        );
 
         if (! $response->successful() || count($response->json('icons')) === 0) {
             return $this->notFound($url);
