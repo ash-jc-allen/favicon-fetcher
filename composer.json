@@ -28,7 +28,8 @@
     "mockery/mockery": "^1.0",
     "orchestra/testbench": "^7.0|^8.0",
     "phpunit/phpunit": "^9.0|^10.0",
-    "nunomaduro/larastan": "^2.0"
+    "nunomaduro/larastan": "^2.0",
+    "pestphp/pest": "^2.16"
   },
   "autoload": {
     "psr-4": {
@@ -52,5 +53,10 @@
     "larastan": "vendor/bin/phpstan analyse"
   },
   "minimum-stability": "dev",
-  "prefer-stable": true
+  "prefer-stable": true,
+  "config": {
+    "allow-plugins": {
+      "pestphp/pest-plugin": true
+    }
+  }
 }
