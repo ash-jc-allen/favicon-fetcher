@@ -8,14 +8,14 @@ use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
-use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
+use Symfony\Component\DomCrawler\Crawler;
 
 class HttpDriver implements Fetcher
 {
@@ -25,11 +25,14 @@ class HttpDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param  string  $url
+     * @param string $url
      * @return Favicon|null
      *
-     * @throws InvalidUrlException
      * @throws FaviconNotFoundException
+     * @throws InvalidIconSizeException
+     * @throws InvalidIconTypeException
+     * @throws InvalidUrlException
+     * @throws FaviconFetcherException
      */
     public function fetch(string $url): ?Favicon
     {
@@ -116,22 +119,25 @@ class HttpDriver implements Fetcher
             return null;
         }
 
-        $linkTag = $this->findLinkElement($response->body());
+        $linkTag = (new Crawler($response->body()))
+            ->filter('
+                head link[rel="icon"],
+                head link[rel="shortcut icon"]
+            ')
+            ->first();
 
-        if (! $linkTag) {
+        if (! $linkTag->count()) {
             return null;
         }
 
-        $linkElement = $this->parseLinkFromElement($linkTag);
-
         $favicon = new Favicon(
             url: $url,
-            faviconUrl: $this->convertToAbsoluteUrl($url, $linkElement),
+            faviconUrl: $this->convertToAbsoluteUrl($url, $linkTag->attr('href')),
             fromDriver: $this,
         );
 
-        if ($iconSize = $this->guessSizeFromElement($linkTag)) {
-            $favicon->setIconSize($iconSize);
+        if ($iconSize = $linkTag->attr('sizes')) {
+            $favicon->setIconSize((int) $iconSize);
         }
 
         if ($iconType = $this->guessTypeFromElement($linkTag)) {
@@ -149,17 +155,22 @@ class HttpDriver implements Fetcher
             return null;
         }
 
-        $linkTags = $this->findAllLinkElements($response->body());
+        $linkTags = (new Crawler($response->body()))
+            ->filter('
+                head link[rel="icon"],
+                head link[rel="shortcut icon"],
+                head link[rel="apple-touch-icon"]
+            ');
 
-        $favicons = $linkTags->map(function (string $linkTag) use ($url): Favicon {
+        $favicons = $linkTags->each(function (Crawler $linkTag) use ($url): Favicon {
             $favicon = new Favicon(
                 $url,
-                $this->convertToAbsoluteUrl($url, $this->parseLinkFromElement($linkTag)),
+                $this->convertToAbsoluteUrl($url, $linkTag->attr('href')),
                 $this,
             );
 
-            if ($iconSize = $this->guessSizeFromElement($linkTag)) {
-                $favicon->setIconSize($iconSize);
+            if ($iconSize = $linkTag->attr('sizes')) {
+                $favicon->setIconSize((int) $iconSize);
             }
 
             if ($iconType = $this->guessTypeFromElement($linkTag)) {
@@ -172,136 +183,9 @@ class HttpDriver implements Fetcher
         return new FaviconCollection($favicons);
     }
 
-    /**
-     * @param  string  $html
-     * @return Collection<int, string>
-     */
-    private function findAllLinkElements(string $html): Collection
+    private function guessTypeFromElement(Crawler $linkElement): string
     {
-        $pattern = '/<link.*rel=["\'](icon|shortcut icon|apple-touch-icon)["\'][^>]*>/i';
-
-        preg_match_all($pattern, $html, $linkElementLines);
-
-        // If multiple link elements were found in a single line, we need to loop
-        // through and split them out.
-        /** @phpstan-ignore-next-line  */
-        return collect($linkElementLines[0])
-            ->map(function (string $htmlLine): array {
-                return collect(explode('>', $htmlLine))
-                    ->filter(
-                        fn (string $link): bool => Str::is([
-                            '*rel="shortcut icon"*',
-                            '*rel="icon"*',
-                            '*rel="apple-touch-icon"*',
-                            "*rel='shortcut icon'*",
-                            "*rel='icon'*",
-                            "*rel='apple-touch-icon'*",
-                        ], $link)
-                    )
-                    ->all();
-            })
-            ->flatten();
-    }
-
-    /**
-     * Attempt to find an "icon" or "shortcut icon" link in the HTML.
-     *
-     * @param  string  $html
-     * @return string|null
-     */
-    private function findLinkElement(string $html): ?string
-    {
-        $pattern = '/<link.*rel=["\'](icon|shortcut icon)["\'][^>]*>/i';
-
-        preg_match($pattern, $html, $linkElement);
-
-        if (! isset($linkElement[0])) {
-            return null;
-        }
-
-        // If multiple link elements were found in the HTML, we need to loop
-        // through and only grab the "shortcut icon" or "icon" link.
-        return collect(explode('>', $linkElement[0]))
-            ->filter(
-                fn (string $link): bool => Str::is([
-                    '*rel="shortcut icon"*',
-                    '*rel="icon"*',
-                    "*rel='shortcut icon'*",
-                    "*rel='icon'*",
-                ], $link)
-            )
-            ->first();
-    }
-
-    /**
-     * Find and return the text inside the "href" attribute from the link tag.
-     *
-     * @param  string  $linkElement
-     * @return string
-     */
-    private function parseLinkFromElement(string $linkElement): string
-    {
-        $stringUntilHref = strstr($linkElement, 'href="');
-
-        if (! $stringUntilHref) {
-            $stringUntilHref = strstr($linkElement, "href='");
-        }
-
-        // Replace the double or single quotes with a common delimiter
-        // that can be used for exploding the string.
-        $stringUntilHref = str_replace(['"', '\''], '|', $stringUntilHref);
-
-        return explode('|', $stringUntilHref)[1];
-    }
-
-    private function guessSizeFromElement(string $linkElement): ?int
-    {
-        $stringUntilSizesAttr = strstr($linkElement, 'sizes="');
-
-        if (! $stringUntilSizesAttr) {
-            $stringUntilSizesAttr = strstr($linkElement, "sizes='");
-        }
-
-        // If we couldn't find a "sizes" attribute, then we can't guess the size.
-        if (! $stringUntilSizesAttr) {
-            return null;
-        }
-
-        // Replace the double or single quotes with a common delimiter
-        // that can be used for exploding the string.
-        $stringUntilSizesAttr = str_replace(
-            search: ['"', '\''],
-            replace: '|',
-            subject: $stringUntilSizesAttr
-        );
-
-        // Find the size of the icon (e.g. - 192x192)
-        $sizesIncludingX = explode('|', $stringUntilSizesAttr)[1];
-
-        // The favicons should be squares, so the height and width should
-        // be the same. So we can just return the first number.
-        return (int) explode('x', $sizesIncludingX)[0];
-    }
-
-    private function guessTypeFromElement(string $linkElement): string
-    {
-        $stringUntilRelAttr = strstr($linkElement, 'rel="');
-
-        if (! $stringUntilRelAttr) {
-            $stringUntilRelAttr = strstr($linkElement, "rel='");
-        }
-
-        // Replace the double or single quotes with a common delimiter
-        // that can be used for exploding the string.
-        $stringUntilRelAttr = str_replace(
-            search: ['"', '\''],
-            replace: '|',
-            subject: $stringUntilRelAttr
-        );
-
-        $type = explode('|', $stringUntilRelAttr)[1];
-
-        return match ($type) {
+        return match ($linkElement->attr('rel')) {
             'icon' => Favicon::TYPE_ICON,
             'shortcut icon' => Favicon::TYPE_SHORTCUT_ICON,
             'apple-touch-icon' => Favicon::TYPE_APPLE_TOUCH_ICON,
