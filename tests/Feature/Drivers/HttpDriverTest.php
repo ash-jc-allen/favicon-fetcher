@@ -385,6 +385,7 @@ class HttpDriverTest extends TestCase
     {
         Http::fake([
             'https://example.com' => Http::response('not found', 404),
+            'https://example.com/favicon.ico' => Http::response('not found', 404),
             '*' => Http::response('should not hit here'),
         ]);
 

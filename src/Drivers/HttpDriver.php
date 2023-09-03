@@ -73,7 +73,7 @@ class HttpDriver implements Fetcher
                 throw new FaviconNotFoundException('A favicon cannot be found for '.$url);
             }
 
-            return new FaviconCollection();
+            $favicons = new FaviconCollection();
         }
 
         if ($favicons->isEmpty()) {
