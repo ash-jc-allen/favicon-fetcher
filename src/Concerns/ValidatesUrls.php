@@ -14,6 +14,6 @@ trait ValidatesUrls
      */
     protected function urlIsValid(string $url): bool
     {
-        return filter_var($url, FILTER_VALIDATE_URL);
+        return filter_var($url, FILTER_VALIDATE_URL) !== false;
     }
 }
