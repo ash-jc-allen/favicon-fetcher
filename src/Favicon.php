@@ -185,7 +185,8 @@ class Favicon
             ->append('/')
             ->append($filename)
             ->append('.')
-            ->append($this->guessFileExtension());
+            ->append($this->guessFileExtension())
+            ->toString();
     }
 
     protected function guessFileExtension(): string

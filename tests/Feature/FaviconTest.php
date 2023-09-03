@@ -96,7 +96,7 @@ class FaviconTest extends TestCase
                     'icon_size' => null,
                     'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
                 ],
-                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
+                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->eq($expectedTtl)),
             ])
             ->once();
 
@@ -137,7 +137,7 @@ class FaviconTest extends TestCase
                     'icon_size' => null,
                     'icon_type' => Favicon::TYPE_ICON_UNKNOWN,
                 ],
-                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->is($expectedTtl)),
+                Mockery::on(fn (CarbonInterface $ttl): bool => $ttl->eq($expectedTtl)),
             ])
             ->once();
 
