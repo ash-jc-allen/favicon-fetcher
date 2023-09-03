@@ -162,7 +162,7 @@ class HttpDriver implements Fetcher
                 head link[rel="apple-touch-icon"]
             ');
 
-        if (!$linkTags->count()) {
+        if (! $linkTags->count()) {
             return null;
         }
 
