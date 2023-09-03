@@ -433,6 +433,34 @@ class HttpDriverTest extends TestCase
     }
 
     /** @test */
+    public function error_is_thrown_if_no_icons_can_be_found_for_a_url_and_the_throw_on_not_found_flag_is_true(): void
+    {
+        $responseHtml = <<<'HTML'
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
+
+        Http::fake([
+            'https://example.com' => Http::response($responseHtml),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $exception = null;
+
+        try {
+            (new HttpDriver())
+                ->throw()
+                ->fetchAll('https://example.com');
+        } catch (\Exception $e) {
+            $exception = $e;
+        }
+
+        self::assertInstanceOf(FaviconNotFoundException::class, $exception);
+        self::assertSame('A favicon cannot be found for https://example.com', $exception->getMessage());
+    }
+
+    /** @test */
     public function all_favicon_for_a_url_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
         Cache::put(

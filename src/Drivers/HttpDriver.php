@@ -162,6 +162,10 @@ class HttpDriver implements Fetcher
                 head link[rel="apple-touch-icon"]
             ');
 
+        if (!$linkTags->count()) {
+            return null;
+        }
+
         $favicons = $linkTags->each(function (Crawler $linkTag) use ($url): Favicon {
             $favicon = new Favicon(
                 $url,
