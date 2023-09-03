@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;

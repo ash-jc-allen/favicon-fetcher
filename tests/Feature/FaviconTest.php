@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
