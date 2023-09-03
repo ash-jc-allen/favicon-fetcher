@@ -1,7 +1,7 @@
 <?php
 
-use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Facade;
 
