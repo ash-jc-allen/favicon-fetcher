@@ -17,9 +17,6 @@ use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Http\Client\Response;
-use Illuminate\Support\Collection;
-use Illuminate\Support\Str;
-use Illuminate\Support\Facades\Http;
 use Symfony\Component\DomCrawler\Crawler;
 
 class HttpDriver implements Fetcher
