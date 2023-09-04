@@ -30,6 +30,7 @@
     * [Choosing a Driver](#choosing-a-driver)
         + [Fallback Drivers](#fallback-drivers)
         + [Adding Your Own Driver](#adding-your-own-driver)
+    * [HTTP Timeouts](#http-timeouts)
     * [Storing Favicons](#storing-favicons)
         + [Using `store`](#using-store)
         + [Using `storeAs`](#using-storeas)
@@ -164,12 +165,13 @@ By default, if a favicon can't be found for a URL, the `fetch` method will retur
 
 To enable exceptions to be thrown, your code could look something like this:
 
-
 ```php
 use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 
 $favicon = Favicon::throw()->fetch('https://ashallendesign.co.uk');
 ```
+
+If you attempt to fetch a favicon and the request times out or no website is found at the URL, an `AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException` will be thrown. This will be thrown even if the `throw` method has not been used.
 
 ### Drivers
 
@@ -274,6 +276,32 @@ use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 
 $favicon = Favicon::driver('my-custom-driver')->fetch('https://ashallendesign.co.uk');
 ```
+
+### HTTP Timeouts
+
+Favicon Fetcher provides the ability for you to set the connection timeout and request timeout for all the drivers.
+
+The connection timeout is the time that the package will wait for a connection to be made to the website. The request timeout is the time that the package will wait for the website to respond to the request.
+
+To do this, you can update the `connect_timeout` and `timeout` fields in the `favicon-fetcher.php` config file after you've published it. For example, to set the connection timeout to 5 seconds and the request timeout to 10 seconds, you could update your config file like so:
+
+```php
+return [
+
+    // ...
+        
+    'connect_timeout' => 5,
+
+    'timeout' => 10,
+            
+    // ...
+
+]
+```
+
+If you'd prefer that no timeout be set, you can set the values to `0`.
+
+Please note that these timeouts are applied to all HTTP requests that Favicon Fetcher makes, regardless of the driver that is being used.
 
 ### Storing Favicons
 

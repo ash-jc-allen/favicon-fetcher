@@ -6,18 +6,22 @@ namespace AshAllenDesign\FaviconFetcher\Drivers;
 
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
+use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
+use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
 use AshAllenDesign\FaviconFetcher\Favicon;
-use Illuminate\Support\Facades\Http;
+use Illuminate\Http\Client\Response;
 
 class FaviconGrabberDriver implements Fetcher
 {
     use ValidatesUrls;
     use HasDefaultFunctionality;
+    use MakesHttpRequests;
 
     private const BASE_URL = 'https://favicongrabber.com/api/grab/';
 
@@ -29,6 +33,8 @@ class FaviconGrabberDriver implements Fetcher
      *
      * @throws InvalidUrlException
      * @throws FaviconNotFoundException
+     * @throws ConnectionException
+     * @throws FaviconFetcherException
      */
     public function fetch(string $url): ?Favicon
     {
@@ -44,7 +50,8 @@ class FaviconGrabberDriver implements Fetcher
 
         $apiUrl = self::BASE_URL.$urlWithoutProtocol;
 
-        $response = Http::get($apiUrl);
+        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($apiUrl)
+        );
 
         if (! $response->successful() || count($response->json('icons')) === 0) {
             return $this->notFound($url);
