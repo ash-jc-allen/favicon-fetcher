@@ -1,5 +1,18 @@
 # Changelog
 
+**v3.0.0 (released 2023-09-04):**
+
+- Added `connect_timeout` and `timeout` config fields. ([#67](https://github.com/ash-jc-allen/favicon-fetcher/pull/67))
+- Use `symfony/dom-crawler` in the `HttpDriver` to parse the HTML. ([#56](https://github.com/ash-jc-allen/favicon-fetcher/pull/56))
+- Updated all files to use strict types for improved type safety. ([#62](https://github.com/ash-jc-allen/favicon-fetcher/pull/62))
+- Throw package-specific exceptions instead of vendor exceptions. ([#67](https://github.com/ash-jc-allen/favicon-fetcher/pull/67))
+- Fixed a bug that prevented an exception from being thrown when using `fetchAll` if no favicons were found when using the `throw` method. ([#56](https://github.com/ash-jc-allen/favicon-fetcher/pull/50))
+- Fixed a bug that prevented the `fetchAll` method from trying to guess the default icon if no favicons were found. ([#56](https://github.com/ash-jc-allen/favicon-fetcher/pull/50))
+- Fixed a bug that stripped the port from the base URL. Thanks for the fix, @mhoffmann777! ([#50](https://github.com/ash-jc-allen/favicon-fetcher/pull/50))
+- Dropped support for PHP 8.0. ([#59](https://github.com/ash-jc-allen/favicon-fetcher/pull/59))
+- Dropped support for Laravel 8. ([#59](https://github.com/ash-jc-allen/favicon-fetcher/pull/59))
+- Dropped support for PHPUnit 8.* and Larastan 1.*. ([#59](https://github.com/ash-jc-allen/favicon-fetcher/pull/59))
+
 **v2.0.0 (released 2023-03-23):**
 - Added driver for the [Favicon Grabber API](https://favicongrabber.com/). ([#24](https://github.com/ash-jc-allen/favicon-fetcher/pull/24))
 - Added `fetchAll` implementation to the `HttpDriver` for fetching all the icons for a URL. ([#29](https://github.com/ash-jc-allen/favicon-fetcher/pull/29), [#31](https://github.com/ash-jc-allen/favicon-fetcher/pull/31))

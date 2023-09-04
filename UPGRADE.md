@@ -2,7 +2,20 @@
 
 ## Contents
 
+- [Upgrading from 2.* to 3.0.0](#upgrading-from-2-to-300)
 - [Upgrading from 1.* to 2.0.0](#upgrading-from-1-to-200)
+
+## Upgrading from 2.* to 3.0.0
+
+### Exceptions
+
+Previously, if Favicon Fetcher attempted to make a request to a URL and the request failed (for example, if the site doesn't exist), an `Illuminate\Http\Client\ConnectionException` would be thrown. However, as of v3.0.0, a `AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException` will be thrown instead.
+
+This will be thrown in the following situations:
+
+- If the URL has a valid structure but the site doesn't exist.
+- If the HTTP client exceeds the connection timeout.
+- If the HTTP client exceeds the request timeout.
 
 ## Upgrading from 1.* to 2.0.0
 
