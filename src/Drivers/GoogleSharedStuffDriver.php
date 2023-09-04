@@ -9,11 +9,11 @@ use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
-use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Http\Client\Response;
 
@@ -28,7 +28,7 @@ class GoogleSharedStuffDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
      *
      * @throws FaviconNotFoundException
@@ -48,8 +48,7 @@ class GoogleSharedStuffDriver implements Fetcher
 
         $faviconUrl = self::BASE_URL.$url;
 
-        $response = $this->withRequestExceptionHandling(fn (): Response =>
-            $this->httpClient()->get($faviconUrl)
+        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($faviconUrl)
         );
 
         return $response->successful()

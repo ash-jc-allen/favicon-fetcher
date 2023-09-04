@@ -9,11 +9,11 @@ use AshAllenDesign\FaviconFetcher\Concerns\HasDefaultFunctionality;
 use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Concerns\ValidatesUrls;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
-use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
@@ -91,14 +91,14 @@ class HttpDriver implements Fetcher
      * is successful, we can assume that a valid favicon was returned.
      * Otherwise, we can assume that a favicon wasn't found.
      *
-     * @param string $faviconUrl
+     * @param  string  $faviconUrl
      * @return bool
+     *
      * @throws ConnectionException
      */
     private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
-        return $this->withRequestExceptionHandling(fn (): bool =>
-            $this->httpClient()
+        return $this->withRequestExceptionHandling(fn (): bool => $this->httpClient()
                 ->get($faviconUrl)
                 ->successful()
         );
@@ -110,7 +110,7 @@ class HttpDriver implements Fetcher
      * is found, return the absolute URL of the link's "href".
      * Otherwise, return null.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
      *
      * @throws InvalidIconSizeException
@@ -119,8 +119,7 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
-        $response = $this->withRequestExceptionHandling(fn (): Response =>
-            $this->httpClient()->get($url)
+        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($url)
         );
 
         if (! $response->successful()) {
@@ -157,8 +156,7 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
-        $response = $this->withRequestExceptionHandling(fn (): Response =>
-            $this->httpClient()->get($url)
+        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($url)
         );
 
         if (! $response->successful()) {
