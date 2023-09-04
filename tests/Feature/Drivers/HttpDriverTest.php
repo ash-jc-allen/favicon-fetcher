@@ -387,6 +387,7 @@ class HttpDriverTest extends TestCase
     {
         Http::fake([
             'https://example.com' => Http::response('not found', 404),
+            'https://example.com/favicon.ico' => Http::response('not found', 404),
             '*' => Http::response('should not hit here'),
         ]);
 
@@ -432,6 +433,34 @@ class HttpDriverTest extends TestCase
 
         self::assertInstanceOf(InvalidUrlException::class, $exception);
         self::assertSame('example.com is not a valid URL', $exception->getMessage());
+    }
+
+    /** @test */
+    public function error_is_thrown_if_no_icons_can_be_found_for_a_url_and_the_throw_on_not_found_flag_is_true(): void
+    {
+        $responseHtml = <<<'HTML'
+            <html lang="en">
+                <link rel="localization" href="branding/brand.ftl" />
+            </html>
+        HTML;
+
+        Http::fake([
+            'https://example.com' => Http::response($responseHtml),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $exception = null;
+
+        try {
+            (new HttpDriver())
+                ->throw()
+                ->fetchAll('https://example.com');
+        } catch (\Exception $e) {
+            $exception = $e;
+        }
+
+        self::assertInstanceOf(FaviconNotFoundException::class, $exception);
+        self::assertSame('A favicon cannot be found for https://example.com', $exception->getMessage());
     }
 
     /** @test */
@@ -677,6 +706,7 @@ class HttpDriverTest extends TestCase
             [$this->htmlOptionNine(), 'https://example.com/images/favicon.ico', null, Favicon::TYPE_ICON],
             [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico', null, Favicon::TYPE_SHORTCUT_ICON],
             [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
+            [$this->htmlOptionTwelve(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
         ];
     }
 
@@ -821,6 +851,33 @@ class HttpDriverTest extends TestCase
                 <link rel="icon" type="image/png" sizes="192x192"  href="/android-icon-192x192.png">
                 <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png">
                 <link rel="icon" type="image/png" sizes="96x96" href="/favicon-96x96.png">
+                <link rel="manifest" href="/manifest.json">
+                <meta name="msapplication-TileColor" content="#ffffff">
+                <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
+                <meta name="theme-color" content="#ffffff">
+                <title>Dummy title</title>
+            </head>
+        HTML;
+    }
+
+    private function htmlOptionTwelve(): string
+    {
+        return <<<'HTML'
+            <head>
+                <meta charset="utf-8">
+                <meta name="viewport" content="width=device-width, initial-scale=1">
+                <link rel="apple-touch-icon" sizes="57x57" href=/apple-icon-57x57.png>
+                <link rel=apple-touch-icon sizes=60x60 href=/apple-icon-60x60.png>
+                <link rel="apple-touch-icon" sizes="72x72" href=/apple-icon-72x72.png>
+                <link rel="apple-touch-icon" sizes="76x76" href=/apple-icon-76x76.png>
+                <link rel="apple-touch-icon" sizes="114x114" href=/apple-icon-114x114.png>
+                <link rel="apple-touch-icon" sizes="120x120" href=/apple-icon-120x120.png>
+                <link rel="apple-touch-icon" sizes="144x144" href=/apple-icon-144x144.png>
+                <link rel="apple-touch-icon" sizes="152x152" href=/apple-icon-152x152.png>
+                <link rel="apple-touch-icon" sizes="200x200" href=/apple-icon-200x200.png>
+                <link rel="icon" type="image/png" sizes="192x192"  href=/android-icon-192x192.png>
+                <link rel="icon" type="image/png" sizes="32x32" href=/favicon-32x32.png>
+                <link rel="icon" type="image/png" sizes="96x96" href=/favicon-96x96.png>
                 <link rel="manifest" href="/manifest.json">
                 <meta name="msapplication-TileColor" content="#ffffff">
                 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
