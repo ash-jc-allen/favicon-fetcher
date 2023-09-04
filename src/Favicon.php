@@ -5,10 +5,13 @@ declare(strict_types=1);
 namespace AshAllenDesign\FaviconFetcher;
 
 use AshAllenDesign\FaviconFetcher\Concerns\BuildsCacheKeys;
+use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use Carbon\CarbonInterface;
+use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Http;
@@ -18,6 +21,7 @@ use Illuminate\Support\Str;
 class Favicon
 {
     use BuildsCacheKeys;
+    use MakesHttpRequests;
 
     public const TYPE_ICON = 'icon';
 
@@ -113,14 +117,13 @@ class Favicon
      * Get the contents of the favicon file.
      *
      * @return string
+     * @throws ConnectionException
      */
     public function content(): string
     {
-        // TODO Extract into client method
-        return Http::timeout(config('favicon-fetcher.timeout'))
-            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
-            ->get($this->faviconUrl)
-            ->body();
+        return $this->withRequestExceptionHandling(
+            fn (): Response => $this->httpClient()->get($this->faviconUrl)
+        )->body();
     }
 
     /**
@@ -204,12 +207,14 @@ class Favicon
         return $this->guessFileExtensionFromMimeType() ?? $default;
     }
 
+    /**
+     * @throws ConnectionException
+     */
     protected function guessFileExtensionFromMimeType(): ?string
     {
-        $faviconMimetype = Http::timeout(config('favicon-fetcher.timeout'))
-            ->connectTimeout(config('favicon-fetcher.connect_timeout'))
-            ->get($this->faviconUrl)
-            ->header('content-type');
+        $faviconMimetype = $this->withRequestExceptionHandling(
+            fn (): Response => $this->httpClient()->get($this->faviconUrl)
+        )->header('content-type');
 
         $mimeToExtensionMap = [
             'image/x-icon' => 'ico',
