@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Concerns;
 
-use AshAllenDesign\FaviconFetcher\Exceptions\RequestTimeoutException;
-use Illuminate\Http\Client\ConnectionException;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
+use Illuminate\Http\Client\ConnectionException as ClientConnectionException;
 use Illuminate\Http\Client\PendingRequest;
 use Illuminate\Support\Facades\Http;
 
@@ -21,8 +21,8 @@ trait MakesHttpRequests
     {
         try {
             return $callback();
-        } catch (ConnectionException $exception) {
-            throw new RequestTimeoutException(
+        } catch (ClientConnectionException $exception) {
+            throw new ConnectionException(
                 $exception->getMessage(),
                 $exception->getCode(),
                 $exception

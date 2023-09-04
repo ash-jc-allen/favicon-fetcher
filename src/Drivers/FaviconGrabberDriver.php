@@ -13,7 +13,7 @@ use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\FeatureNotSupportedException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
-use AshAllenDesign\FaviconFetcher\Exceptions\RequestTimeoutException;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Http\Client\Response;
 
@@ -33,7 +33,7 @@ class FaviconGrabberDriver implements Fetcher
      *
      * @throws InvalidUrlException
      * @throws FaviconNotFoundException
-     * @throws RequestTimeoutException
+     * @throws ConnectionException
      * @throws FaviconFetcherException
      */
     public function fetch(string $url): ?Favicon

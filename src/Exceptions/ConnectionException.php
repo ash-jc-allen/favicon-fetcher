@@ -2,7 +2,7 @@
 
 namespace AshAllenDesign\FaviconFetcher\Exceptions;
 
-class RequestTimeoutException extends FaviconFetcherException
+class ConnectionException extends FaviconFetcherException
 {
     //
 }

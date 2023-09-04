@@ -13,7 +13,7 @@ use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
-use AshAllenDesign\FaviconFetcher\Exceptions\RequestTimeoutException;
+use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Collection;
@@ -93,7 +93,7 @@ class HttpDriver implements Fetcher
      *
      * @param string $faviconUrl
      * @return bool
-     * @throws RequestTimeoutException
+     * @throws ConnectionException
      */
     private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
@@ -115,7 +115,7 @@ class HttpDriver implements Fetcher
      *
      * @throws InvalidIconSizeException
      * @throws InvalidIconTypeException
-     * @throws RequestTimeoutException
+     * @throws ConnectionException
      */
     private function attemptToResolveFromHeadTags(string $url): ?Favicon
     {
@@ -153,7 +153,7 @@ class HttpDriver implements Fetcher
     }
 
     /**
-     * @throws RequestTimeoutException
+     * @throws ConnectionException
      */
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
