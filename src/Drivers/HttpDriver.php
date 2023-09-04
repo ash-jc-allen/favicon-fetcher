@@ -101,7 +101,8 @@ class HttpDriver implements Fetcher
      */
     private function faviconUrlCanBeReached(string $faviconUrl): bool
     {
-        return $this->withRequestExceptionHandling(fn (): bool => $this->httpClient()
+        return $this->withRequestExceptionHandling(
+            fn (): bool => $this->httpClient()
                 ->get($faviconUrl)
                 ->successful()
         );
@@ -163,7 +164,8 @@ class HttpDriver implements Fetcher
      */
     private function attemptToResolveAllFromHeadTags(string $url): ?FaviconCollection
     {
-        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($url)
+        $response = $this->withRequestExceptionHandling(
+            fn (): Response => $this->httpClient()->get($url)
         );
 
         if (! $response->successful()) {

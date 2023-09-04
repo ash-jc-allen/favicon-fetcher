@@ -50,7 +50,8 @@ class FaviconGrabberDriver implements Fetcher
 
         $apiUrl = self::BASE_URL.$urlWithoutProtocol;
 
-        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($apiUrl)
+        $response = $this->withRequestExceptionHandling(
+            fn (): Response => $this->httpClient()->get($apiUrl)
         );
 
         if (! $response->successful() || count($response->json('icons')) === 0) {

@@ -48,7 +48,8 @@ class UnavatarDriver implements Fetcher
 
         $faviconUrl = self::BASE_URL.$urlWithoutProtocol.'?fallback=false';
 
-        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($faviconUrl)
+        $response = $this->withRequestExceptionHandling(
+            fn (): Response => $this->httpClient()->get($faviconUrl)
         );
 
         return $response->successful()
