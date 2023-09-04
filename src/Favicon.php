@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AshAllenDesign\FaviconFetcher;
 
 use AshAllenDesign\FaviconFetcher\Concerns\BuildsCacheKeys;
@@ -183,7 +185,8 @@ class Favicon
             ->append('/')
             ->append($filename)
             ->append('.')
-            ->append($this->guessFileExtension());
+            ->append($this->guessFileExtension())
+            ->toString();
     }
 
     protected function guessFileExtension(): string
