@@ -14,7 +14,6 @@ use Carbon\CarbonInterface;
 use Illuminate\Http\Client\Response;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\File;
-use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
@@ -117,6 +116,7 @@ class Favicon
      * Get the contents of the favicon file.
      *
      * @return string
+     *
      * @throws ConnectionException
      */
     public function content(): string
