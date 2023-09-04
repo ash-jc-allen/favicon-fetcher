@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
 use AshAllenDesign\FaviconFetcher\FaviconFetcherProvider;
@@ -10,7 +12,7 @@ abstract class TestCase extends OrchestraTestCase
     /**
      * Load package service provider.
      *
-     * @param $app
+     * @param  $app
      * @return array
      */
     protected function getPackageProviders($app)
