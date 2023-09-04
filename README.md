@@ -4,7 +4,6 @@
 
 <p align="center">
 <a href="https://packagist.org/packages/ashallendesign/favicon-fetcher"><img src="https://img.shields.io/packagist/v/ashallendesign/favicon-fetcher.svg?style=flat-square" alt="Latest Version on Packagist"></a>
-<a href="https://github.com/ash-jc-allen/favicon-fetcher"><img src="https://img.shields.io/github/workflow/status/ash-jc-allen/favicon-fetcher/run-tests?style=flat-square" alt="Build Status"></a>
 <a href="https://packagist.org/packages/ashallendesign/favicon-fetcher"><img src="https://img.shields.io/packagist/dt/ashallendesign/favicon-fetcher.svg?style=flat-square" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/ashallendesign/favicon-fetcher"><img src="https://img.shields.io/packagist/php-v/ashallendesign/favicon-fetcher?style=flat-square" alt="PHP from Packagist"></a>
 <a href="https://github.com/ash-jc-allen/favicon-fetcher/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ash-jc-allen/favicon-fetcher?style=flat-square" alt="GitHub license"></a>
