@@ -28,7 +28,7 @@ class GoogleSharedStuffDriver implements Fetcher
     /**
      * Attempt to fetch the favicon for the given URL.
      *
-     * @param string $url
+     * @param  string  $url
      * @return Favicon|null
      *
      * @throws FaviconNotFoundException
@@ -48,8 +48,7 @@ class GoogleSharedStuffDriver implements Fetcher
 
         $faviconUrl = self::BASE_URL.$url;
 
-        $response = $this->withRequestExceptionHandling(fn (): Response =>
-            $this->httpClient()->get($faviconUrl)
+        $response = $this->withRequestExceptionHandling(fn (): Response => $this->httpClient()->get($faviconUrl)
         );
 
         return $response->successful()
