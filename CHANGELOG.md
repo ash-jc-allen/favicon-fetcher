@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.1.0 (released 2023-11-07):**
+
+- Added `user_agent` config field to configure HTTP `User-Agent` request header. ([#70](https://github.com/ash-jc-allen/favicon-fetcher/pull/70))
+
 **v3.0.0 (released 2023-09-04):**
 
 - Added `connect_timeout` and `timeout` config fields. ([#67](https://github.com/ash-jc-allen/favicon-fetcher/pull/67))
