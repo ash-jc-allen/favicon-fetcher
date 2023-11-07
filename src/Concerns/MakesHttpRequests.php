@@ -13,8 +13,14 @@ trait MakesHttpRequests
 {
     protected function httpClient(): PendingRequest
     {
-        return Http::timeout(config('favicon-fetcher.timeout'))
+        $client = Http::timeout(config('favicon-fetcher.timeout'))
             ->connectTimeout(config('favicon-fetcher.connect_timeout'));
+
+        if ($userAgent = config('favicon-fetcher.user_agent')) {
+            $client->withUserAgent($userAgent);
+        }
+
+        return $client;
     }
 
     protected function withRequestExceptionHandling(\Closure $callback): mixed

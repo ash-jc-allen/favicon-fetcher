@@ -30,6 +30,7 @@
         + [Fallback Drivers](#fallback-drivers)
         + [Adding Your Own Driver](#adding-your-own-driver)
     * [HTTP Timeouts](#http-timeouts)
+    * [HTTP User Agent](#http-user-agent)
     * [Storing Favicons](#storing-favicons)
         + [Using `store`](#using-store)
         + [Using `storeAs`](#using-storeas)
@@ -301,6 +302,32 @@ return [
 If you'd prefer that no timeout be set, you can set the values to `0`.
 
 Please note that these timeouts are applied to all HTTP requests that Favicon Fetcher makes, regardless of the driver that is being used.
+
+### HTTP User Agent
+
+You may find that your requests are sometimes blocked by websites when trying to retrieve a favicon. This may be due to the fact that the default Guzzle `User-Agent` header is passed in the requests.
+
+Favicon Fetcher allows you to set the `User-Agent` header that is used in the package's requests. To do this, you can update the `user_agent` field in the `favicon-fetcher.php` config file after you've published it. For example, to set the `User-Agent` header to `My Custom User Agent`, you could update your config file like so:
+
+```php
+return [
+
+    // ...
+        
+    'user_agent' => 'My Custom User Agent',
+            
+    // ...
+
+]
+```
+
+The `User-Agent` header will be set on all HTTP requests that Favicon Fetcher makes, regardless of the driver that is being used.
+
+The `user_agent` config field is already configured in the config file to read directly from a `FAVICON_FETCHER_USER_AGENT` field in your `.env` file. So, if you'd prefer to set the `User-Agent` header in your `.env` file, you could do so like this:
+
+```dotenv
+FAVICON_FETCHER_USER_AGENT="My Custom User Agent"
+```
 
 ### Storing Favicons
 

@@ -14,6 +14,7 @@ use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\NullDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
+use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
@@ -592,6 +593,30 @@ class HttpDriverTest extends TestCase
             });
 
         self::assertSame('fallback-to-this', $favicon);
+    }
+
+    /** @test */
+    public function can_set_the_user_agent_when_fetching()
+    {
+        Http::fake();
+
+        $driver = new HttpDriver();
+
+        // No user agent set.
+        $driver->fetch('https://example.com');
+
+        Http::assertSent(function (Request $request) {
+            return $request->hasHeader('User-Agent', 'GuzzleHttp/7');
+        });
+
+        // Custom user agent.
+        config()->set('favicon-fetcher.user_agent', 'test-user-agent');
+
+        $driver->fetch('https://example.com');
+
+        Http::assertSent(function (Request $request) {
+            return $request->hasHeader('User-Agent', 'test-user-agent');
+        });
     }
 
     public function allFaviconLinksInHtmlProvider(): array

@@ -46,4 +46,14 @@ return [
     'timeout' => 0,
 
     'connect_timeout' => 0,
+
+    /*
+    |--------------------------------------------------------------------------
+    | HTTP User Agent
+    |--------------------------------------------------------------------------
+    |
+    | Set the user agent used by the HTTP client when fetching the favicons.
+    |
+    */
+    'user_agent' => env('FAVICON_FETCHER_USER_AGENT'),
 ];
