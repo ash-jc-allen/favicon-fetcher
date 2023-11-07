@@ -3,6 +3,7 @@
 **v3.1.0 (released 2023-11-07):**
 
 - Added `user_agent` config field to configure HTTP `User-Agent` request header. ([#70](https://github.com/ash-jc-allen/favicon-fetcher/pull/70))
+- Run CI tests using PHP 8.3 ([#69](https://github.com/ash-jc-allen/favicon-fetcher/pull/69))
 
 **v3.0.0 (released 2023-09-04):**
 
