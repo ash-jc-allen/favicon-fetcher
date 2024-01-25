@@ -67,4 +67,11 @@ class FaviconCollection extends Collection
             fn (Favicon $favicon): ?int => $favicon->getIconSize()
         )->first();
     }
+
+    public function largestByFileSize() : ?Favicon
+    {
+        return $this->sortByDesc(
+            fn (Favicon $favicon): int => strlen($favicon->content())
+        )->first();
+    }
 }
