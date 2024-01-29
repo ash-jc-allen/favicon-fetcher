@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.2.0 (released 2024-01-29):**
+
+- Added a `largestByFileSize` method to the `FaviconCollection`. [#73](https://github.com/ash-jc-allen/favicon-fetcher/pull/73)
+
 **v3.1.0 (released 2023-11-07):**
 
 - Added `user_agent` config field to configure HTTP `User-Agent` request header. ([#70](https://github.com/ash-jc-allen/favicon-fetcher/pull/70))
