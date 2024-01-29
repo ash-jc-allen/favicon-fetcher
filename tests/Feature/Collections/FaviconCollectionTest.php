@@ -136,4 +136,24 @@ final class FaviconCollectionTest extends TestCase
 
         self::assertSame('https://example.com/favicon/favicon-32x32.png', $largest->getFaviconUrl());
     }
+
+    /** @test */
+    public function largest_favicon_can_be_retrieved_based_on_file_size()
+    {
+        // mock the favicons to specify file content lengths
+        $favicon1 = $this->createMock(Favicon::class);
+        $favicon1->method('getFaviconUrl')->willReturn('https://example.com/favicon/favicon-32x32.png');
+        $favicon1->method('content')->willReturn('some-short-string');
+
+        $favicon2 = $this->createMock(Favicon::class);
+        $favicon2->method('getFaviconUrl')->willReturn('https://example.com/favicon/favicon-64x64.png');
+        $favicon2->method('content')->willReturn('some-much-longer-string');
+
+        $largest = FaviconCollection::make([
+            $favicon1,
+            $favicon2,
+        ])->largestByFileSize();
+
+        self::assertSame('https://example.com/favicon/favicon-64x64.png', $largest->getFaviconUrl());
+    }
 }

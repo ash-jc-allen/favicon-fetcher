@@ -133,6 +133,14 @@ use AshAllenDesign\FaviconFetcher\Facades\Favicon;
 $largestFavicon = Favicon::fetchAll('https://ashallendesign.co.uk')->largest();
 ```
 
+The `FaviconCollection` also provides a `largestByFileSize` method that you can use to get the favicon with the largest file size. You may want to do this if the package cannot detect the sizes of the icons for a given website, and so it can't detect the largest icon. This method works based on the assumption that the larger the file size, the larger the image dimensions. For example, you can use the `largestByFileSize` method like this:
+
+```php
+use AshAllenDesign\FaviconFetcher\Facades\Favicon;
+
+$largestFavicon = Favicon::fetchAll('https://ashallendesign.co.uk')->largestByFileSize();
+```
+
 Note: Only the `http` driver supports retrieving all the favicons for a given website. For this reason, the `fetchAll` method does not support fallbacks. Support may be added for other drivers and fallbacks in the future. 
 
 #### Using the `fetchAllOr` Method
