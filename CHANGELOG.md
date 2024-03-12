@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.3.0 (released 2024-03-12):**
+
+- Added support for Laravel 11. ([#75](https://github.com/ash-jc-allen/favicon-fetcher/pull/75))
+
 **v3.2.0 (released 2024-01-29):**
 
 - Added a `largestByFileSize` method to the `FaviconCollection`. [#73](https://github.com/ash-jc-allen/favicon-fetcher/pull/73)
