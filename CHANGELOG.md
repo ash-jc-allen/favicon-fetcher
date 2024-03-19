@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.4.0 (released 2024-03-19):**
+
+- Added support for `nesbot/carbon 3.0`. ([#76](https://github.com/ash-jc-allen/favicon-fetcher/pull/76))
+
 **v3.3.0 (released 2024-03-12):**
 
 - Added support for Laravel 11. ([#75](https://github.com/ash-jc-allen/favicon-fetcher/pull/75))
