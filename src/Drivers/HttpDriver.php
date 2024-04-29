@@ -142,6 +142,10 @@ class HttpDriver implements Fetcher
             return null;
         }
 
+        if ($linkTag->attr('href') === null) {
+            return null;
+        }
+
         $favicon = new Favicon(
             url: $url,
             faviconUrl: $this->convertToAbsoluteUrl($url, $linkTag->attr('href')),
