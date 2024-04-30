@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.4.1 (released 2024-04-30):**
+
+- Fixed a bug that prevented fetching icons from a URL if the HTML contained a `link` tag without a `href` attribute.([#77](https://github.com/ash-jc-allen/favicon-fetcher/pull/77))
+
 **v3.4.0 (released 2024-03-19):**
 
 - Added support for `nesbot/carbon 3.0`. ([#76](https://github.com/ash-jc-allen/favicon-fetcher/pull/76))
