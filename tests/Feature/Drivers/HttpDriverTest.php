@@ -33,10 +33,11 @@ class HttpDriverTest extends TestCase
         ?int $expectedSize,
         string $expectedType,
     ): void {
+        Http::preventStrayRequests();
+
         Http::fake([
             'https://example.com' => Http::response($html),
             $expectedFaviconUrl => Http::response('favicon contents here'),
-            '*' => Http::response('should not hit here'),
         ]);
 
         $favicon = (new HttpDriver())->fetch('https://example.com');
@@ -622,9 +623,21 @@ class HttpDriverTest extends TestCase
     /** @test */
     public function null_is_returned_if_using_fetch_and_the_link_has_no_href(): void
     {
+        $responseHtml = <<<'HTML'
+            <head>
+                <meta charset="utf-8" />
+                <title>Dummy title</title>
+                <meta name="title" content="Dummy title">
+                <meta name="description" content="Dummy title">
+                <link rel="icon" type="image/x-icon">
+            </head>
+        HTML;
+
+        Http::preventStrayRequests();
+
         Http::fake([
-            'https://example.com' => Http::response($this->htmlOptionThirteen()),
-            '*' => Http::response('should not hit here'),
+            'https://example.com' => Http::response($responseHtml),
+            'https://example.com/favicon.ico' => Http::response(status: 404),
         ]);
 
         $favicon = (new HttpDriver())->fetch('https://example.com');
@@ -635,9 +648,21 @@ class HttpDriverTest extends TestCase
     /** @test */
     public function null_is_returned_if_using_fetchAll_and_the_link_has_no_href(): void
     {
+        $responseHtml = <<<'HTML'
+            <head>
+                <meta charset="utf-8" />
+                <title>Dummy title</title>
+                <meta name="title" content="Dummy title">
+                <meta name="description" content="Dummy title">
+                <link rel="icon" type="image/x-icon">
+            </head>
+        HTML;
+
+        Http::preventStrayRequests();
+
         Http::fake([
-            'https://example.com' => Http::response($this->htmlOptionThirteen()),
-            '*' => Http::response('should not hit here'),
+            'https://example.com' => Http::response($responseHtml),
+            'https://example.com/favicon.ico' => Http::response(status: 404),
         ]);
 
         $favicons = (new HttpDriver())->fetchAll('https://example.com');
@@ -764,7 +789,7 @@ class HttpDriverTest extends TestCase
             [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico', null, Favicon::TYPE_SHORTCUT_ICON],
             [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
             [$this->htmlOptionTwelve(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
-            [$this->htmlOptionThirteen(), 'https://example.com/android-icon-96x96.png', 96, Favicon::TYPE_ICON],
+            [$this->htmlOptionThirteen(), 'https://example.com/favicon-96x96.png', 96, Favicon::TYPE_ICON],
         ];
     }
 
