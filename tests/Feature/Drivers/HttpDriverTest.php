@@ -619,6 +619,32 @@ class HttpDriverTest extends TestCase
         });
     }
 
+    /** @test */
+    public function null_is_returned_if_using_fetch_and_the_link_has_no_href(): void
+    {
+        Http::fake([
+            'https://example.com' => Http::response($this->htmlOptionThirteen()),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicon = (new HttpDriver())->fetch('https://example.com');
+
+        self::assertNull($favicon);
+    }
+
+    /** @test */
+    public function null_is_returned_if_using_fetchAll_and_the_link_has_no_href(): void
+    {
+        Http::fake([
+            'https://example.com' => Http::response($this->htmlOptionThirteen()),
+            '*' => Http::response('should not hit here'),
+        ]);
+
+        $favicons = (new HttpDriver())->fetchAll('https://example.com');
+
+        self::assertCount(0, $favicons);
+    }
+
     public function allFaviconLinksInHtmlProvider(): array
     {
         return [
@@ -714,6 +740,12 @@ class HttpDriverTest extends TestCase
                     (new Favicon('https://example.com', 'https://example.com/favicon-96x96.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(96),
                 ]),
             ],
+            [
+                $this->htmlOptionThirteen(),
+                FaviconCollection::make([
+                    (new Favicon('https://example.com', 'https://example.com/favicon-96x96.png'))->setIconType(Favicon::TYPE_ICON)->setIconSize(96),
+                ]),
+            ],
         ];
     }
 
@@ -732,6 +764,7 @@ class HttpDriverTest extends TestCase
             [$this->htmlOptionTen(), 'https://www.example.com/favicon123.ico', null, Favicon::TYPE_SHORTCUT_ICON],
             [$this->htmlOptionEleven(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
             [$this->htmlOptionTwelve(), 'https://example.com/android-icon-192x192.png', 192, Favicon::TYPE_ICON],
+            [$this->htmlOptionThirteen(), 'https://example.com/android-icon-96x96.png', 96, Favicon::TYPE_ICON],
         ];
     }
 
@@ -908,6 +941,20 @@ class HttpDriverTest extends TestCase
                 <meta name="msapplication-TileImage" content="/ms-icon-144x144.png">
                 <meta name="theme-color" content="#ffffff">
                 <title>Dummy title</title>
+            </head>
+        HTML;
+    }
+
+    private function htmlOptionThirteen(): string
+    {
+        return <<<'HTML'
+            <head>
+                <meta charset="utf-8" />
+                <title>Dummy title</title>
+                <meta name="title" content="Dummy title">
+                <meta name="description" content="Dummy title">
+                <link rel="icon" type="image/x-icon">
+                <link rel="icon" type="image/png" sizes="96x96" href=/favicon-96x96.png>
             </head>
         HTML;
     }
