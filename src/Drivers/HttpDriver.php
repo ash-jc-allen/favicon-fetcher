@@ -133,8 +133,8 @@ class HttpDriver implements Fetcher
 
         $linkTag = (new Crawler($response->body()))
             ->filter('
-                head link[rel="icon"],
-                head link[rel="shortcut icon"]
+                head link[rel="icon"][href],
+                head link[rel="shortcut icon"][href]
             ')
             ->first();
 
@@ -174,9 +174,9 @@ class HttpDriver implements Fetcher
 
         $linkTags = (new Crawler($response->body()))
             ->filter('
-                head link[rel="icon"],
-                head link[rel="shortcut icon"],
-                head link[rel="apple-touch-icon"]
+                head link[rel="icon"][href],
+                head link[rel="shortcut icon"][href],
+                head link[rel="apple-touch-icon"][href]
             ');
 
         if (! $linkTags->count()) {
