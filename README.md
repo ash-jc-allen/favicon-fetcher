@@ -30,6 +30,7 @@
         + [Fallback Drivers](#fallback-drivers)
         + [Adding Your Own Driver](#adding-your-own-driver)
     * [HTTP Timeouts](#http-timeouts)
+    * [SSL Verification](#ssl-verification)
     * [HTTP User Agent](#http-user-agent)
     * [Storing Favicons](#storing-favicons)
         + [Using `store`](#using-store)
@@ -310,6 +311,31 @@ return [
 If you'd prefer that no timeout be set, you can set the values to `0`.
 
 Please note that these timeouts are applied to all HTTP requests that Favicon Fetcher makes, regardless of the driver that is being used.
+
+### SSL Verification
+
+Favicon Fetcher uses SSL verification by default, but this can be disabled. This can be useful in development environments or situations where
+you might be working with self-signed certificates or certificates from an untrusted certificate authority.
+
+You can disable the verification by updating the `verify_ssl` field in the `favicon-fetcher.php` config file after you've published it.
+
+```php
+return [
+
+    // ...
+        
+    'verify_ssl' => false,
+            
+    // ...
+
+]
+```
+
+Or by updating your .env file:
+
+```dotenv
+FAVICON_FETCHER_VERIFY_SSL=false
+```
 
 ### HTTP User Agent
 
