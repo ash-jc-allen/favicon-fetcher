@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.5.0 (released 2024-06-14):**
+
+- Added a new `verify_tls` config option to disable TLS certificate verification. ([#78](https://github.com/ash-jc-allen/favicon-fetcher/pull/78))
+
 **v3.4.1 (released 2024-04-30):**
 
 - Fixed a bug that prevented fetching icons from a URL if the HTML contained a `link` tag without a `href` attribute.([#77](https://github.com/ash-jc-allen/favicon-fetcher/pull/77))
