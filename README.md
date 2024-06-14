@@ -314,8 +314,7 @@ Please note that these timeouts are applied to all HTTP requests that Favicon Fe
 
 ### SSL Verification
 
-Favicon Fetcher uses SSL verification by default, but this can be disabled. This can be useful in development environments or situations where
-you might be working with self-signed certificates or certificates from an untrusted certificate authority.
+Favicon Fetcher uses SSL verification by default, but this can be disabled. This can be useful in development environments or situations where you might be working with self-signed certificates or certificates from an untrusted certificate authority.
 
 You can disable the verification by updating the `verify_ssl` field in the `favicon-fetcher.php` config file after you've published it.
 
