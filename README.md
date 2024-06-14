@@ -330,7 +330,7 @@ return [
 ]
 ```
 
-Or by updating your .env file:
+Or by updating your `.env` file:
 
 ```dotenv
 FAVICON_FETCHER_VERIFY_SSL=false
