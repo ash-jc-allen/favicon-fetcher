@@ -17,7 +17,7 @@ final class HttpClientTest extends TestCase
         config([
             'favicon-fetcher.timeout' => 10,
             'favicon-fetcher.connect_timeout' => 5,
-            'favicon-fetcher.verify_ssl' => false,
+            'favicon-fetcher.verify_tls' => false,
         ]);
 
         $client = $this->httpClient();
@@ -28,10 +28,10 @@ final class HttpClientTest extends TestCase
     }
 
     /** @test */
-    public function http_client_is_returned_with_correct_verify_ssl_option(): void
+    public function http_client_is_returned_with_correct_verify_tls_option(): void
     {
         config([
-            'favicon-fetcher.verify_ssl' => true,
+            'favicon-fetcher.verify_tls' => true,
         ]);
 
         $client = $this->httpClient();

@@ -20,7 +20,7 @@ trait MakesHttpRequests
             $client->withUserAgent($userAgent);
         }
 
-        if (! config('favicon-fetcher.verify_ssl')) {
+        if (! config('favicon-fetcher.verify_tls')) {
             $client->withoutVerifying();
         }
 

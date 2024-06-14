@@ -49,13 +49,13 @@ return [
 
     /*
     |--------------------------------------------------------------------------
-    | Verify SSL
+    | Verify TLS
     |--------------------------------------------------------------------------
     |
-    | Sets the SSL verification option when making HTTP requests, which is
+    | Sets the TLS verification option when making HTTP requests, which is
     | enabled by default.
     */
-    'verify_ssl' => env('FAVICON_FETCHER_VERIFY_SSL', true),
+    'verify_tls' => env('FAVICON_FETCHER_VERIFY_TLS', true),
 
     /*
     |--------------------------------------------------------------------------
