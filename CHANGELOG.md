@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.6.0 (released 2024-07-08):**
+
+- Added support for `symfony/dom-crawler` v7.0. ([#79](https://github.com/ash-jc-allen/favicon-fetcher/pull/79))
+
 **v3.5.0 (released 2024-06-14):**
 
 - Added a new `verify_tls` config option to disable TLS certificate verification. ([#78](https://github.com/ash-jc-allen/favicon-fetcher/pull/78))
