@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.7.0 (released 2024-11-30):**
+
+- Added explicit nullable types to support PHP 8.4. ([#80](https://github.com/ash-jc-allen/favicon-fetcher/pull/80))
+
 **v3.6.0 (released 2024-07-08):**
 
 - Added support for `symfony/dom-crawler` v7.0. ([#79](https://github.com/ash-jc-allen/favicon-fetcher/pull/79))
