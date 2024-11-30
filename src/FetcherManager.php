@@ -16,7 +16,7 @@ class FetcherManager
 {
     protected static array $customDrivers = [];
 
-    public static function driver(string $driver = null): Fetcher
+    public static function driver(?string $driver = null): Fetcher
     {
         $driver ??= config('favicon-fetcher.default');
 

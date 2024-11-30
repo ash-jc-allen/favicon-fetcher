@@ -66,7 +66,7 @@ class Favicon
     public function __construct(
         string $url,
         string $faviconUrl,
-        Fetcher $fromDriver = null,
+        ?Fetcher $fromDriver = null,
         bool $retrievedFromCache = false
     ) {
         $this->url = $url;
@@ -154,7 +154,7 @@ class Favicon
      * @param  string|null  $disk
      * @return string
      */
-    public function store(string $directory, string $disk = null): string
+    public function store(string $directory, ?string $disk = null): string
     {
         return $this->storeAs($directory, Str::uuid()->toString(), $disk);
     }
@@ -167,7 +167,7 @@ class Favicon
      * @param  string|null  $disk
      * @return string
      */
-    public function storeAs(string $directory, string $filename, string $disk = null): string
+    public function storeAs(string $directory, string $filename, ?string $disk = null): string
     {
         $path = $this->buildStoragePath($directory, $filename);
 
