@@ -275,7 +275,7 @@ class FaviconTest extends TestCase
         ))->setIconSize(-1);
     }
 
-    public function iconTypeProvider(): array
+    public static function iconTypeProvider(): array
     {
         return [
             [Favicon::TYPE_ICON],
@@ -285,7 +285,7 @@ class FaviconTest extends TestCase
         ];
     }
 
-    public function iconSizeProvider(): array
+    public static function iconSizeProvider(): array
     {
         return [
             [null],
