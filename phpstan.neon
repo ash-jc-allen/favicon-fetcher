@@ -13,4 +13,3 @@ parameters:
         - '#^Call to an undefined method AshAllenDesign\\FaviconFetcher\\Collections\\FaviconCollection::fetch\(\)#'
         - '#^Call to an undefined method AshAllenDesign\\FaviconFetcher\\Collections\\FaviconCollection::fetchAll\(\)#'
 
-    checkMissingIterableValueType: false

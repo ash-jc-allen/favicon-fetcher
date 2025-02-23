@@ -14,6 +14,9 @@ use AshAllenDesign\FaviconFetcher\Exceptions\FaviconFetcherException;
 
 class FetcherManager
 {
+    /**
+     * @var Fetcher[]
+     */
     protected static array $customDrivers = [];
 
     public static function driver(?string $driver = null): Fetcher
