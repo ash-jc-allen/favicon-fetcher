@@ -1,5 +1,12 @@
 # Changelog
 
+**v3.8.0 (released 2025-02-24):**
+
+- Added support for Laravel 12. ([#82](https://github.com/ash-jc-allen/favicon-fetcher/pull/82))
+- Added support for PHPUnit 11. ([#83](https://github.com/ash-jc-allen/favicon-fetcher/pull/83))
+- Migrated from `nunomaduro/larastan` to `larastan/larastan`. ([#84](https://github.com/ash-jc-allen/favicon-fetcher/pull/84))
+- Added support for Larastan 3. ([#84](https://github.com/ash-jc-allen/favicon-fetcher/pull/84))
+
 **v3.7.0 (released 2024-11-30):**
 
 - Added explicit nullable types to support PHP 8.4. ([#80](https://github.com/ash-jc-allen/favicon-fetcher/pull/80))
