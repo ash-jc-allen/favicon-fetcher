@@ -21,7 +21,7 @@ trait HasDefaultFunctionality
      * An array of the drivers that should be as fallbacks if the current
      * driver fails to retrieve a favicon for the given URL.
      *
-     * @var array
+     * @var string[]
      */
     protected array $fallbacks = [];
 

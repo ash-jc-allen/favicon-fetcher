@@ -246,7 +246,7 @@ class Favicon
     /**
      * Transform the favicon object into an array that can be cached.
      *
-     * @return array
+     * @return array<string,string|int|null>
      */
     public function toCache(): array
     {
