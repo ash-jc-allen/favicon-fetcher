@@ -9,7 +9,6 @@ use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
 use AshAllenDesign\FaviconFetcher\Favicon as FetchedFavicon;
 use AshAllenDesign\FaviconFetcher\FetcherManager;
 use Illuminate\Support\Facades\Facade;
-use RuntimeException;
 
 /**
  * @method static Fetcher driver(string $driver = null)
