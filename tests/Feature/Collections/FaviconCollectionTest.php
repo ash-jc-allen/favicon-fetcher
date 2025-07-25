@@ -9,12 +9,13 @@ use AshAllenDesign\FaviconFetcher\Favicon;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\Test;
 
 final class FaviconCollectionTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    /** @test */
+    #[Test]
     public function favicon_collection_can_be_cached_if_the_collection_was_not_retrieved_from_the_cache(): void
     {
         $collection = FaviconCollection::make([
@@ -43,7 +44,7 @@ final class FaviconCollectionTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function favicon_collection_can_be_cached_if_the_collection_was_retrieved_from_the_cache_and_the_force_flag_is_true(): void
     {
         Cache::put(
@@ -75,7 +76,7 @@ final class FaviconCollectionTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function favicon_collection_is_not_cached_if_the_collection_was_retrieved_from_the_cache_and_the_force_flag_is_false(): void
     {
         Cache::put(
@@ -96,7 +97,7 @@ final class FaviconCollectionTest extends TestCase
         );
     }
 
-    /** @test */
+    #[Test]
     public function favicon_collection_is_not_cached_if_the_collection_is_empty(): void
     {
         Cache::shouldReceive('put')->never();
@@ -106,7 +107,7 @@ final class FaviconCollectionTest extends TestCase
         $collection->cache(now()->addDay());
     }
 
-    /** @test */
+    #[Test]
     public function largest_favicon_can_be_retrieved(): void
     {
         $largest = FaviconCollection::make([
@@ -126,7 +127,7 @@ final class FaviconCollectionTest extends TestCase
         self::assertSame('https://example.com/favicon/android-icon-192x192.png', $largest->getFaviconUrl());
     }
 
-    /** @test */
+    #[Test]
     public function largest_favicon_can_be_retrieved_if_there_are_only_null_sizes(): void
     {
         $largest = FaviconCollection::make([
@@ -137,8 +138,8 @@ final class FaviconCollectionTest extends TestCase
         self::assertSame('https://example.com/favicon/favicon-32x32.png', $largest->getFaviconUrl());
     }
 
-    /** @test */
-    public function largest_favicon_can_be_retrieved_based_on_file_size()
+    #[Test]
+    public function largest_favicon_can_be_retrieved_based_on_file_size(): void
     {
         // mock the favicons to specify file content lengths
         $favicon1 = $this->createMock(Favicon::class);

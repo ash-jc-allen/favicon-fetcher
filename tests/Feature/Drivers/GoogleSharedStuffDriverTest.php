@@ -15,17 +15,16 @@ use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 
-class GoogleSharedStuffDriverTest extends TestCase
+final class GoogleSharedStuffDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    /**
-     * @test
-     *
-     * @testWith ["https"]
-     *           ["http"]
-     */
+    #[Test]
+    #[TestWith(['https'])]
+    #[TestWith(['http'])]
     public function favicon_can_be_fetched_from_driver(string $protocol): void
     {
         Http::fake([
@@ -38,7 +37,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('https://www.google.com/s2/favicons?domain='.$protocol.'://example.com', $favicon->getFaviconUrl());
     }
 
-    /** @test */
+    #[Test]
     public function favicon_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
         Cache::put(
@@ -60,7 +59,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('url-goes-here', $favicon->getFaviconUrl());
     }
 
-    /** @test */
+    #[Test]
     public function favicon_is_not_fetched_from_the_cache_if_it_exists_but_the_use_cache_flag_is_false(): void
     {
         Cache::put(
@@ -79,7 +78,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('https://www.google.com/s2/favicons?domain=https://example.com', $favicon->getFaviconUrl());
     }
 
-    /** @test */
+    #[Test]
     public function null_is_returned_if_the_driver_cannot_find_the_favicon(): void
     {
         Http::fake([
@@ -92,7 +91,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertNull($favicon);
     }
 
-    /** @test */
+    #[Test]
     public function fallback_is_attempted_if_the_driver_cannot_find_the_favicon(): void
     {
         Http::fake([
@@ -110,7 +109,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('favicon-from-default', $favicon->getFaviconUrl());
     }
 
-    /** @test */
+    #[Test]
     public function exception_is_thrown_if_the_driver_cannot_find_the_favicon_and_the_throw_on_not_found_flag_is_true(): void
     {
         Http::fake([
@@ -133,7 +132,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('A favicon cannot be found for https://example.com', $exception->getMessage());
     }
 
-    /** @test */
+    #[Test]
     public function default_value_can_be_returned_using_fetchOr_method(): void
     {
         Http::fake([
@@ -148,7 +147,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('fallback-to-this', $favicon);
     }
 
-    /** @test */
+    #[Test]
     public function default_value_can_be_returned_using_fetchOr_method_with_a_closure(): void
     {
         Http::fake([
@@ -164,7 +163,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertSame('fallback-to-this', $favicon);
     }
 
-    /** @test */
+    #[Test]
     public function exception_can_be_thrown_after_attempting_a_fallback(): void
     {
         Http::fake([
@@ -191,7 +190,7 @@ class GoogleSharedStuffDriverTest extends TestCase
         self::assertTrue(NullDriver::$flag);
     }
 
-    /** @test */
+    #[Test]
     public function exception_is_thrown_if_the_url_is_invalid(): void
     {
         Http::fake([
