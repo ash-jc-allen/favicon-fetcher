@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace AshAllenDesign\FaviconFetcher;
 
 use AshAllenDesign\FaviconFetcher\Contracts\Fetcher;
+use AshAllenDesign\FaviconFetcher\Drivers\DuckDuckGoDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconGrabberDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
@@ -29,6 +30,7 @@ class FetcherManager
             'favicon-kit' => new FaviconKitDriver(),
             'unavatar' => new UnavatarDriver(),
             'favicon-grabber' => new FaviconGrabberDriver(),
+            'duck-duck-go' => new DuckDuckGoDriver(),
             default => static::attemptToCreateCustomDriver($driver),
         };
     }
