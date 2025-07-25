@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Concerns\MakesHttpRequests;
 
+use PHPUnit\Framework\Attributes\Test;
 use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 
@@ -11,7 +12,7 @@ final class HttpClientTest extends TestCase
 {
     use MakesHttpRequests;
 
-    /** @test */
+    #[Test]
     public function http_client_is_returned_with_correct_options(): void
     {
         config([
@@ -27,7 +28,7 @@ final class HttpClientTest extends TestCase
         self::assertFalse($client->getOptions()['verify']);
     }
 
-    /** @test */
+    #[Test]
     public function http_client_is_returned_with_correct_verify_tls_option(): void
     {
         config([
