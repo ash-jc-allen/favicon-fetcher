@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
+use AshAllenDesign\FaviconFetcher\Drivers\DuckDuckGoDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconGrabberDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
@@ -49,6 +50,12 @@ class FetcherManagerTest extends TestCase
     public function favicon_grabber_driver_can_be_returned(): void
     {
         self::assertInstanceOf(FaviconGrabberDriver::class, FetcherManager::driver('favicon-grabber'));
+    }
+
+    /** @test */
+    public function duck_duck_go_driver_can_be_returned(): void
+    {
+        self::assertInstanceOf(DuckDuckGoDriver::class, FetcherManager::driver('duck-duck-go'));
     }
 
     /** @test */
