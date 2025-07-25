@@ -4,12 +4,12 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Collections;
 
-use PHPUnit\Framework\Attributes\Test;
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Favicon;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
+use PHPUnit\Framework\Attributes\Test;
 
 final class FaviconCollectionTest extends TestCase
 {

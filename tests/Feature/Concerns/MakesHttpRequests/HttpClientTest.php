@@ -4,9 +4,9 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Concerns\MakesHttpRequests;
 
-use PHPUnit\Framework\Attributes\Test;
 use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 final class HttpClientTest extends TestCase
 {
