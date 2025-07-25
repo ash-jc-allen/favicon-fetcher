@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconSizeException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidIconTypeException;
 use AshAllenDesign\FaviconFetcher\Favicon;
@@ -17,6 +15,8 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mockery;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
 
 final class FaviconTest extends TestCase
 {

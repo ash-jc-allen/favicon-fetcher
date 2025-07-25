@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Drivers;
 
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\TestWith;
 use AshAllenDesign\FaviconFetcher\Drivers\GoogleSharedStuffDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
 use AshAllenDesign\FaviconFetcher\Exceptions\InvalidUrlException;
@@ -17,14 +15,16 @@ use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 
 final class GoogleSharedStuffDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
     #[Test]
-    #[TestWith(["https"])]
-    #[TestWith(["http"])]
+    #[TestWith(['https'])]
+    #[TestWith(['http'])]
     public function favicon_can_be_fetched_from_driver(string $protocol): void
     {
         Http::fake([
