@@ -591,7 +591,7 @@ class HttpDriverTest extends TestCase
     }
 
     #[Test]
-    public function can_set_the_user_agent_when_fetching()
+    public function can_set_the_user_agent_when_fetching(): void
     {
         Http::fake();
 

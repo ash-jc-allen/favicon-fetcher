@@ -139,7 +139,7 @@ final class FaviconCollectionTest extends TestCase
     }
 
     #[Test]
-    public function largest_favicon_can_be_retrieved_based_on_file_size()
+    public function largest_favicon_can_be_retrieved_based_on_file_size(): void
     {
         // mock the favicons to specify file content lengths
         $favicon1 = $this->createMock(Favicon::class);
