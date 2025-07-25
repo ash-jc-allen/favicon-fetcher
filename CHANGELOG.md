@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.9.0 (released 2025-07-25):**
+
+- Added driver for the DuckDuckGo icons API. ([#88](https://github.com/ash-jc-allen/favicon-fetcher/pull/88))
+
 **v3.8.0 (released 2025-02-24):**
 
 - Added support for Laravel 12. ([#82](https://github.com/ash-jc-allen/favicon-fetcher/pull/82))
