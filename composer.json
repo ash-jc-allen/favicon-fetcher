@@ -38,7 +38,7 @@
   },
   "autoload-dev": {
     "psr-4": {
-      "AshAllenDesign\\FaviconFetcher\\Tests\\": "tests/"
+        "AshAllenDesign\\FaviconFetcher\\Tests\\": "tests/"
     }
   },
   "extra": {

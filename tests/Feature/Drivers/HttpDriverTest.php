@@ -17,16 +17,16 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\TestWith;
 
-final class HttpDriverTest extends TestCase
+class HttpDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    #[Test]
-    #[DataProvider('faviconLinksInHtmlProvider')]
+    /**
+     * @test
+     *
+     * @dataProvider faviconLinksInHtmlProvider
+     */
     public function favicon_can_be_fetched_using_link_element_in_html(
         string $html,
         string $expectedFaviconUrl,
@@ -47,7 +47,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame($expectedType, $favicon->getIconType());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_if_the_url_has_a_path_and_thelink_element_contains_a_relative_url(): void
     {
         Http::fake([
@@ -61,7 +61,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/icon/is/here.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html(): void
     {
         $responseHtml = <<<'HTML'
@@ -81,7 +81,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html_and_a_relative_url_is_passed(): void
     {
         $responseHtml = <<<'HTML'
@@ -101,9 +101,12 @@ final class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
-    #[TestWith(['https'])]
-    #[TestWith(['http'])]
+    /**
+     * @test
+     *
+     * @testWith ["https"]
+     *           ["http"]
+     */
     public function favicon_can_be_fetched_from_driver(string $protocol): void
     {
         Http::fake([
@@ -117,7 +120,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame($protocol.'://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_url_with_port(): void
     {
         Http::fake([
@@ -130,7 +133,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('http://example.com:8080/icon/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_url_with_query_parameters(): void
     {
         Http::fake([
@@ -143,7 +146,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('http://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
         Cache::put(
@@ -167,7 +170,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame(Favicon::TYPE_ICON_UNKNOWN, $favicon->getIconType());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_the_cache_if_it_already_exists_in_the_old_string_format(): void
     {
         Cache::put(
@@ -187,7 +190,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame(Favicon::TYPE_ICON_UNKNOWN, $favicon->getIconType());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_is_not_fetched_from_the_cache_if_it_exists_but_the_use_cache_flag_is_false(): void
     {
         Cache::put(
@@ -206,7 +209,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/icon/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function null_is_returned_if_the_driver_cannot_find_the_favicon(): void
     {
         Http::fake([
@@ -219,7 +222,7 @@ final class HttpDriverTest extends TestCase
         self::assertNull($favicon);
     }
 
-    #[Test]
+    /** @test */
     public function fallback_is_attempted_if_the_driver_cannot_find_the_favicon(): void
     {
         Http::fake([
@@ -237,7 +240,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('favicon-from-default', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function exception_is_thrown_if_the_driver_cannot_find_the_favicon_and_the_throw_on_not_found_flag_is_true(): void
     {
         Http::fake([
@@ -260,7 +263,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('A favicon cannot be found for https://example.com', $exception->getMessage());
     }
 
-    #[Test]
+    /** @test */
     public function default_value_can_be_returned_using_fetchOr_method(): void
     {
         Http::fake([
@@ -275,7 +278,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('fallback-to-this', $favicon);
     }
 
-    #[Test]
+    /** @test */
     public function default_value_can_be_returned_using_fetchOr_method_with_a_closure(): void
     {
         Http::fake([
@@ -291,7 +294,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('fallback-to-this', $favicon);
     }
 
-    #[Test]
+    /** @test */
     public function exception_can_be_thrown_after_attempting_a_fallback(): void
     {
         Http::fake([
@@ -318,7 +321,7 @@ final class HttpDriverTest extends TestCase
         self::assertTrue(NullDriver::$flag);
     }
 
-    #[Test]
+    /** @test */
     public function exception_is_thrown_if_the_url_is_invalid(): void
     {
         Http::fake([
@@ -337,8 +340,11 @@ final class HttpDriverTest extends TestCase
         self::assertSame('example.com is not a valid URL', $exception->getMessage());
     }
 
-    #[Test]
-    #[DataProvider('allFaviconLinksInHtmlProvider')]
+    /**
+     * @test
+     *
+     * @dataProvider allFaviconLinksInHtmlProvider
+     */
     public function all_icons_for_a_url_can_be_fetched(string $html, $expectedFaviconCollection): void
     {
         Http::fake([
@@ -357,7 +363,7 @@ final class HttpDriverTest extends TestCase
         }
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_fetched_from_guessed_url_if_it_cannot_be_found_in_response_html_when_trying_to_get_all_icons(): void
     {
         $responseHtml = <<<'HTML'
@@ -378,7 +384,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame($favicons->first()->getFaviconUrl(), 'https://example.com/favicon.ico');
     }
 
-    #[Test]
+    /** @test */
     public function empty_favicon_collection_is_returned_if_the_url_cannot_be_reached(): void
     {
         Http::fake([
@@ -392,7 +398,7 @@ final class HttpDriverTest extends TestCase
         self::assertCount(0, $favicons);
     }
 
-    #[Test]
+    /** @test */
     public function empty_favicon_collection_is_returned_if_no_icons_can_be_found_for_a_url(): void
     {
         $responseHtml = <<<'HTML'
@@ -412,7 +418,7 @@ final class HttpDriverTest extends TestCase
         self::assertCount(0, $favicons);
     }
 
-    #[Test]
+    /** @test */
     public function error_is_thrown_if_trying_to_find_all_the_favicons_for_an_invalid_url(): void
     {
         Http::fake([
@@ -431,7 +437,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('example.com is not a valid URL', $exception->getMessage());
     }
 
-    #[Test]
+    /** @test */
     public function error_is_thrown_if_no_icons_can_be_found_for_a_url_and_the_throw_on_not_found_flag_is_true(): void
     {
         $responseHtml = <<<'HTML'
@@ -459,7 +465,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('A favicon cannot be found for https://example.com', $exception->getMessage());
     }
 
-    #[Test]
+    /** @test */
     public function all_favicon_for_a_url_can_be_fetched_from_the_cache_if_it_already_exists(): void
     {
         Cache::put(
@@ -505,7 +511,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame(Favicon::TYPE_APPLE_TOUCH_ICON, $favicons->skip(2)->first()->getIconType());
     }
 
-    #[Test]
+    /** @test */
     public function all_favicons_for_a_url_are_not_fetched_from_the_cache_if_it_exists_but_the_use_cache_flag_is_false(): void
     {
         Cache::put(
@@ -542,7 +548,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('https://example.com/icon/favicon.ico', $favicons->first()->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicons_can_be_returned_using_the_fetchAllOr_method(): void
     {
         Http::fake([
@@ -559,7 +565,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame(null, $favicons->first()->getIconSize());
     }
 
-    #[Test]
+    /** @test */
     public function default_value_can_be_returned_using_fetchAllOr_method(): void
     {
         Http::fake([
@@ -574,7 +580,7 @@ final class HttpDriverTest extends TestCase
         self::assertSame('fallback-to-this', $favicon);
     }
 
-    #[Test]
+    /** @test */
     public function default_value_can_be_returned_using_fetchAllOr_method_with_a_closure(): void
     {
         Http::fake([
@@ -590,8 +596,8 @@ final class HttpDriverTest extends TestCase
         self::assertSame('fallback-to-this', $favicon);
     }
 
-    #[Test]
-    public function can_set_the_user_agent_when_fetching(): void
+    /** @test */
+    public function can_set_the_user_agent_when_fetching()
     {
         Http::fake();
 
@@ -614,7 +620,7 @@ final class HttpDriverTest extends TestCase
         });
     }
 
-    #[Test]
+    /** @test */
     public function null_is_returned_if_using_fetch_and_the_link_has_no_href(): void
     {
         $responseHtml = <<<'HTML'
@@ -639,7 +645,7 @@ final class HttpDriverTest extends TestCase
         self::assertNull($favicon);
     }
 
-    #[Test]
+    /** @test */
     public function null_is_returned_if_using_fetchAll_and_the_link_has_no_href(): void
     {
         $responseHtml = <<<'HTML'

@@ -15,14 +15,12 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mockery;
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
 
-final class FaviconTest extends TestCase
+class FaviconTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
-    #[Test]
+    /** @test */
     public function favicon_url_can_be_returned(): void
     {
         $favicon = new Favicon(
@@ -33,7 +31,7 @@ final class FaviconTest extends TestCase
         self::assertSame('https://example.com/favicon.ico', $favicon->getFaviconUrl());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_contents_can_be_returned(): void
     {
         Http::fake([
@@ -49,7 +47,7 @@ final class FaviconTest extends TestCase
         self::assertSame('favicon contents here', $favicon->content());
     }
 
-    #[Test]
+    /** @test */
     public function url_can_be_returned(): void
     {
         $favicon = new Favicon(
@@ -60,7 +58,7 @@ final class FaviconTest extends TestCase
         self::assertSame('https://example.com', $favicon->getUrl());
     }
 
-    #[Test]
+    /** @test */
     public function retrieved_from_cache_value_can_be_returned_if_the_favicon_was_retrieved_from_the_cache(): void
     {
         $favicon = new Favicon(
@@ -72,7 +70,7 @@ final class FaviconTest extends TestCase
         self::assertTrue($favicon->retrievedFromCache());
     }
 
-    #[Test]
+    /** @test */
     public function retrieved_from_cache_value_can_be_returned_if_the_favicon_was_not_retrieved_from_the_cache(): void
     {
         $favicon = new Favicon(
@@ -83,7 +81,7 @@ final class FaviconTest extends TestCase
         self::assertFalse($favicon->retrievedFromCache());
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_cached_if_it_is_not_already_cached(): void
     {
         Carbon::setTestNow(now());
@@ -108,7 +106,7 @@ final class FaviconTest extends TestCase
         ))->cache($expectedTtl);
     }
 
-    #[Test]
+    /** @test */
     public function favicon_cannot_be_cached_if_it_is_already_cached(): void
     {
         Carbon::setTestNow(now());
@@ -124,7 +122,7 @@ final class FaviconTest extends TestCase
         ))->cache($expectedTtl);
     }
 
-    #[Test]
+    /** @test */
     public function favicon_can_be_cached_if_it_is_already_cached_and_the_force_flag_is_passed(): void
     {
         Carbon::setTestNow(now());
@@ -149,7 +147,7 @@ final class FaviconTest extends TestCase
         ))->cache(now()->addMinute(), true);
     }
 
-    #[Test]
+    /** @test */
     public function favicon_contents_be_stored(): void
     {
         Storage::fake();
@@ -169,7 +167,7 @@ final class FaviconTest extends TestCase
         self::assertSame('favicon contents here', Storage::get($path));
     }
 
-    #[Test]
+    /** @test */
     public function favicon_contents_be_stored_if_the_favicon_url_does_not_have_an_image_extension(): void
     {
         Storage::fake();
@@ -191,7 +189,7 @@ final class FaviconTest extends TestCase
         self::assertTrue(Str::of($path)->endsWith('.png'));
     }
 
-    #[Test]
+    /** @test */
     public function favicon_contents_can_be_stored_with_a_custom_file_name(): void
     {
         Storage::fake();
@@ -219,8 +217,11 @@ final class FaviconTest extends TestCase
         self::assertSame(Favicon::TYPE_ICON_UNKNOWN, $iconType);
     }
 
-    #[Test]
-    #[DataProvider('iconTypeProvider')]
+    /**
+     * @test
+     *
+     * @dataProvider iconTypeProvider
+     */
     public function icon_type_can_be_set_and_returned(string $expectedIconType): void
     {
         $iconType = (new Favicon(
@@ -233,8 +234,11 @@ final class FaviconTest extends TestCase
         self::assertSame($expectedIconType, $iconType);
     }
 
-    #[Test]
-    #[DataProvider('iconSizeProvider')]
+    /**
+     * @test
+     *
+     * @dataProvider iconSizeProvider
+     */
     public function icon_size_can_be_set_and_returned(?int $expectedIconSize): void
     {
         $iconSize = (new Favicon(
@@ -247,7 +251,7 @@ final class FaviconTest extends TestCase
         self::assertSame($expectedIconSize, $iconSize);
     }
 
-    #[Test]
+    /** @test */
     public function exception_is_thrown_when_trying_to_create_a_favicon_with_an_invalid_icon_type(): void
     {
         $this->expectException(InvalidIconTypeException::class);
@@ -259,7 +263,7 @@ final class FaviconTest extends TestCase
         ))->setIconType('INVALID');
     }
 
-    #[Test]
+    /** @test */
     public function exception_is_thrown_when_trying_to_create_a_favicon_with_an_invalid_icon_size(): void
     {
         $this->expectException(InvalidIconSizeException::class);
