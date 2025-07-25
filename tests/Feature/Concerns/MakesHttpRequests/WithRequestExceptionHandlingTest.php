@@ -4,11 +4,11 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Concerns\MakesHttpRequests;
 
-use PHPUnit\Framework\Attributes\Test;
 use AshAllenDesign\FaviconFetcher\Concerns\MakesHttpRequests;
 use AshAllenDesign\FaviconFetcher\Exceptions\ConnectionException;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
 use Illuminate\Http\Client\ConnectionException as ClientConnectionException;
+use PHPUnit\Framework\Attributes\Test;
 
 final class WithRequestExceptionHandlingTest extends TestCase
 {

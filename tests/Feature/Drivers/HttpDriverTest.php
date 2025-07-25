@@ -4,9 +4,6 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature\Drivers;
 
-use PHPUnit\Framework\Attributes\DataProvider;
-use PHPUnit\Framework\Attributes\Test;
-use PHPUnit\Framework\Attributes\TestWith;
 use AshAllenDesign\FaviconFetcher\Collections\FaviconCollection;
 use AshAllenDesign\FaviconFetcher\Drivers\HttpDriver;
 use AshAllenDesign\FaviconFetcher\Exceptions\FaviconNotFoundException;
@@ -20,6 +17,9 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\Test;
+use PHPUnit\Framework\Attributes\TestWith;
 
 final class HttpDriverTest extends TestCase
 {
@@ -102,8 +102,8 @@ final class HttpDriverTest extends TestCase
     }
 
     #[Test]
-    #[TestWith(["https"])]
-    #[TestWith(["http"])]
+    #[TestWith(['https'])]
+    #[TestWith(['http'])]
     public function favicon_can_be_fetched_from_driver(string $protocol): void
     {
         Http::fake([

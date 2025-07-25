@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace AshAllenDesign\FaviconFetcher\Tests\Feature;
 
-use PHPUnit\Framework\Attributes\Test;
 use AshAllenDesign\FaviconFetcher\Drivers\DuckDuckGoDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconGrabberDriver;
 use AshAllenDesign\FaviconFetcher\Drivers\FaviconKitDriver;
@@ -16,6 +15,7 @@ use AshAllenDesign\FaviconFetcher\FetcherManager;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Mockery;
+use PHPUnit\Framework\Attributes\Test;
 
 final class FetcherManagerTest extends TestCase
 {
