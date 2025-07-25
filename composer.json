@@ -1,57 +1,57 @@
 {
-  "name": "ashallendesign/favicon-fetcher",
-  "description": "A Laravel package for fetching website's favicons.",
-  "type": "library",
-  "homepage": "https://github.com/ash-jc-allen/favicon-fetcher",
-  "license": "MIT",
-  "authors": [
-    {
-      "name": "Ash Allen",
-      "email": "mail@ashallendesign.co.uk"
-    }
-  ],
-  "keywords": [
-    "ashallendesign",
-    "favicon-fetcher",
-    "favicon",
-    "icon"
-  ],
-  "require": {
-    "php": "^8.1",
-    "nesbot/carbon": "^2.0|^3.0",
-    "illuminate/cache": "^9.0|^10.0|^11.0|^12.0",
-    "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0",
-    "illuminate/http": "^9.0|^10.0|^11.0|^12.0",
-    "guzzlehttp/guzzle": "^7.4",
-    "symfony/dom-crawler": "^6.3 || ^7.0"
-  },
-  "require-dev": {
-    "mockery/mockery": "^1.0",
-    "orchestra/testbench": "^7.0|^8.0|^9.0",
-    "phpunit/phpunit": "^9.0|^10.0|^11.0",
-    "larastan/larastan": "^2.0|^3.0"
-  },
-  "autoload": {
-    "psr-4": {
-      "AshAllenDesign\\FaviconFetcher\\": "src/"
-    }
-  },
-  "autoload-dev": {
-    "psr-4": {
-        "AshAllenDesign\\FaviconFetcher\\Tests\\": "tests/"
-    }
-  },
-  "extra": {
-    "laravel": {
-      "providers": [
-        "AshAllenDesign\\FaviconFetcher\\FaviconFetcherProvider"
-      ]
-    }
-  },
-  "scripts": {
-    "test": "vendor/bin/phpunit",
-    "larastan": "vendor/bin/phpstan analyse"
-  },
-  "minimum-stability": "dev",
-  "prefer-stable": true
+    "name": "ashallendesign/favicon-fetcher",
+    "description": "A Laravel package for fetching website's favicons.",
+    "type": "library",
+    "homepage": "https://github.com/ash-jc-allen/favicon-fetcher",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Ash Allen",
+            "email": "mail@ashallendesign.co.uk"
+        }
+    ],
+    "keywords": [
+        "ashallendesign",
+        "favicon-fetcher",
+        "favicon",
+        "icon"
+    ],
+    "require": {
+        "php": "^8.1",
+        "nesbot/carbon": "^2.0|^3.0",
+        "illuminate/cache": "^9.0|^10.0|^11.0|^12.0",
+        "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0",
+        "illuminate/http": "^9.0|^10.0|^11.0|^12.0",
+        "guzzlehttp/guzzle": "^7.4",
+        "symfony/dom-crawler": "^6.3 || ^7.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "^1.0",
+        "orchestra/testbench": "^7.0|^8.0|^9.0",
+        "phpunit/phpunit": "^10.0",
+        "larastan/larastan": "^2.0|^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "AshAllenDesign\\FaviconFetcher\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "AshAllenDesign\\FaviconFetcher\\Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "AshAllenDesign\\FaviconFetcher\\FaviconFetcherProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": "vendor/bin/phpunit",
+        "larastan": "vendor/bin/phpstan analyse"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
 }
