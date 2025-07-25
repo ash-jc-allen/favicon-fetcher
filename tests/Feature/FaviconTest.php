@@ -18,7 +18,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Mockery;
 
-class FaviconTest extends TestCase
+final class FaviconTest extends TestCase
 {
     use LazilyRefreshDatabase;
 

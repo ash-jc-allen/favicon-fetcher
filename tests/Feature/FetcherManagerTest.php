@@ -17,7 +17,7 @@ use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Mockery;
 
-class FetcherManagerTest extends TestCase
+final class FetcherManagerTest extends TestCase
 {
     use LazilyRefreshDatabase;
 

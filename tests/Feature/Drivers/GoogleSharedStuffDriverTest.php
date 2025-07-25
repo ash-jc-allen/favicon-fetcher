@@ -18,7 +18,7 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class GoogleSharedStuffDriverTest extends TestCase
+final class GoogleSharedStuffDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 

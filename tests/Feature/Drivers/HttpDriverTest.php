@@ -21,7 +21,7 @@ use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class HttpDriverTest extends TestCase
+final class HttpDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 

@@ -18,7 +18,7 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class UnavatarDriverTest extends TestCase
+final class UnavatarDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 

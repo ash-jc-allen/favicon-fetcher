@@ -18,7 +18,7 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class DuckDuckGoDriverTest extends TestCase
+final class DuckDuckGoDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 

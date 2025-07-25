@@ -18,7 +18,7 @@ use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 
-class FaviconKitDriverTest extends TestCase
+final class FaviconKitDriverTest extends TestCase
 {
     use LazilyRefreshDatabase;
 
