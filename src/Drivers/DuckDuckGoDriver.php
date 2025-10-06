@@ -61,6 +61,6 @@ class DuckDuckGoDriver implements Fetcher
 
     public function fetchAll(string $url): FaviconCollection
     {
-        throw new FeatureNotSupportedException('The DuckDuckGi driver does not support fetching all favicons.');
+        throw new FeatureNotSupportedException('The DuckDuckGo driver does not support fetching all favicons.');
     }
 }
