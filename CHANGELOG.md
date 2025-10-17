@@ -1,5 +1,9 @@
 # Changelog
 
+**v3.10.0 (released 2025-10-17):**
+
+- Added `.gitattributes` file. ([#94](https://github.com/ash-jc-allen/favicon-fetcher/pull/94))
+
 **v3.9.0 (released 2025-07-25):**
 
 - Added driver for the DuckDuckGo icons API. ([#88](https://github.com/ash-jc-allen/favicon-fetcher/pull/88))
