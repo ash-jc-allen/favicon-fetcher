@@ -1,5 +1,10 @@
 # Changelog
 
+**v3.11.0 (released 2026-03-13):**
+
+- Added support for Laravel 13. ((#96)[https://github.com/ash-jc-allen/favicon-fetcher/pull/96])
+- Run CI workflows with PHP 8.5. ([#95](https://github.com/ash-jc-allen/favicon-fetcher/pull/95))
+
 **v3.10.0 (released 2025-10-17):**
 
 - Fixed typo. ([#93](https://github.com/ash-jc-allen/favicon-fetcher/pull/93))
