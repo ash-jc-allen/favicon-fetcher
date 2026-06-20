@@ -7,6 +7,7 @@
 <a href="https://packagist.org/packages/ashallendesign/favicon-fetcher"><img src="https://img.shields.io/packagist/dt/ashallendesign/favicon-fetcher.svg?style=flat-square" alt="Total Downloads"></a>
 <a href="https://packagist.org/packages/ashallendesign/favicon-fetcher"><img src="https://img.shields.io/packagist/php-v/ashallendesign/favicon-fetcher?style=flat-square" alt="PHP from Packagist"></a>
 <a href="https://github.com/ash-jc-allen/favicon-fetcher/blob/master/LICENSE"><img src="https://img.shields.io/github/license/ash-jc-allen/favicon-fetcher?style=flat-square" alt="GitHub license"></a>
+<a href="https://github.com/ash-jc-allen/favicon-fetcher/blob/master/composer.json"><img src="https://badge.laravel.cloud/badge/ashallendesign/favicon-fetcher?style=flat" alt="Laravel Compatibility"></a>
 </p>
 
 ## Table of Contents
