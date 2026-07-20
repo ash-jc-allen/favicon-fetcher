@@ -22,7 +22,7 @@
     "illuminate/cache": "^9.0|^10.0|^11.0|^12.0|^13.0",
     "illuminate/filesystem": "^9.0|^10.0|^11.0|^12.0|^13.0",
     "illuminate/http": "^9.0|^10.0|^11.0|^12.0|^13.0",
-    "guzzlehttp/guzzle": "^7.4",
+    "guzzlehttp/guzzle": "^7.4 || ^8.0",
     "symfony/dom-crawler": "^6.3 || ^7.0"
   },
   "require-dev": {
