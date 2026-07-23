@@ -1,8 +1,14 @@
 # Changelog
 
+**v3.12.0 (released 2026-07-23):**
+
+- Added support for Guzzle 8. ([#97](https://github.com/ash-jc-allen/favicon-fetcher/pull/97))
+- Pinned GitHub Action services to specific versions ([#98](https://github.com/ash-jc-allen/favicon-fetcher/pull/98))
+- Added Laravel Compatibility badges to the README. ([2f562d4](https://github.com/ash-jc-allen/favicon-fetcher/commit/2f562d4aa9473f152301a11a92fcaf71cdb42d34))
+
 **v3.11.0 (released 2026-03-13):**
 
-- Added support for Laravel 13. ((#96)[https://github.com/ash-jc-allen/favicon-fetcher/pull/96])
+- Added support for Laravel 13. ([#96](https://github.com/ash-jc-allen/favicon-fetcher/pull/96))
 - Run CI workflows with PHP 8.5. ([#95](https://github.com/ash-jc-allen/favicon-fetcher/pull/95))
 
 **v3.10.0 (released 2025-10-17):**
