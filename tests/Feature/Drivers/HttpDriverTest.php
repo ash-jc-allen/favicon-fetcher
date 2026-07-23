@@ -13,6 +13,7 @@ use AshAllenDesign\FaviconFetcher\FetcherManager;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\CustomDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\_data\NullDriver;
 use AshAllenDesign\FaviconFetcher\Tests\Feature\TestCase;
+use GuzzleHttp\Utils;
 use Illuminate\Foundation\Testing\LazilyRefreshDatabase;
 use Illuminate\Http\Client\Request;
 use Illuminate\Support\Facades\Cache;
@@ -607,7 +608,7 @@ class HttpDriverTest extends TestCase
         $driver->fetch('https://example.com');
 
         Http::assertSent(function (Request $request) {
-            return $request->hasHeader('User-Agent', 'GuzzleHttp/7');
+            return $request->hasHeader('User-Agent', Utils::defaultUserAgent());
         });
 
         // Custom user agent.
